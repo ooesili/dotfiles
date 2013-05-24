@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# template for new perl script
+my $template = <<TEMPLATE;
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+TEMPLATE
+
+# check for single argument
+if (@ARGV == 1) {
+    # filename is first argument
+    my $file = $ARGV[0];
+    # check for file
+    unless (-f $file) {
+        # try to open file
+        open FILE, ">", $file
+            or die "$0: error: cannot open file: $!\n";
+        # write template to file
+        print FILE $template;
+        close FILE;
+        # make executable
+        chmod 0744, $file;
+        # run vim
+        exec "vim $file";
+    } else {
+        die "$0: file exists\n";
+    }
+} else {
+    die "$0: error: takes exactly one argument\n";
+}

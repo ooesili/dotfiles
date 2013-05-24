@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Copy;
+
+my $restore;
+my @files;
+
+if ($ARGV[0] eq "-r") {
+    $restore = 1;
+    @files = @ARGV[1 ..];
+}
+
+# move each file if it exists
+for my $file (@files) {
+    if (-e) {
+        unless ($restore) {
+            move "$file", "${file}~"; # backup
+        } else {
+            $file ~= s/~$//;
+            move "${file}~", "$file"; # restore
+        }
+    } else {
+        warn "$0: file not found: $file\n";
+    }
+}

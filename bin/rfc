@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+if (@ARGV == 1) {
+    # RFC number is first argument
+    my $file = "/usr/share/doc/rfc/txt/rfc$ARGV[0].txt" ;
+    if (-f $file) {
+        # display file if found
+        system("less $file");
+    } else {
+        # file not found
+        die "$0: error: RFC$ARGV[0] not found\n";
+    }
+} else {
+    # not one argument
+    die "$0: error: takes exactly one argument\n";
+}

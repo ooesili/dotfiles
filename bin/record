@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $canRun    = 0;
+my $weMounted = 0;
+my $mntPoint = "/mnt/exthd";
+
+# if system was already mounted
+if (!system "mount | grep $mntPoint > /dev/null") {
+    $canRun = 1;
+} else {
+    # if mount was successful
+    $weMounted = $canRun = 1 if !system "mount $mntPoint";
+}
+
+if ($canRun) {
+    my $child_pid;
+
+    # fork and run programs
+    if (!defined($child_pid = fork)) {
+        die "cannot fork: $!";
+    } elsif (!$child_pid) {
+        # I am the child
+        #system "patchage &";
+        system "ardour3";
+        system "umount $mntPoint" if $weMounted;
+    }
+}

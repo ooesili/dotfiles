@@ -1,0 +1,21 @@
+Config { font = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
+       , bgColor = "black"
+       , fgColor = "#657b83"
+       , position = Top
+       , hideOnStart = False
+       , persistent = True
+       , border = NoBorder
+       , borderColor = "grey"
+       , lowerOnStart = True
+       , commands = [ Run Weather "EGPF" ["-t"," <tempF>F","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 36000
+                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "%a %b %_d %l:%M" "date" 10
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#268bd2>%date%</fc> | %EGPF%"
+       }
+-- vim: ft=haskell:

@@ -1,0 +1,100 @@
+0.07
+sum $ map ord "Wake-on-LAN"
+sum $ map ord "Wake-on-LAN Port"
+sum $ map ord "Wake-on-LAN"
+sum $ map ord "wol"
+map ord "wol"
+map ord "wol'
+import Data.Char
+ord
+1210 / (60 * 6)
+map (\x -> (x,2^x)) [1..20]
+map (\x -> (x,2^x)) [1..5]
+:t zipWith
+map (\x -> 2^x) [1..5]
+192/21
+192/21
+192/2
+exit
+629/960
+toRational 1 - 662 / 1920
+219/320
+331/960
+toRational 662 / 1920
+hex
+ls
+2 ^ 8 + 2 ^ 10
+2 ^ 18
+2 ^ 17
+32 - 24
+32 - 22
+2 ^((32 - 23 ) * 2)
+2 ^(32 - 23)
+2 ^(22)
+2 ^(23)
+2 ^(32 - 24 + 32 - 22)
+:t (**)
+:t (^)
+2 ^ 25
+2 ^ 24
+24 ^ 2
+logBase 2 21000000
+logBase 2 21
+logBase 2 4
+:t logBase 2 4
+:t logBase 
+log 2.731
+log 2.73
+log 2.7
+log 2,7
+log 10
+log 4
+:t log
+100000 / 3001000
+(40 ** 8) `divMod` 
+:t divMod 
+ls
+:t divMod 
+40 ** 40
+40 ** 8
+216 / 237
+2013 - 1786
+216 / 237
+256 ^ 3
+255 ^ 3
+16 ^ 9
+7.78 * 40 * 52
+:m +XMonad
+toRational 606 / 1920 * (-1)
+toRational 606 / 1920 * (-1) + 1
+toRational 606 / 1920
+:l main
+:t manageDocks
+import XMonad.Hooks.ManageDocks 
+:t manageDocks
+:t (<||>)
+:t (<||>)\
+:t (=?)
+:t resource
+import XMonad.Hooks.ManageHelpers 
+import XMonad.Hooks.Manage
+:t composeAll 
+import XMonad
+64 * 16
+solutions 
+concatMap (\(_,xs) -> head xs) $ [head solutions]
+:l main
+concatMap (\(_,xs) -> head xs) $ [head solutions]
+solutions 
+:l main
+concatMap (\(_,xs) -> head xs) $ [head solutions]
+map (\(_,xs) -> head xs) $ [head solutions]
+map (\(_,xs) -> head xs) $ head solutions 
+map (\(_,xs) -> head xs) solutions 
+:l main
+map (\(_,xs) -> head xs) solutions 
+map (\(_,xs) -> head xs) solutions 
+:t solutions 
+solutions 
+:l main
+solutions 

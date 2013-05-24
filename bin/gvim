@@ -1,0 +1,6 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+# Fake gvim
+exec "urxvtc +tr -bg '#002b36' -e vim @ARGV";

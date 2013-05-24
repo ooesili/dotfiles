@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+use strict; use warnings;
+
+## script to relink files into ~/*
+## will only overwrite links
+
+# open Manifest file
+open(my $fh, '<', 'Manifest')
+    or die "$0: cannot open `Manifest': $!\n";
+while (<$fh>) {
+    chomp $_;	# get rid of newlines
+    my $source = "$ENV{PWD}/$_";
+    my $dest = "$ENV{HOME}/$_";
+    # link every file in Manifest to ~/
+    if (-e "$source") {
+        unlink $dest if -l "$dest"; # remove previous link
+        symlink "$source", "$dest"
+            or warn "$0: error linking `$_': $!\n";
+    } else {
+        warn "$0: file `$_' does not exist\n";
+    }
+}
+close $fh;

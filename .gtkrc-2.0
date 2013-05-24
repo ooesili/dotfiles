@@ -1,0 +1,6 @@
+gtk-theme-name = "BSM Simple Dark Menu"
+
+style "vimfix" {
+  bg[NORMAL] = "#002b36" # this matches my gVim theme 'Normal' bg color.
+}
+widget "vim-main-window.*GtkForm" style "vimfix"

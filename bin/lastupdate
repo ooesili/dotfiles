@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# get last update time from log file
+last=$(tac /var/log/pacman.log | grep -m1 'starting full system upgrade$' \
+    | sed 's/\].*$/]/')
+
+# get time in same format as log file
+now=$(date '+[%Y-%m-%d %R]')
+
+# print results
+echo "Last: $last"
+echo "Time: $now"

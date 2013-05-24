@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Colors
+red="[0;31m"
+green="[0;32m"
+yellow="[0;33m"
+blue="[0;34m"
+purple="[0;35m"
+cyan="[0;36m"
+
+# Color reset
+reset="[0m"
+
+# Patterns
+three_asterisks="/^\\*\\*\\*/{s/^.*$/$red&$reset/;}"
+failed_loading="/^Failed, modules loaded: none.$/{s/^.*$/$red&$reset/;}"
+success_loading="/^Ok, modules loaded:/{s/^.*$/$green&$rst/;}"
+double_colon="s/\([[:graph:]]*\) ::/$purple\1$red ::$reset/;"
+rocket="s/=>/$red&$reset/;"
+arrow="s/->/$green&$reset/g;"
+left_arrow="s//$red&$reset/;"
+string="s/\"[^\"]*\"/$yellow&$reset/g;"
+char="s/'[a-zA-Z]*'/$purple&$reset/g;"
+# New
+calc_operators="s/[+\-\/*]/$purple&$reset/g;"
+load_done="s/done./$green&$reset/g;"
+parenthesis="s/[{}()]/$blue&$reset/g;"
+left_bracket="s/\[/$blue[$reset/g;"
+right_bracket="s/\]/$blue&$reset/g;"
+no_instance="s/^\s*No instance/$red&$reset/g;"
+interactive="s/^<[^>]*>/$red&$reset/g;"
+
+exec `which ghc` --interactive ${1+"$@"} 2>&1 |\
+    sed "$left_bracket
+        $right_bracket
+        $double_colon
+        $rocket
+        $right_arrow
+        $left_arrow
+        $string
+        $three_asterisks
+        $failed_loading
+        $success_loading
+        $load_done
+        $arrow
+        $calc_operators
+        $parenthesis
+        $no_instance
+        $interactive
+        $char"

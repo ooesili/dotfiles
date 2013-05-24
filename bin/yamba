@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+use strict;
+use warnings; 
+
+# filenames
+my $mufFile = '/proc/sys/dev/hpet/max-user-freq';
+my $projectDir = "$ENV{'HOME'}/src/yamba";
+
+# set max-user-freq to 1024 if it is not already
+open MUF, "<", $mufFile
+    or die "cannot open $mufFile: $!\n";
+chomp (my $muf = <MUF>);
+close MUF;
+unless ($muf eq '1024') {
+    system "echo 1024 | sudo tee $mufFile > /dev/null";
+}
+
+# run programs
+system 'android avd &';
+system "gvim -c 'cd $projectDir'";
+exec "ranger --selectfile=$projectDir/AndroidManifest.xml";

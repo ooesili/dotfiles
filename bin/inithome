@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+use strict; use warnings;
+
+# start htop, plain and simple
+system 'urxvtc -e htop';
+
+# grab pid_file from mpd.conf
+open(my $mpdconf, '<', '/etc/mpd.conf')
+    or die "cannot open file: $!\n";
+my $pidfile;
+# extract value from matching line
+while (<$mpdconf>) {
+    if (/^pid_file.*"(?<file>.*)".*$/) {
+        $pidfile = $+{file};
+        last; # optimise
+    }
+}
+
+close $mpdconf;
+
+# wait 10 seconds for mpd to start
+for (1..10) {
+    if ( -e $pidfile ) {
+        system 'urxvtc -e ncmpcpp';
+        last;
+    } else {
+        sleep 1;
+    }
+}

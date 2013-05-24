@@ -1,0 +1,9 @@
+! set colors
+*transparent: True
+*shading:     20
+
+*scrollBar:   False
+*cursorBlink: True
+
+! set font
+*font: -xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1
