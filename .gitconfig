@@ -30,5 +30,6 @@
 	undo = reset --hard
 	st    = status
 	s     = status -s
+	p    = push
 [core]
 	excludesfile = ~/.gitglobalignore
