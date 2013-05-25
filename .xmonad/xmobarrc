@@ -7,7 +7,7 @@ Config { font = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
        , border = NoBorder
        , borderColor = "grey"
        , lowerOnStart = True
-       , commands = [ Run Weather "EGPF" ["-t"," <tempF>F","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 36000
+       , commands = [ Run Weather "KAPA" ["-t"," <tempF>F","-L","64","-H","77","--normal","green","--high","red","--low","lightblue"] 36000
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
@@ -16,6 +16,6 @@ Config { font = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#268bd2>%date%</fc> | %EGPF%"
+       , template = "%StdinReader% }{ %cpu% | %memory% * %swap%    <fc=#268bd2>%date%</fc> | %KAPA%"
        }
 -- vim: ft=haskell:
