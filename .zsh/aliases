@@ -43,7 +43,6 @@ alias tpair="tmux -S /run/tmux/shared"
 alias tpaira="tmux -S /run/tmux/shared attach"
 alias iptsave="sudo cat /dev/null && sudo iptables-save |\
     sudo tee /etc/iptables/iptables.rules > /dev/null"
-alias gvim="urxvtc +tr -bg '#002b36' -e vim"
 alias printon="sudo ptal-init start; sudo systemctl start cupsd"
 alias printoff="sudo systemctl stop cupsd colord; sudo ptal-init stop"
 
