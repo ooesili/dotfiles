@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+## quickly search the ArchWiki in w3m
+
+# if at least one argument
+if (@ARGV >= 1) {
+    my $url = "https://wiki.archlinux.org/index.php?title=Special%3ASearch&search=@ARGV";
+    exec "w3m '$url'"
+} else {
+    # not one argument
+    die "$0: error: no arguments supplied\n";
+}
