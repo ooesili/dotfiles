@@ -5,9 +5,16 @@ use warnings;
 if (defined $ARGV[0]) {
     if (@ARGV == 1) {
         # get owner
-        my $owner = `yaourt -Qoq $ARGV[0]`;
-        # get owner's info if found
-        exec "yaourt -Qi $owner" unless ${^CHILD_ERROR_NATIVE};
+        my $ownerString = `yaourt -Qoq $ARGV[0]`;
+        # seperate owners
+        my @owners = split(/\n/m, $ownerString);
+        if (@owners == 1) {
+            # print info of owner if there is only one
+            exec "yaourt -Qi @owners" unless ${^CHILD_ERROR_NATIVE};
+        } else {
+            # print names of all owners
+            print $ownerString;
+        }
     } else {
         # list owner of each file
         exec "yaourt -Qo @ARGV";
