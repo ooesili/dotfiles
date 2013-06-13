@@ -5,19 +5,19 @@ use warnings;
 if (defined $ARGV[0]) {
     if (@ARGV == 1) {
         # get owner
-        my $ownerString = `yaourt -Qoq $ARGV[0]`;
+        my $ownerString = `pacman -Qoq $ARGV[0]`;
         # seperate owners
         my @owners = split(/\n/m, $ownerString);
         if (@owners == 1) {
             # print info of owner if there is only one
-            exec "yaourt -Qi @owners" unless ${^CHILD_ERROR_NATIVE};
+            exec "pacman -Qi @owners" unless ${^CHILD_ERROR_NATIVE};
         } else {
             # print names of all owners
             print $ownerString;
         }
     } else {
         # list owner of each file
-        exec "yaourt -Qo @ARGV";
+        exec "pacman -Qo @ARGV";
     }
 } else {
     die "$0: no package(s) specified\n";
