@@ -45,6 +45,7 @@ alias iptsave="sudo cat /dev/null && sudo iptables-save |\
     sudo tee /etc/iptables/iptables.rules > /dev/null"
 alias printon="sudo ptal-init start; sudo systemctl start cupsd"
 alias printoff="sudo systemctl stop cupsd colord; sudo ptal-init stop"
+alias torpdf="torsocks mupdf"
 
 # abbreviations
 alias a="alsamixer"
