@@ -25,7 +25,7 @@ unclutter -grab -jitter 5 &
 eval $(cat ~/.fehbg)
 xsetroot -cursor_name left_ptr
 xmodmap ~/.capscape
-inithome
+inithome &
 
 # start window manager
 exec xmonad
