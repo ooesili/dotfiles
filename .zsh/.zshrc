@@ -341,6 +341,11 @@ if [[ $TERM == "rxvt-unicode-256color" || $TERM == "screen-256color" ]]; then
     eval "export `dircolors /etc/dir_colors`"
 fi
 
+# dislapy R:% if in ranger sub-shell
+if [[ -n $RANGER_LEVEL ]]; then
+    zstyle :prompt:grml:*:items:percent pre %F{blue}R:%f
+fi
+
 # solarize less
 export LESS_TERMCAP_mb="[0;35m"  # begin blinking mode
 export LESS_TERMCAP_md="[0;32m"  # begin bold mode [headers]
