@@ -34,7 +34,7 @@ main = do
         , normalBorderColor = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         } `additionalKeysP`
-        [ ("M-d",   spawn "dwb")
+        [ ("M-d",   spawn "firefox")
         , ("M-g",   spawn "gvim")
         , ("M-S-o", spawn "systemctl poweroff")
         , ("M-S-r", spawn "systemctl reboot")

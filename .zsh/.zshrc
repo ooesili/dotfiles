@@ -335,7 +335,7 @@ HISTFILE=$ZDOTDIR/.histfile
 source $ZDOTDIR/aliases
 export MANWIDTH=78
 bindkey -v
-export BROWSER="dwb"
+export BROWSER="firefox"
 # set solarized dircolors
 if [[ $TERM == "rxvt-unicode-256color" || $TERM == "screen-256color" ]]; then
     eval "export `dircolors /etc/dir_colors`"
