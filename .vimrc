@@ -97,6 +97,7 @@ nmap <Leader>qc :below cw<CR>
 nmap <Leader>ql :below lw<CR>
 nmap <Leader>d :bdelete<CR>
 nmap <F4> :!xmonad --recompile<CR>
+nmap <F5> :make<CR>
 nmap <F6> :nmap <buffer> <F5> :><Left>R<Left>C<Left><<Left>
 nmap q; A;<Esc>
 nmap gb :ls<CR>:b<Space>
