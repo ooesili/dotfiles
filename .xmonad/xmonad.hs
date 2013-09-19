@@ -122,7 +122,7 @@ myManageHook = composeOne
     , resource =? "emulator64-arm"	-?> doFloatAt (3/4) (19/1080)
     , isDialog <||>
         resource =? "ardour_preferences" <||>
-        resource =? "ardour-3.3"	-?> doCenterFloat
+        resource =? "ardour-3.4"	-?> doCenterFloat
     , return True			-?> manageDocks
     ]
 
