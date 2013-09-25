@@ -130,6 +130,7 @@ nmap <Leader>gC :Gcommit<Space>
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+set foldmethod=syntax
 set hls
 set ignorecase smartcase
 
