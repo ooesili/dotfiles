@@ -46,7 +46,7 @@ main = do
         , ("M-b",   spawn "ncmpcpp next")
         , ("M-i",   spawn "inithome")
         , ("M-r",   spawn "qjackctl")
-        , ("M-a",   spawn "urxvt -e yamba")
+        , ("M-a",   spawn "anki")
         , ("M-e",   spawn "easytag")
         , ("M-f",   sendMessage ToggleLayout)
         , ("M-p",   shellPrompt  xoriaXPConfig)
