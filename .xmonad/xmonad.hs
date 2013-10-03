@@ -121,6 +121,7 @@ myManageHook = composeOne
         resource =? "qjackctl"		-?> doShift "mixer"
     , resource =? "emulator64-arm"	-?> doFloatAt (3/4) (19/1080)
     , isDialog <||>
+        resource =? "gvim" <||>
         resource =? "ardour_preferences" <||>
         resource =? "ardour-3.4"	-?> doCenterFloat
     , return True			-?> manageDocks
