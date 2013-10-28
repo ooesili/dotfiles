@@ -48,6 +48,7 @@ main = do
         , ("M-r",   spawn "qjackctl")
         , ("M-a",   spawn "anki")
         , ("M-e",   spawn "easytag")
+        , ("M-s",   spawn "scide")
         , ("M-f",   sendMessage ToggleLayout)
         , ("M-p",   shellPrompt  xoriaXPConfig)
         , ("M-o",   configPrompt home xoriaXPConfig)
