@@ -1,7 +1,4 @@
-! set colors
-*transparent: True
-*shading:     20
-
+! UI customizations
 *scrollBar:   False
 *cursorBlink: True
 

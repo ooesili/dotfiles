@@ -11,10 +11,11 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-# load Xresources
-[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-# load solarized colors
-[[ -f ~/.Xsolarized ]] && xrdb -merge ~/.Xsolarized
+# load Xresources and related files
+Xfiles="$HOME/.Xshading $HOME/.Xsolarized $HOME/.Xresources"
+for file in $Xfiles; do
+    [[ -f $file ]] && xrdb -merge $file
+done
 
 # environment variables
 [[ -f ~/.zprofile ]] && source ~/.zprofile
