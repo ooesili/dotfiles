@@ -2,18 +2,19 @@
 alias info="info --vi-keys"
 
 # yaourt aliases
-alias ysearch="yaourt -Sas"
-alias lsearch="yaourt -Qs"
-alias yinfo="yaourt -Sai"
-alias linfo="yaourt -Qi"
+alias yss="yaourt -Sas"
+alias yqs="yaourt -Qs"
+alias ysi="yaourt -Sai"
+alias yqi="yaourt -Qi"
 alias files="yaourt -Qlq"
-alias linst="yaourt -U"
-alias yinst="yaourt -S"
-alias lrm="yaourt -Rs"
+alias yu="yaourt -U"
+alias ys="yaourt -S"
+alias yr="yaourt -Rs"
 alias orphans="yaourt -Qdt"
-alias paclog="cat /var/log/pacman.log | less +G"
+alias paclog="less +G /var/log/pacman.log"
+alias pacerr="grep -A1 ALPM /var/log/pacman.log | less +G"
 alias update="yaourt -Syua"
-alias pkgbuild="yaourt -G"
+alias yg="yaourt -G"
 
 # ls aliases
 alias ls="ls --color=auto --width=80 -h"
