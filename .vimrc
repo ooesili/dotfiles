@@ -171,3 +171,6 @@ if has("cscope")
   nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
   nmap <C-_><C-_> :cs add cscope.out<CR>
 endif
+
+" SCVim
+let g:sclangTerm = "urxvtc -e"
