@@ -54,9 +54,9 @@ mpd_music_dir = "/var/lib/mpd/music"
 ##
 #
 #visualizer_in_stereo = "no"
-#
-#visualizer_fifo_path = ""
-#
+
+visualizer_fifo_path = "/run/mpd/mpd.fifo"
+
 ##
 ## Note: Below parameter is needed for ncmpcpp
 ## to determine which output provides data for
@@ -64,9 +64,9 @@ mpd_music_dir = "/var/lib/mpd/music"
 ## visualization and sound as currently there
 ## are some problems with it.
 ##
-#
-#visualizer_output_name = ""
-#
+
+visualizer_output_name = "ncmpcpp_visualizer"
+
 ##
 ## Note: Below parameter defines how often ncmpcpp
 ## has to "synchronize" visualizer and audio outputs.
@@ -82,7 +82,7 @@ mpd_music_dir = "/var/lib/mpd/music"
 ## you need to compile ncmpcpp with fftw3 support.
 ##
 #
-#visualizer_type = "wave" (spectrum/wave)
+visualizer_type = "spectrum" #(spectrum/wave)
 #
 #visualizer_look = "◆│"
 #
@@ -444,7 +444,7 @@ ignore_leading_the = "yes"
 #
 #allow_physical_directories_deletion = "no"
 #
-#external_editor = ""
+external_editor = "gvim"
 #
 #use_console_editor = "no" (set to yes, if your editor is console app)
 #
