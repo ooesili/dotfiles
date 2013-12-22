@@ -51,7 +51,6 @@ main = do
         , ("M-s",   spawn "scide")
         , ("M-f",   sendMessage ToggleLayout)
         , ("M-p",   shellPrompt  xoriaXPConfig)
-        , ("M-o",   configPrompt home xoriaXPConfig)
         , ("M-S-a", withFocused $ keysMoveWindowTo (1918,18) (1, 0))
         ] `additionalKeys`
         [ ((0, 0x1008ff13), spawn "amixer --quiet set Master 1+")
@@ -138,25 +137,3 @@ xoriaXPConfig = defaultXPConfig
     , borderColor     = "#4e4e4e"
     , alwaysHighlight = True
     }
-
--- config prompt
-data Config = Config
-
-instance XPrompt Config where
-    showXPrompt Config = "Config: "
-
-configPrompt :: String -> XPConfig -> X ()
-configPrompt home c = do
-    configMap <- io . configParse $ home ++ "/.xmonad/configs"
-    mkXPrompt Config c (mkComplFunFromList $ map fst configMap) (\key ->
-        case (lookup key configMap) of (Just file) -> editSpawn file
-                                       Nothing     -> return () )
-    where editSpawn (':':file) = spawn $ "urxvt -e sh -c 'sudoedit " ++ file ++ "'"
-          editSpawn      file  = spawn $ "gvim " ++ file
-
-configParse :: FilePath -> IO [(String, String)]
-configParse file = do
-    handle <- openFile file ReadMode
-    xs <- fmap lines $ hGetContents handle
-    let pairs = fmap (fmap tail . span (/=':')) xs
-    return pairs
