@@ -346,6 +346,11 @@ if [[ -n $RANGER_LEVEL ]]; then
     zstyle :prompt:grml:*:items:percent pre %F{blue}R:%f
 fi
 
+# display `detached: ' if not using tmux
+if [[ -z $TMUX ]]; then
+    zstyle :prompt:grml:*:items:user pre %B%S%F{red}detached:%f%s %F{blue}
+fi
+
 # solarize less
 export LESS_TERMCAP_mb="[0;35m"  # begin blinking mode
 export LESS_TERMCAP_md="[0;32m"  # begin bold mode [headers]
