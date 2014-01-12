@@ -48,7 +48,7 @@ main = do
         , ("M-e",   spawn "easytag")
         , ("M-s",   spawn "scide")
         , ("M-f",   sendMessage ToggleLayout)
-        , ("M-p",   spawn "dmenu_run -b -fn '-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1' -p 'run>' -nb '#002b36' -nf '#93a1a1' -sb '#dc322f' -sf '#fdf6e3'")
+        , ("M-p",   spawn "dmenu_run -fn '-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1' -p 'run>' -nb '#002b36' -nf '#93a1a1' -sb '#dc322f' -sf '#fdf6e3'")
         , ("M-S-a", withFocused $ keysMoveWindowTo (1918,18) (1, 0))
         ] `additionalKeys`
         [ ((0, 0x1008ff13), spawn "amixer --quiet set Master 1+")
@@ -168,7 +168,7 @@ myManageHook = composeOne
 -- logHook configuration
 myLogHook input = dynamicLogWithPP xmobarPP
     { ppOutput = hPutStrLn input
-    , ppTitle = xmobarColor (green solarP) "" . shorten 82
+    , ppTitle = xmobarColor (green solarP) ""
     , ppLayout = xmobarColor (yellow solarP) ""
     , ppCurrent = xmobarColor (base2 solarP) (base01 solarP) . wrap "[" "]"
     }

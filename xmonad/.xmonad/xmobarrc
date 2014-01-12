@@ -9,14 +9,14 @@ Config { font = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
        , allDesktops = True
        , overrideRedirect = True
        , lowerOnStart = True
-       , commands = [ Run Weather "KAPA" ["-t","sky:<skyCondition> * <tempF>F","-L","64","-H","77","--normal","#859900","--high","#dc322f","--low","#268bd2"] 36000
+       , commands = [ Run Weather "KAPA" ["-t","sky:<skyCondition> * <tempC>C * <tempF>F","-L","64","-H","77","--normal","#859900","--high","#dc322f","--low","#268bd2"] 36000
                     , Run Cpu ["-t", "<fc=#b58900>cpu:</fc><bar>", "-L","3","-H","50","--normal","#b58900","--high","#dc322f","--bback","-"] 10
                     , Run Memory ["-t","<fc=#d33682>mem:</fc><usedratio>%","-L","25","-H","75","--normal","#b58900","--high","#dc322f","--minwidth","2"] 10
                     , Run Swap ["-t", "<fc=#6c71c4>swap:</fc><usedratio>%","-L","0","-H","50","--normal","#b58900","--high","#dc322f","--minwidth","2"] 20
                     , Run Date "<fc=#cb4b16>%a %b %_d %l:%M</fc>" "date" 10
                     , Run StdinReader
                     , Run Network "eth0" ["-t","<fc=#2aa198>up:</fc><tx> * <fc=#859900>down:</fc><rx>","-S","True","--minwidth","8","-L","250","-H","1000","--normal","#b58900","--high","#dc322f"] 10
-                    , Run CoreTemp ["-t", "<fc=#cb4b16>temp:</fc><core0>C:<core1>C", "-L", "37", "-H", "55", "--low", "#268bd2", "--high", "#dc322f", "--normal", "#b58900"] 50
+                    , Run CoreTemp ["-t", "<fc=#cb4b16>CPU:</fc><core0>C * <fc=#cb4b16>MB:</fc><core1>C", "-L", "37", "-H", "55", "--low", "#268bd2", "--high", "#dc322f", "--normal", "#b58900"] 50
                     ]
        , sepChar = "%"
        , alignSep = "}{"
