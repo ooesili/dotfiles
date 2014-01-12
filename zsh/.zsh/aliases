@@ -52,7 +52,6 @@ alias ddg="w3m duckduckgo.com"
 # abbreviations
 alias a="alsamixer"
 alias f='ranger'
-alias fe='exec ranger'
 alias h="htop"
 alias d="sdcv"
 alias n="ncmpcpp"
@@ -64,10 +63,9 @@ alias m="mysql -p -u root"
 alias s="sudo"
 alias t="tmux"
 alias ta="tmux attach"
-alias te="exec tmux"
-alias tea="exec tmux attach"
 alias jx="journalctl -xn"
 alias g="git"
-alias x="exec startx"
+alias q="qfi"
+alias v="vim"
 
 # vim: ft=zsh:

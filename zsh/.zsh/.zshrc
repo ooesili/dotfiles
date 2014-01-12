@@ -360,4 +360,7 @@ export LESS_TERMCAP_ue="[0m"     # end underline
 export LESS_TERMCAP_so="[0;34m"  # begin standout [info box]
 export LESS_TERMCAP_se="[0m"     # end standout
 
+# enable qfi directory-swiching
+emulate sh -c 'source /usr/share/qfi/wrapper.sh'
+
 ## END OF FILE #################################################################
