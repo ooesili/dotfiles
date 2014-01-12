@@ -83,10 +83,8 @@ endif
 execute pathogen#infect()
 
 " look and feel
-if &t_Co == 256 || has("gui_running")
-    set background=dark
-    colorscheme solarized
-endif
+set background=dark
+colorscheme solarized
 set number
 set guioptions=ac
 set guifont=Terminus\ 10
@@ -103,6 +101,7 @@ nmap q; A;<Esc>
 nmap gb :ls<CR>:b<Space>
 nmap gB :ls<CR>:bd<Space>
 nmap g/ :%s/
+nmap <Leader>w :w<CR>
 
 " surroundings
 inoremap "" "<Left>"
@@ -114,7 +113,8 @@ imap <C-l> <Right>
 imap ;; <End>;<Esc>
 imap <C-b> <CR><Esc>O
 
-" fugitive mappings
+" fugitive
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 nmap <Leader>gr :Git<Space>
 nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>ge :Gedit<CR>
@@ -175,3 +175,4 @@ endif
 
 " SCVim
 let g:sclangTerm = "urxvtc -e"
+nmap <Leader>ss :SClangStart<CR>
