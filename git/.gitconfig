@@ -33,3 +33,5 @@
 	p    = push
 [core]
 	excludesfile = ~/.gitglobalignore
+[push]
+	default = simple
