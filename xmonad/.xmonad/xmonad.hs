@@ -50,6 +50,25 @@ main = do
         , ("M-f",   sendMessage ToggleLayout)
         , ("M-p",   spawn "dmenu_run -fn '-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1' -p 'run>' -nb '#002b36' -nf '#93a1a1' -sb '#dc322f' -sf '#fdf6e3'")
         , ("M-S-a", withFocused $ keysMoveWindowTo (1918,18) (1, 0))
+        ---------- TMUX REMAPPINGS ----------
+        -- swich panes
+        , ("M4-j",   spawn "xdotool keyup j" >> spawn "xdotool key --clearmodifiers ctrl+a o")
+        , ("M4-k",   spawn "xdotool keyup k" >> spawn "xdotool key --clearmodifiers ctrl+a O")
+        -- move panes
+        , ("M4-S-j", spawn "xdotool keyup j" >> spawn "xdotool key --clearmodifiers ctrl+a braceright")
+        , ("M4-S-k", spawn "xdotool keyup k" >> spawn "xdotool key --clearmodifiers ctrl+a braceleft")
+        -- switch windows
+        , ("M4-n",   spawn "xdotool keyup n" >> spawn "xdotool key --clearmodifiers ctrl+a n")
+        , ("M4-p",   spawn "xdotool keyup p" >> spawn "xdotool key --clearmodifiers ctrl+a p")
+        ---------- VIM REMAPPINGS ----------
+        -- switch panes
+        , ("M3-f",   spawn "xdotool keyup f" >> spawn "xdotool key --clearmodifiers ctrl+w w")
+        , ("M3-d",   spawn "xdotool keyup d" >> spawn "xdotool key --clearmodifiers ctrl+w W")
+        -- close
+        , ("M3-q",   spawn "xdotool keyup q" >> spawn "xdotool key --clearmodifiers ctrl+w q")
+        -- split panes
+        , ("M3-s",   spawn "xdotool keyup s" >> spawn "xdotool key --clearmodifiers ctrl+w s")
+        , ("M3-v",   spawn "xdotool keyup v" >> spawn "xdotool key --clearmodifiers ctrl+w v")
         ] `additionalKeys`
         [ ((0, 0x1008ff13), spawn "amixer --quiet set Master 1+")
         , ((0, 0x1008ff11), spawn "amixer --quiet set Master 1-")

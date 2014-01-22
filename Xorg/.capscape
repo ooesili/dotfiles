@@ -1,5 +1,11 @@
-! Swap caps lock and escape
+! swap caps lock and escape
 remove Lock = Caps_Lock
 keysym Escape = Caps_Lock
 keysym Caps_Lock = Escape
 add Lock = Caps_Lock
+
+! remap menu to hyper for xmonad-vim remappings
+keycode 135 = Hyper_R
+add Mod3 = Hyper_R
+
+! vim: ft=xmodmap:
