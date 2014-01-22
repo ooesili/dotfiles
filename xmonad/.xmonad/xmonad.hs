@@ -48,7 +48,7 @@ main = do
         , ("M-e",   spawn "easytag")
         , ("M-s",   spawn "scide")
         , ("M-f",   sendMessage ToggleLayout)
-        , ("M-p",   spawn "dmenu_run -fn '-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1' -p 'run>' -nb '#002b36' -nf '#93a1a1' -sb '#dc322f' -sf '#fdf6e3'")
+        , ("M-p",   spawn "dmenu_run -fn '-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1' -p 'run>' -nb '#002b36' -nf '#93a1a1' -sb '#dc322f' -sf '#fdf6e3'")
         , ("M-S-a", withFocused $ keysMoveWindowTo (1918,18) (1, 0))
         ] `additionalKeys`
         [ ((0, 0x1008ff13), spawn "amixer --quiet set Master 1+")
@@ -124,7 +124,7 @@ mixerLayout r =
     in name $ combineTwoP mainPanes mixerTabs sidePane notPatchOrCtl
 
 myLayoutHook =
-    let showToolbar = gaps [(U,18)]
+    let showToolbar = gaps [(U,16)]
         tiled = Tall 1 (3/100) (1/2)
         ardourLayout = renamed [Replace "Ardour Tabs"] (showToolbar myTabbed ||| myTabbed)
     in smartBorders
@@ -144,7 +144,7 @@ solarizedTabs = defaultTheme
     , inactiveBorderColor = myNormalBorderColor
     , activeTextColor     = base2 solarP
     , inactiveTextColor   = base0 solarP
-    , fontName            = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
+    , fontName            = "-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1"
     , decoHeight          = 16
     }
 

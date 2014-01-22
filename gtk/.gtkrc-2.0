@@ -1,4 +1,5 @@
 gtk-theme-name = "BSM Simple Dark Menu"
+gtk-font-name = "Terminus 10"
 
 style "vimfix" {
   bg[NORMAL] = "#002b36" # this matches my gVim theme 'Normal' bg color.

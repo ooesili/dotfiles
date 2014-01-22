@@ -87,7 +87,7 @@ set background=dark
 colorscheme solarized
 set number
 set guioptions=ac
-set guifont=Terminus\ 10
+set guifont=Terminus\ 9
 
 nmap <Leader>t :TagbarOpen<CR>
 nmap <Leader>n :NERDTreeToggle<CR>

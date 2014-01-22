@@ -1,4 +1,4 @@
-Config { font = "-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso8859-1"
+Config { font = "-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1"
        , bgColor = "#002b36"
        , fgColor = "#839496"
        , position = Top
