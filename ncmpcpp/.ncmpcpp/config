@@ -444,9 +444,9 @@ ignore_leading_the = "yes"
 #
 #allow_physical_directories_deletion = "no"
 #
-external_editor = "gvim"
+external_editor = "vim"
 #
-#use_console_editor = "no" (set to yes, if your editor is console app)
+use_console_editor = "yes" # (set to yes, if your editor is console app)
 #
 ##### colors definitions #####
 #
