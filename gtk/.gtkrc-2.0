@@ -1,4 +1,5 @@
-gtk-theme-name = "BSM Simple Dark Menu"
+gtk-theme-name = "BSM Simple Dark"
+gtk-icon-theme-name = "Faenza-Darkest"
 gtk-font-name = "Terminus 10"
 
 style "vimfix" {
