@@ -5,8 +5,6 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.EZConfig
 import System.IO
-import XMonad.Prompt
-import XMonad.Prompt.Shell
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.PerWorkspace
@@ -151,7 +149,6 @@ myLayoutHook =
      . toggleLayouts (Full ||| myTabbed)
      . showToolbar
      . onWorkspace "android" androidLayout
-     {-. onWorkspace "mixer" (ResizableTall 1 (3/100) (5/7) [1, 9/5, 1/5])-}
      . onWorkspace "mixer" ((mixerLayout $ 219/320) ||| (mixerLayout $ 629/960))
      $ (tiled ||| Mirror tiled ||| myTabbed)
 
