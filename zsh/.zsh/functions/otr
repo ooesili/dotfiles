@@ -1,0 +1,11 @@
+if [[ -z $OTR ]]; then
+    local temp_hist
+    temp_hist="$(mktemp)"
+    cp -f "$HISTFILE" "$temp_hist"
+    env "OTR=$temp_hist" "$SHELL"
+    rm "$temp_hist"
+else
+    exit 0
+fi
+
+# vim: ft=zsh:

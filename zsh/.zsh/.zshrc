@@ -331,7 +331,15 @@ alias -g V='| vim -'
 #vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
 
 ## Personal settings
+
+# add my functions
+local funcdir="$ZDOTDIR/functions"
+fpath=($funcdir $fpath)
+autoload $(/usr/bin/ls $funcdir)
+unset funcdir
+
 HISTFILE=$ZDOTDIR/.histfile
+HISTORY_IGNORE="otr"
 source $ZDOTDIR/aliases
 export MANWIDTH=78
 bindkey -v
@@ -340,12 +348,16 @@ export BROWSER="firefox"
 if [[ $TERM == "rxvt-unicode-256color" || $TERM == "screen-256color" ]]; then
     eval "export `dircolors /etc/dir_colors`"
 fi
-
+# display OTR, then turn off history
+if [[ -n $OTR ]]; then
+    zstyle ':prompt:grml:*:items:percent' pre %F{red}OTR:%f
+    HISTFILE="$OTR"
+else
+fi
 # dislapy R:% if in ranger sub-shell
 if [[ -n $RANGER_LEVEL ]]; then
-    zstyle :prompt:grml:*:items:percent pre %F{blue}R:%f
+    zstyle :prompt:grml:*:items:path pre %F{blue}R:%f
 fi
-
 # display `detached: ' if not using tmux
 if [[ -z $TMUX ]]; then
     zstyle :prompt:grml:*:items:user pre %B%S%F{red}detached:%f%s %F{blue}
