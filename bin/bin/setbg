@@ -19,7 +19,7 @@ $0 = basename $0;
 my $img = $ARGV[0];
 if (-f $img) {
     my $abs = File::Spec->rel2abs($img);
-    exec "feh --bg-fill $abs";
+    exec "feh --bg-fill '$abs'";
 }
 else {
     &errx(2, "file does not exist");
