@@ -132,8 +132,8 @@ androidLayout =
         name = renamed [Replace "Android Layout"]
     in name $ combineTwo mainPanes myTabbed littleTerm
 
-mixerLayout r =
-    let mainPanes = TwoPane 0 r
+mixerLayout =
+    let mainPanes = TwoPane 0 (2/3)
         sidePane = Mirror $ TwoPane 0 (9/10)
         name = renamed [Replace "Mixer Layout"]
         notPatchOrCtl = Not $ Or (Resource "qjackctl") (Title "Audio Connection Manager")
@@ -149,7 +149,7 @@ myLayoutHook =
      . toggleLayouts (Full ||| myTabbed)
      . showToolbar
      . onWorkspace "android" androidLayout
-     . onWorkspace "mixer" ((mixerLayout $ 219/320) ||| (mixerLayout $ 629/960))
+     . onWorkspace "mixer" mixerLayout
      $ (tiled ||| Mirror tiled ||| myTabbed)
 
 -- tabbed layout theme
