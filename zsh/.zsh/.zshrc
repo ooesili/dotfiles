@@ -348,20 +348,32 @@ export BROWSER="firefox"
 if [[ $TERM == "rxvt-unicode-256color" || $TERM == "screen-256color" ]]; then
     eval "export `dircolors /etc/dir_colors`"
 fi
+
+### customize colors ###
+function zstyle_update {
+    local existing
+    zstyle -g existing $1 $2
+    zstyle $1 $2 $3 $existing
+}
+# color customizations
+zstyle :prompt:grml:*:items:user pre %F{blue}
 # display OTR, then turn off history
 if [[ -n $OTR ]]; then
-    zstyle ':prompt:grml:*:items:percent' pre %F{red}OTR:%f
+    zstyle_update ':prompt:grml:*:items:percent' pre %F{red}OTR:%f
     HISTFILE="$OTR"
 else
 fi
 # dislapy R:% if in ranger sub-shell
 if [[ -n $RANGER_LEVEL ]]; then
-    zstyle :prompt:grml:*:items:path pre %F{blue}R:%f
+    zstyle_update ':prompt:grml:*:items:path' pre %F{blue}R:%f
 fi
 # display `detached: ' if not using tmux
 if [[ -z $TMUX ]]; then
-    zstyle :prompt:grml:*:items:user pre %B%S%F{red}detached:%f%s %F{blue}
+    zstyle_update ':prompt:grml:*:items:user' pre %B%S%F{red}detached:%f%s%b
 fi
+unfunction zstyle_update
+
+### customize environment ###
 
 # solarize less
 export LESS_TERMCAP_mb="[0;35m"  # begin blinking mode
