@@ -48,6 +48,7 @@ alias printon="sudo ptal-init start; sudo systemctl start cupsd"
 alias printoff="sudo systemctl stop cupsd colord; sudo ptal-init stop"
 alias torpdf="torsocks mupdf"
 alias ddg="w3m duckduckgo.com"
+alias mp3-dl="youtube-dl -x -f bestaudio --audio-format mp3 --audio-quality 0"
 
 # abbreviations
 alias a="alsamixer"
