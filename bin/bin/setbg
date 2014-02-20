@@ -3,6 +3,8 @@ use strict; use warnings;
 use File::Spec;
 use File::Basename;
 
+my $wallpaper_dir = "$ENV{HOME}/images/wallpapers";
+
 # error reporting function
 sub errx {
     my $code = shift;
@@ -13,14 +15,20 @@ sub errx {
 
 # check number of arguments
 $0 = basename $0;
-&errx(1, "requires one argument") if @ARGV != 1;
+&errx(1, "too many arguments") if @ARGV > 1;
 
-# set wallpaper
-my $img = $ARGV[0];
-if (-f $img) {
-    my $abs = File::Spec->rel2abs($img);
-    exec "feh --bg-fill '$abs'";
+if (@ARGV == 1) {
+    # set wallpaper
+    my $img = $ARGV[0];
+    if (-f $img) {
+        my $abs = File::Spec->rel2abs($img);
+        exec "feh --bg-fill '$abs'";
+    }
+    else {
+        &errx(2, "file does not exist");
+    }
 }
 else {
-    &errx(2, "file does not exist");
+    # view wallpapers
+    exec "feh -F --zoom fill $wallpaper_dir";
 }
