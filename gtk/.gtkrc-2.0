@@ -1,6 +1,6 @@
-gtk-theme-name = "BSM Simple Dark"
-gtk-icon-theme-name = "Faenza-Darkest"
-gtk-font-name = "Terminus 10"
+gtk-theme-name = "Numix Solarized"
+gtk-icon-theme-name = "Numix"
+gtk-cursor-theme-name="OpenZone_Black_Slim"
 
 style "vimfix" {
   bg[NORMAL] = "#002b36" # this matches my gVim theme 'Normal' bg color.
