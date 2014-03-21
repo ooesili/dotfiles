@@ -368,7 +368,7 @@ if [[ -n $RANGER_LEVEL ]]; then
     zstyle_update ':prompt:grml:*:items:path' pre %F{blue}R:%f
 fi
 # display `detached: ' if not using tmux
-if [[ -z $TMUX ]]; then
+if [[ -z $TMUX && -z $SSH_CLIENT ]]; then
     zstyle_update ':prompt:grml:*:items:user' pre %B%S%F{red}detached:%f%s%b
 fi
 unfunction zstyle_update

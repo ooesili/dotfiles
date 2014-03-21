@@ -68,5 +68,6 @@ alias jx="journalctl -xn"
 alias g="git"
 alias q="qfi"
 alias v="vim"
+alias sue="sudoedit"
 
 # vim: ft=zsh:
