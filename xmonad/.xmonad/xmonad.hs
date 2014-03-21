@@ -119,7 +119,7 @@ powerlineFont = "-xos4-terminesspowerline-medium-r-normal--12-120-72-72-c-60-iso
 
 -- simple items
 
-myTerminal = "urxvtc"
+myTerminal = "st"
 
 myWorkspaces = ["home","web","apps","vim","term","android","misc","mixer","ardour"]
 

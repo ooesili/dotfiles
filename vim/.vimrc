@@ -173,7 +173,7 @@ if has("cscope")
 endif
 
 " SCVim
-let g:sclangTerm = "urxvtc -e"
+let g:sclangTerm = "env -u TMUX fork st -e tmux new-session -n sclang"
 nmap <Leader>ss :SClangStart<CR>
 
 " powerline configurations
