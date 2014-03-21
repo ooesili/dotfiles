@@ -114,7 +114,6 @@ imap ;; <End>;<Esc>
 imap <C-b> <CR><Esc>O
 
 " fugitive
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 nmap <Leader>gr :Git<Space>
 nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>ge :Gedit<CR>
@@ -176,3 +175,6 @@ endif
 " SCVim
 let g:sclangTerm = "urxvtc -e"
 nmap <Leader>ss :SClangStart<CR>
+
+" powerline configurations
+set laststatus=2

@@ -113,6 +113,9 @@ solarP = SolarizedPalette
     , green =   "#859900"
     }
 
+-- terminus font strings
+normalFont    = "-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1"
+powerlineFont = "-xos4-terminesspowerline-medium-r-normal--12-120-72-72-c-60-iso10646-1"
 
 -- simple items
 
@@ -162,7 +165,7 @@ solarizedTabs = defaultTheme
     , inactiveBorderColor = myNormalBorderColor
     , activeTextColor     = base2 solarP
     , inactiveTextColor   = base0 solarP
-    , fontName            = "-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1"
+    , fontName            = normalFont
     , decoHeight          = 16
     }
 
@@ -219,7 +222,7 @@ appGrid file = do
     spawnSelected (solarGSC green) apps
 
 -- dmenu argments
-dmenuArgs prompt colorF = [ "-fn", "-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1"
+dmenuArgs prompt colorF = [ "-fn", normalFont
                           , "-p",  prompt
                           , "-nb", base03 solarP
                           , "-nf", base1  solarP

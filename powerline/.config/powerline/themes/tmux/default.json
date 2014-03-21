@@ -1,0 +1,19 @@
+{
+	"default_module": "powerline.segments.common",
+	"segment_data": {
+		"system_load": {
+			"before": "♥ "
+		}
+	},
+	"segments": {
+		"right": [
+			{
+				"name": "system_load",
+				"priority": 50
+			},
+			{
+				"name": "hostname"
+			}
+		]
+	}
+}
