@@ -25,4 +25,4 @@ xmodmap ~/.capscape
 inithome &
 
 # start window manager
-exec xmonad
+exec herbstluftwm --locked

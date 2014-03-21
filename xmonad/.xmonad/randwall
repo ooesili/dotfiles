@@ -1,7 +1,0 @@
-#!/usr/bin/env perl
-
-my @walls = glob "$ENV{HOME}/images/wallpapers/*";
-my $chosen;
-
-$chosen = $walls[rand(@walls)];
-system "feh --bg-fill $chosen";

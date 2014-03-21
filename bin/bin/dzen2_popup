@@ -1,0 +1,199 @@
+#!/usr/bin/perl
+use strict; use warnings;
+use File::Basename;
+
+sub bytef {
+    my @units = qw(kB MB GB TB PB EB ZB YB);
+    my @results;
+    for my $size (@_) {
+        my $i = 0;
+        while ($size > 999) { $i += 1; $size /= 1024; }
+        push @results, sprintf("%.1f %s", $size, $units[$i]);
+    }
+    @results;
+}
+
+# solarized colors
+my $base03="#002b36";
+my $base02="#073642";
+my $base01="#586e75";
+my $base00="#657b83";
+my $base0="#839496";
+my $base1="#93a1a1";
+my $base2="#eee8d5";
+my $base3="#fdf6e3";
+my $yellow="#b58900";
+my $orange="#cb4b16";
+my $red="#dc322f";
+my $magenta="#d33682";
+my $violet="#6c71c4";
+my $blue="#268bd2";
+my $cyan="#2aa198";
+my $green="#859900";
+
+# check for exactly one argument
+exit(1) if @ARGV != 1;
+
+# pipe here so we can print as soon as we figure out the argument
+pipe(my $pread, my $pwrite);
+open STDOUT, ">&", $pwrite; $| = 1;
+
+# stuff that changes depending on the argument
+my ($instance, $x, $lines, $width);
+
+########## MPD ##########
+if ($ARGV[0] eq "mpd") {
+    $instance = "ncmpcpp_home";
+    $width = 300;
+    $lines = 4;
+    $x = 960;
+    print "^fg($base2)mpd\n";
+    chomp(my $format = <<FORMAT);
+ ^fg($green)title:  ^fg()%t
+ ^fg($cyan)track:  ^fg()%N ---> %l
+ ^fg($blue)artist: ^fg()%a
+ ^fg($magenta)album:  ^fg()%b (%y)
+FORMAT
+    system "ncmpcpp", "--now-playing", $format;
+}
+########## MEMORY ##########
+elsif ($ARGV[0] eq "memory") {
+    $instance = "htop_home";
+    $x = 1620;
+    $width = 200;
+    $lines = 2;
+    my %meminfo;
+    open my $fh, "<", "/proc/meminfo";
+    while (<$fh>) {
+        /^([^:]*) :\s* (\d*)/x;
+        $meminfo{$1} = $2;
+    }
+    close $fh;
+    # memory information
+    my $mem_total = $meminfo{'MemTotal'};
+    my $mem = $mem_total -
+        ($meminfo{'MemFree'} + $meminfo{'Buffers'} + $meminfo{'Cached'});
+    my $swap_total = $meminfo{'SwapTotal'};
+    my $swap = $swap_total - $meminfo{'SwapFree'};
+    # write to dzen2
+    print "^fg($base2)memory\n";
+    my $format = <<FORMAT;
+ ^fg($magenta)ram:  ^fg()%s / %s
+ ^fg($violet)swap: ^fg()%s / %s
+FORMAT
+    printf $format, &bytef(
+        $mem, $mem_total,
+        $swap, $swap_total);
+    # filesystem information
+    for (`df --output=source,target,used,size | grep '^/dev/sda'`) {
+        $lines += 1;
+        my ($dev, $target, $used, $size) = split;
+        printf " ^fg($orange)%-5s ^fg()%s / %s\n",
+            $target, &bytef($used, $size);
+    }
+    close $fh;
+}
+########## CPU ##########
+elsif ($ARGV[0] eq "cpu") {
+    $instance = "htop_home";
+    $x = 1415;
+    $width = 250;
+    $lines = 12;
+    # get uptime and load
+    chomp(my $uptime = `uptime -p`);
+    chomp(my $load = `uptime`);
+    $load =~ s/.*load average: (.*)/$1/;
+    # get process stats
+    chomp(my @ps = `ps --sort -%cpu xhao rss,vsz,s,%cpu,cmd`);
+    # -2 to get rid of ps and this process
+    my ($userland, $running) = (-2, 0);
+    my @tops;
+    for (@ps) {
+        my ($rss, $vsz, $stat, $cpu, $cmd) = split;
+        # not perfect, but hey... it works
+        unless ($rss == 0 && $vsz == 0 && $cmd =~ /^\[.*\]$/) {
+            $userland += 1 ;
+            push @tops, sprintf(" %4.1f%% %s\n", $cpu, $cmd) if @tops < 8;
+        }
+        $running  += 1 if $stat eq 'R';
+    }
+    # print to dzen2
+    print "^fg($base2)cpu\n";
+    print <<FORMAT;
+ ^fg($yellow)uptime: ^fg()$uptime
+ ^fg($orange)load:   ^fg()$load
+ ^fg($red)tasks:  ^fg()$userland; $running running
+ ^fg($magenta)top processes:
+FORMAT
+    for (@tops) { print; }
+}
+########## CALENDAR ##########
+elsif ($ARGV[0] eq "calendar") {
+    $width = 66 * 6;
+    $x = 1920 - $width;
+    $lines = 0;
+    print "^fg($base2)calendar\n";
+    my @cal = `env TERM=linux cal -3 --color=always`;
+    for (@cal) {
+        # highlight today
+        s/\e\[\d*m(\d*)\e\[\d*m/^fg($orange)$1^fg()/;
+        # indent
+        s/^/ /;
+        print;
+        $lines += 1;
+    }
+}
+########## NETWORK ##########
+elsif ($ARGV[0] eq "network") {
+    $width = 200;
+    $x = 1260;
+    $lines = 0;
+    my @ips;
+    print "^fg($base2)network\n";
+    for (`ip -4 -o addr`) {
+        if (/^\d*:\s* (\S*) \s*inet\s* (\S*)/x) {
+            printf " ^fg($yellow)%-7s ^fg()%s\n", $1, $2;
+            $lines += 1;
+        }
+    }
+}
+########## VOLUME ##########
+elsif ($ARGV[0] eq "volume") {
+    $width = 33 * 6;
+    $x = 1150;
+    $lines = 2;
+    my $volume;
+    for (`amixer get Master`) {
+        $volume = $1 if /\[(\d+)%\]/;
+    }
+    print "^fg($base2)volume\n";
+    print " ^ca(1, amixer --quiet set Master toggle)0%^ca()",
+        "                         100%\n";
+    print " ^ca(1, amixer --quiet set Master 1-)^fg($yellow)<<^ca() ",
+        sprintf("^fg()%-25s", "=" x ($volume / 4)),
+        " ^ca(1, amixer --quiet set Master 1+)^fg($yellow)>>^ca() \n";
+}
+# bad argument
+else { exit(2); }
+
+# find window to jumpto
+my $winid;
+if (defined($instance)) {
+    my @all_winids = `herbstclient complete_shell 1 object_tree clients.`;
+    for (@all_winids) {
+        /\.([^.]*)\./;
+        chomp(my $this_inst = `herbstclient get_attr clients.$1.instance`);
+        $winid = $1 if $this_inst eq $instance;
+    }
+}
+
+# pipe and fork dzen2
+my $pid = fork;
+if ($pid == 0) {
+    open STDIN, ">&", $pread;
+    my @args = ("-l", $lines, "-p", "-x", $x, "-y", 16, "-w", $width,
+        "-e", "onstart=uncollapse;button1=exit;");
+    $args[$#args] .= "button3=exec:herbstclient jumpto $winid,exit"
+        if (defined($instance));
+    exec "dzen2", @args;
+}

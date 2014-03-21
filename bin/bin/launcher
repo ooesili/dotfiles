@@ -1,0 +1,84 @@
+#!/usr/bin/perl
+use strict; use warnings;
+use File::Basename;
+$0 = basename $0;
+
+# solarized colors
+my $base03="#002b36";
+my $base02="#073642";
+my $base01="#586e75";
+my $base00="#657b83";
+my $base0="#839496";
+my $base1="#93a1a1";
+my $base2="#eee8d5";
+my $base3="#fdf6e3";
+my $yellow="#b58900";
+my $orange="#cb4b16";
+my $red="#dc322f";
+my $magenta="#d33682";
+my $violet="#6c71c4";
+my $blue="#268bd2";
+my $cyan="#2aa198";
+my $green="#859900";
+
+BEGIN {
+    sub usage {
+        warn "usage: $0 [filename]\n";
+        exit(1);
+    }
+
+    if (@ARGV == 1 and not -f $ARGV[0]) {
+        warn "$0: cannot find file `$ARGV[0]'\n";
+        &usage;
+    }
+    elsif (@ARGV > 1) {
+        warn "$0: too many arguments\n";
+        &usage;
+    }
+}
+
+# open pipes
+pipe(my $read_list, my $write_list)
+    or die "$0: cannot create pipe: $!\n";
+pipe(my $read_choice, my $write_choice)
+    or die "$0: cannot create pipe: $!\n";
+
+# fork dmenu, write to it, read from it, launch the result
+my $pid = fork;
+die "$0: cannot fork: $!\n" if !defined($pid);
+if ($pid == 0) {
+    # replace STDIN and STDOUT with pipes
+    open STDIN, "<&", $read_list;
+    open STDOUT, ">&", $write_choice;
+    exec "dmenu -fn '-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso8859-1' -p 'run>' -nb '$base02' -nf '$base1' -sb '$green' -sf '$base3'";
+}
+else {
+    # feed file to dmenu
+    if (@ARGV == 1) {
+        open my $fh, "<", "$ARGV[0]" 
+            or die "$0: cannot open file: $!\n";
+        # write to dmenu
+        select $write_list;
+        while (<$fh>) { print; }
+        # close and wait
+        close $fh;
+    }
+    # write programs in $PATH to dmenu
+    else {
+        my $path_pid = fork;
+        die "$0: cannot fork: $!\n" if !defined($path_pid);
+        if ($path_pid == 0) {
+            open STDOUT, ">&", $write_list;
+            exec "dmenu_path";
+        }
+        else {
+            wait;
+        }
+    }
+    close $write_list; wait;
+    unless ($?) {
+        chomp(my $choice = readline $read_choice);
+        close $read_choice;
+        exec "$choice";
+    }
+}

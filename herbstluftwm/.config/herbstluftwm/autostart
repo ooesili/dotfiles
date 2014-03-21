@@ -1,0 +1,308 @@
+#!/bin/bash
+
+# solarized colors
+base03="#002b36"
+base02="#073642"
+base01="#586e75"
+base00="#657b83"
+base0="#839496"
+base1="#93a1a1"
+base2="#eee8d5"
+base3="#fdf6e3"
+yellow="#b58900"
+orange="#cb4b16"
+red="#dc322f"
+magenta="#d33682"
+violet="#6c71c4"
+blue="#268bd2"
+cyan="#2aa198"
+green="#859900"
+
+# makes relative paths shorter
+CONF_DIR=~/.config/herbstluftwm
+
+# this is a simple config for herbstluftwm
+hc() {
+    herbstclient "$@"
+}
+
+hc emit_hook reload
+
+
+########## KEYBINDINGS ##########
+# remove all existing keybindings
+hc keyunbind --all
+
+# keybindings
+# if you have a super key you will be much happier with Mod set to Mod4
+Mod=Mod1    # Use alt as the main modifier
+#Mod=Mod4   # Use the super key as the main modifier
+
+hc keybind $Mod-Shift-q spawn sh -c\
+    "herbstclient emit_hook quit_panel; sleep 1; herbstclient quit"
+hc keybind $Mod-Shift-r reload
+hc keybind $Mod-Shift-c close
+hc keybind $Mod-Return spawn st
+
+# basic movement
+# focusing clients
+hc keybind $Mod-Left  focus left
+hc keybind $Mod-Down  focus down
+hc keybind $Mod-Up    focus up
+hc keybind $Mod-Right focus right
+hc keybind $Mod-h     focus left
+hc keybind $Mod-j     focus down
+hc keybind $Mod-k     focus up
+hc keybind $Mod-l     focus right
+
+# moving clients
+hc keybind $Mod-Shift-Left  shift left
+hc keybind $Mod-Shift-Down  shift down
+hc keybind $Mod-Shift-Up    shift up
+hc keybind $Mod-Shift-Right shift right
+hc keybind $Mod-Shift-h     shift left
+hc keybind $Mod-Shift-j     shift down
+hc keybind $Mod-Shift-k     shift up
+hc keybind $Mod-Shift-l     shift right
+
+# splitting frames
+# create an empty frame at the specified direction
+hc keybind $Mod-u       split   bottom  0.5
+hc keybind $Mod-o       split   right   0.5
+# let the current frame explode into subframes
+hc keybind $Mod-Control-space split explode
+
+# resizing frames
+resizestep=0.05
+hc keybind $Mod-Control-h       resize left +$resizestep
+hc keybind $Mod-Control-j       resize down +$resizestep
+hc keybind $Mod-Control-k       resize up +$resizestep
+hc keybind $Mod-Control-l       resize right +$resizestep
+hc keybind $Mod-Control-Left    resize left +$resizestep
+hc keybind $Mod-Control-Down    resize down +$resizestep
+hc keybind $Mod-Control-Up      resize up +$resizestep
+hc keybind $Mod-Control-Right   resize right +$resizestep
+
+# layouting
+hc keybind $Mod-r remove
+hc keybind $Mod-space cycle_layout 1
+hc keybind $Mod-s floating toggle
+hc keybind $Mod-f fullscreen toggle
+hc keybind $Mod-p pseudotile toggle
+
+# mouse
+hc mouseunbind --all
+hc mousebind $Mod-Button1 move
+hc mousebind $Mod-Button2 zoom
+hc mousebind $Mod-Button3 resize
+
+# focus
+hc keybind $Mod-BackSpace   cycle_monitor
+hc keybind $Mod-Tab         cycle +1
+hc keybind $Mod-Shift-Tab   cycle -1
+hc keybind $Mod-i jumpto urgent
+
+# ncmpcpp
+hc keybind $Mod-z spawn ncmpcpp prev
+hc keybind $Mod-x spawn ncmpcpp play
+hc keybind $Mod-c spawn ncmpcpp pause
+hc keybind $Mod-v spawn ncmpcpp stop
+hc keybind $Mod-b spawn ncmpcpp next
+hc keybind $Mod-F1 spawn amixer --quiet set Master toggle
+hc keybind $Mod-F2 spawn amixer --quiet set Master 1-
+hc keybind $Mod-F3 spawn amixer --quiet set Master 1+
+
+# vim pane switching helpers
+hc keybind Mod3-f spawn sh -c "xdotool keyup f; xdotool key --clearmodifiers ctrl+w w"
+hc keybind Mod3-d spawn sh -c "xdotool keyup d; xdotool key --clearmodifiers ctrl+w W"
+# close
+hc keybind Mod3-q spawn sh -c "xdotool keyup q; xdotool key --clearmodifiers ctrl+w q"
+# split panes
+hc keybind Mod3-s spawn sh -c "xdotool keyup s; xdotool key --clearmodifiers ctrl+w s"
+hc keybind Mod3-v spawn sh -c "xdotool keyup v; xdotool key --clearmodifiers ctrl+w v"
+
+# application launcing
+hc keybind $Mod-m spawn launcher $CONF_DIR/apps
+hc keybind $Mod-Shift-m spawn launcher
+hc keybind $Mod-d spawn firefox -P default
+
+
+########## SETUP TAGS AND RELATED KEYBINDINGS ##########
+hc set default_frame_layout 2
+floatmon=floatmon
+tag_names=( 0001 0010 0011 0100 0101 0110 0111 1000 1001 )
+tag_keys=( {1..9} 0 )
+
+# set up normal tags
+hc rename default "${tag_names[0]}" || true
+for i in ${!tag_names[@]} ; do
+    hc add "${tag_names[$i]}"
+done
+
+# setup floating tags
+for i in ${!tag_names[@]} ; do
+    tag=${tag_names[$i]}
+    # add floating tags
+    hc and , add "f_$tag" , floating "f_$tag" on
+    # add floating refence to normal tiling tags
+    hc and , new_attr string "tags.by-name.${tag}.my_floating" ,\
+                    set_attr "tags.by-name.${tag}.my_floating" "f_$tag"
+    # add floating refence to normal floating tags
+    hc and , new_attr string "tags.by-name.f_${tag}.my_floating" ,\
+                    set_attr "tags.by-name.f_${tag}.my_floating" "f_$tag"
+    # add floating-aware bindings for tag switching
+    key="${tag_keys[$i]}"
+    if ! [ -z "$key" ] ; then
+        hc keybind $Mod-$key and .\
+            lock .\
+            emit_hook daemon_lock .\
+            focus_monitor "$floatmon" .\
+            use "f_${tag}" .\
+            focus_monitor 0 .\
+            emit_hook daemon_unlock .\
+            use "$tag" .\
+            unlock
+        float_move=(
+        or  case: and
+                # if on floatmon, move to floating tag
+                . compare monitors.focus.name = "$floatmon"
+                . move "f_${tag}"
+                . true
+            case:
+                move "$tag"
+        )
+        hc keybind $Mod-Shift-$key "${float_move[@]}"
+    fi
+done
+
+
+########## FLOATING MONITOR ##########
+# setup floating monitor
+geometry=( $(herbstclient monitor_rect 0) )
+size="${geometry[2]}x${geometry[3]}"
+hc substitute TAG tags.focus.my_floating \
+    or , add_monitor "$size"+0+0 TAG "$floatmon" \
+       , move_monitor "$floatmon" "$size"+0+0
+hc raise_monitor "$floatmon"
+hc keybind $Mod-Shift-x emit_hook quit_panel
+
+float_shift=(
+or  case: and
+        # if not on floating monitor
+        . compare monitors.focus.name != "$floatmon"
+        # and if a client is focused
+        . get_attr clients.focus.winid
+        # move the client to the floating tag
+        . shift_to_monitor "$floatmon"
+        . focus_monitor "$floatmon"
+        . true
+    case: and
+        # if on the floating monitor
+        . compare monitors.focus.name = "$floatmon"
+        # and if a client is focused
+        . get_attr clients.focus.winid
+        # then send it down to tiling tag
+        . shift_to_monitor 0
+        . focus_monitor 0
+        . true
+    case: and
+        # if the previous things fail,
+        # just move to the first monitor
+        . shift_to_monitor 0
+        . focus_monitor 0
+)
+hc keybind $Mod-Shift-n "${float_shift[@]}"
+float_use=(
+or  case: and
+        # if not on floating monitor
+        . compare monitors.focus.name != "$floatmon"
+        # move the client to the floating tag
+        . focus_monitor "$floatmon"
+        . true
+    case: and
+        # if on the floating monitor
+        . compare monitors.focus.name = "$floatmon"
+        # then send it down to tiling tag
+        . focus_monitor 0
+        . true
+    case: and
+        # if the previous things fail,
+        # just move to the first monitor
+        . focus_monitor 0
+)
+hc keybind $Mod-n "${float_use[@]}"
+
+
+########## SETTINGS ##########
+# blend frame and window borders
+hc set frame_border_active_color $red
+hc set frame_border_normal_color $base01
+hc set frame_bg_normal_color $base01
+hc set frame_bg_active_color $red
+hc set window_border_normal_color $base02
+hc set window_border_active_color $red
+# border styles
+hc set frame_border_width 0
+hc set window_border_width 2
+hc set window_border_inner_width 0
+hc set always_show_frame 0
+hc set frame_bg_transparent 1
+hc set frame_transparent_width 5
+hc set frame_gap 20
+# add overlapping window borders
+hc set window_gap -2
+hc set frame_padding 2
+hc set smart_window_surroundings 0
+hc set smart_frame_surroundings 1
+hc set mouse_recenter_gap 0
+hc set focus_crosses_monitor_boundaries 0
+
+########## RULES ##########
+hc unrule -F
+hc rule focus=on # focus new clients
+hc rule monitor=0
+# rules for various window types
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' monitor=$floatmon
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK)' monitor=$floatmon
+hc rule title='AutoChord' monitor=$floatmon
+
+# layout and rules for mixer tag
+hc load 1000\
+    '(split horizontal:0.658000:0
+        (clients max:0 0x2400001)
+        (split vertical:0.883000:0
+            (clients vertical:0 0x1200013) (clients max:0 0x1200004)
+        )
+    )'
+hc rule class='Qjackctl' tag=1000
+hc rule class='Qjackctl' index='10'
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' class='Qjackctl' tag=1000
+hc rule title~'^JACK Audio Connection Kit.*' index='11'
+hc rule instance="ardour_mixer" tag=1000
+hc rule instance="ardour_mixer" index='0'
+hc rule title="Session Setup" index='0'
+
+# layout and rules for ardour tag
+hc rule instance="ardour_editor" tag=1001
+
+# unlock, just to be sure
+hc unlock
+
+herbstclient set tree_style '─│ ├└──┐'
+
+# do multi monitor setup here, e.g.:
+# hc set_monitors 1280x1024+0+0 1280x1024+1280+0
+# or simply:
+# hc detect_monitors
+
+########## PANEL ##########
+
+# find the panel
+panel=$CONF_DIR/hlwmd
+[ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
+for monitor in $(hc list_monitors | grep -v "named \"$floatmon\"" | cut -d: -f1); do
+    # start it on each monitor
+    if [[ $monitor != $floatmon ]]; then
+        "$panel" $monitor &> /dev/null &
+    fi
+done

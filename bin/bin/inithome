@@ -1,8 +1,18 @@
 #!/usr/bin/perl
 use strict; use warnings;
 
+
+# setup layout
+system "herbstclient", "load", <<LAYOUT;
+(split horizontal:0.500000:0
+    (clients vertical:0)
+    (clients vertical:0))
+LAYOUT
+system qw(herbstclient rule --once instance=htop_home    index=1);
+system qw(herbstclient rule --once instance=ncmpcpp_home index=0);
+
 # start htop, plain and simple
-system 'st -e htop &';
+system 'st -c htop_home -e htop &';
 
 # grab pid_file from mpd.conf
 open(my $mpdconf, '<', '/etc/mpd.conf')
@@ -21,7 +31,7 @@ close $mpdconf;
 # wait 10 seconds for mpd to start
 for (1..10) {
     if ( -e $pidfile ) {
-        system 'st -e ncmpcpp &';
+        system 'st -c ncmpcpp_home -e ncmpcpp &';
         last;
     } else {
         sleep 1;

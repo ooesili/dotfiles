@@ -1,0 +1,246 @@
+#!/usr/bin/perl
+use strict; use warnings;
+use File::Basename;
+use POSIX qw(strftime);
+$0 = basename $0;
+
+##### DETECT SETTINGS #####
+# solarized colors
+my $base03="#002b36";
+my $base02="#073642";
+my $base01="#586e75";
+my $base00="#657b83";
+my $base0="#839496";
+my $base1="#93a1a1";
+my $base2="#eee8d5";
+my $base3="#fdf6e3";
+my $yellow="#b58900";
+my $orange="#cb4b16";
+my $red="#dc322f";
+my $magenta="#d33682";
+my $violet="#6c71c4";
+my $blue="#268bd2";
+my $cyan="#2aa198";
+my $green="#859900";
+
+# error reporting function
+sub errx {
+    my ($mesg, $code) = @_;
+    warn "$0: $mesg\n";
+    exit(defined($code) ? $code : 1);
+}
+
+# detect monitors
+my $monitor = @ARGV ? $ARGV[0] : 0;
+my $geometry = `herbstclient monitor_rect "$monitor"`;
+&errx("Invalid monitor `$monitor'") if ($geometry eq '');
+my ($x, $y, $screen_width, $screen_height) = split / /, $geometry;
+my $panel_height = 14;
+
+# font and colors
+my $font = "-xos4-terminesspowerline-medium-r-normal--12-120-72-72-c-60-iso10646-1";
+my $selbg = $red;
+my $selfg = $base3;
+my $sep = "^bg()^fg($selbg) | ";
+
+# general settings
+my $max_title_len = 60;
+
+##### CHECK SYSTEM CAPABILITIES #####
+# Try to find textwidth binary.
+# In e.g. Ubuntu, this is named dzen2-textwidth.
+my $textwidth;
+if (!system "which textwidth &> /dev/null") {
+    $textwidth = "textwidth";
+}
+elsif (!system "which dzen2-textwidth &> /dev/null") {
+    $textwidth = "dzen2-textwidth";
+}
+else {
+    &errx("This script requires the textwidth tool of the dzen2 project");
+}
+
+####
+# true if we are using the svn version of dzen2
+# depending on version/distribution, this seems to have version strings like
+# "dzen-" or "dzen-x.x.x-svn"
+my $dzen2_svn;
+{
+    my @version = `dzen2 -v 2>&1`;
+    $dzen2_svn = $version[0] =~ /^dzen-([^,]*-svn|),/ ? 1 : 0;
+}
+
+# add pad for panel
+system "herbstclient pad $monitor $panel_height\n";
+system "herbstclient pad floatmon $panel_height\n";
+
+##### DEFINE GERNATOR FUNCTIONS #####
+# here's where it gets fun
+pipe(my $from_piper, my $to_bar);
+# fork and start generator function
+sub piper {
+    my $func = shift;
+    my $pid = fork;
+    &errx("cannot fork: $!") if (not defined $pid);
+    # child process
+    if ($pid == 0) {
+        # re-open stdout
+        open STDOUT, ">&", $to_bar;
+        # flush input after every line
+        $| = 1;
+        &{$func};
+        exit(0);
+    }
+    else {
+        return $pid;
+    }
+}
+
+# generator functions
+sub p_hooker {
+    exec "herbstclient", "--idle";
+}
+
+sub p_conky {
+    # prepare pipe for conky
+    my $line; my $old_line = "";
+    pipe(my $read_pipe, my $write_pipe)
+        or &errx("cannot create pipe for conky");
+    # fork and only print unique lines
+    my $pid = fork;
+    &errx("cannot fork: $!") if (not defined $pid);
+    if ($pid == 0) {
+        open STDOUT, ">&", $write_pipe;
+        exec "conky";
+    }
+    else {
+        while ($line = readline $read_pipe) {
+            if ($line ne $old_line) {
+                print "conky\t$line";
+                $old_line = $line;
+            }
+        }
+    }
+}
+
+##### PIPE GERNATOR FUNCTIONS TO DZEN2 #####
+{
+    # keep track of daemon_lock and daemon_unlock hooks
+    my $daemon_lock = 0;
+    # keep track of whether any visual elements have changed
+    my $redraw = 1, my $get_new_tags = 1;
+    # start pipes
+    my @kids;
+    push @kids, &piper(\&p_hooker); my $title = "";
+    push @kids, &piper(\&p_conky);  my $conky  = "";
+    # open pipe to dzen
+    pipe (my $dzen_read, my $dzen);
+    {
+        my $pid = fork;
+        &errx("cannot fork: $!") if (not defined $pid);
+        if ($pid == 0) {
+            open STDIN, ">&", $dzen_read;
+            exec "dzen2 -w '$screen_width' -x '$x' -y '$y' -h '$panel_height' -e 'button3=' -ta l";
+        }
+        push @kids, $pid;
+    }
+    my (%tag_stat, @tags, $tag_text, $line);
+    # grab tag status
+    sub get_tags {
+        my @all_tags = split /\t/, `herbstclient tag_status $monitor`;
+        # clear tags
+        undef @tags;
+        # cut off first and last tabs
+        for (@all_tags[1..$#all_tags-1]) {
+            my $name = substr $_, 1;
+            $tag_stat{$name} = substr $_, 0, 1;
+            push @tags, $name unless $name =~ /^f_/;
+        }
+    }
+    # parse input from pipe
+    select $dzen; $| = 1;
+    &get_tags;
+    while (1) {
+        ### TAG PRINTING ###
+        # print tags
+        if ($redraw) {
+            # only update tag text if we need to
+            if ($get_new_tags) {
+                $get_new_tags = 0;
+                # clear tag text
+                $tag_text = "";
+                for (grep {!/^f_/} @tags) {
+                    # choose tag color
+                    if    ($tag_stat{$_} eq '#') {
+                        $tag_text .= "^bg($selbg)^fg($selfg)";
+                    }
+                    elsif ($tag_stat{$_} eq '+') {
+                        $tag_text .= "^bg($green)^fg($base03)";
+                    }
+                    elsif ($tag_stat{$_} eq ':' or $tag_stat{"f_$_"} eq ':')  {
+                        $tag_text .= "^bg($base01)^fg($base3)";
+                    }
+                    elsif ($tag_stat{$_} eq '!')  {
+                        $tag_text .= "^bg($magenta)^fg($base03)";
+                    }
+                    else          { $tag_text .= "^bg()^fg($base01)"; }
+                    if ($dzen2_svn and 0) {
+                        # clickable tags if using SVN dzen
+                        $tag_text .= "^ca(1,'herbstclient' "
+                            . "focus_monitor '$monitor' && "
+                            . "'herbstclient' "
+                            . "use '$_') $_ ^ca()";
+                    }
+                    else {
+                        # non-clickable tags if using older dzen
+                        $tag_text .= " $_ ";
+                    }
+                }
+            }
+            # print left side
+            print "${tag_text}${sep}^fg($green)$title";
+            # print right side
+            my $right_text_only = $conky;
+            $right_text_only =~ s|\^[^(]*\([^)]*\)||g;
+            my $width = $screen_width - `$textwidth '$font' "$right_text_only"`;
+            print "^pa($width)$conky";
+            print "\n";
+            $redraw = 0;
+        }
+        ### DATA HANDLING ###
+        chomp($line = readline $from_piper);
+        my ($cmd, @data) = split /\t/, $line;
+        if ($cmd eq "daemon_unlock") {
+            $daemon_lock = 0;
+        }
+        unless ($daemon_lock) {
+            if ($cmd =~ /^tag/) {
+                &get_tags;
+                $redraw = 1;
+                $get_new_tags = 1;
+            }
+            elsif ($cmd eq "daemon_lock") {
+                $daemon_lock = 1;
+                $redraw = 1;
+            }
+            elsif ($cmd eq "conky") {
+                $conky = $data[0];
+                $redraw = 1;
+            }
+            elsif ($cmd eq "focus_changed" or $cmd eq "window_title_changed") {
+                $title = $data[1];
+                # slice title if it's too long
+                $title = "" if !defined $title;
+                if (length $title > $max_title_len) {
+                    $title = substr($title, 0, $max_title_len) . "...";
+                }
+                $redraw = 1;
+            }
+            elsif ($line eq "quit_panel" or $line eq "reload") {
+                # kill all children
+                for (@kids) { kill "SIGTERM", $_; }
+                exit;
+            }
+        }
+    }
+}
