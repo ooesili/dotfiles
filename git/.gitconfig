@@ -3,6 +3,8 @@
 	email = ooesili@gmail.com
 [color]
 	ui = true
+[color "diff"]
+	meta = blue
 [alias]
 	ci   = commit
 	l    = log
