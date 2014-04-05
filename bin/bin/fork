@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+use strict; use warnings;
+use File::Basename;
+$0 = basename $0;
+
+my $pid = fork;
+die "$0: cannot fork: $!\n" if !defined($pid);
+if ($pid == 0) {
+    open STDOUT, '>', '/dev/null';
+    open STDERR, '>', '/dev/null';
+    exec @ARGV;
+}
+else {
+    exit (0);
+}
