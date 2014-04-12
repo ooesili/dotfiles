@@ -27,7 +27,7 @@
 	url = https://github.com/tpope/vim-repeat.git
 [submodule ".vim/bundle/snipmate.vim"]
 	path = vim/.vim/bundle/snipmate.vim
-	url = https://github.com/msanders/snipmate.vim.git
+	url = https://github.com/ooesili/snipmate.vim.git
 [submodule ".vim/bundle/scvim"]
 	path = vim/.vim/bundle/scvim
 	url = git://github.com/sbl/scvim.git
