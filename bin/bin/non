@@ -1,0 +1,3 @@
+#!/bin/sh
+non-session-manager
+jack_control quit && jack_control exit

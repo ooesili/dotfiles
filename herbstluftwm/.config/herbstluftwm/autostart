@@ -265,10 +265,15 @@ hc rule monitor=0
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' monitor=$floatmon
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK)' monitor=$floatmon
 hc rule title='AutoChord' monitor=$floatmon
+# non rules
+hc rule instance~"Non-(DAW|Mixer|Session-Manager)" monitor=$floatmon
+hc rule title="Non Mixer"           monitor=0 tag=1000 index='0'
+hc rule title="Non Session Manager" monitor=0 tag=1001
+hc rule title="Non Timeline"        monitor=0 tag=1001
 
 # layout and rules for mixer tag
 hc load 1000\
-    '(split horizontal:0.658000:0
+    '(split horizontal:0.635000:0
         (clients max:0 0x2400001)
         (split vertical:0.883000:0
             (clients vertical:0 0x1200013) (clients max:0 0x1200004)
@@ -278,12 +283,6 @@ hc rule class='Qjackctl' tag=1000
 hc rule class='Qjackctl' index='10'
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' class='Qjackctl' tag=1000
 hc rule title~'^JACK Audio Connection Kit.*' index='11'
-hc rule instance="ardour_mixer" tag=1000
-hc rule instance="ardour_mixer" index='0'
-hc rule title="Session Setup" index='0'
-
-# layout and rules for ardour tag
-hc rule instance="ardour_editor" tag=1001
 
 # unlock, just to be sure
 hc unlock
