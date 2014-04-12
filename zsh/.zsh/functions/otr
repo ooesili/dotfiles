@@ -2,7 +2,7 @@ if [[ -z $OTR ]]; then
     local temp_hist
     temp_hist="$(mktemp)"
     cp -f "$HISTFILE" "$temp_hist"
-    env "OTR=$temp_hist" "$SHELL"
+    env "DIRSTACKFILE=/dev/null" "OTR=$temp_hist" "$SHELL"
     rm "$temp_hist"
 else
     exit 0
