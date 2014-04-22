@@ -357,11 +357,15 @@ function zstyle_update {
 }
 # color customizations
 zstyle :prompt:grml:*:items:user pre %F{blue}
+# display NOIP if were in the noip group
+if [[ `grep -R '^noip' /etc/group | sed 's/^noip:[^:]*:\([^:]*\):.*$/\1/'`\
+        -eq $GID ]]; then
+    zstyle_update ':prompt:grml:*:items:percent' pre %F{yellow}NOIP:%f
+fi
 # display OTR, then turn off history
 if [[ -n $OTR ]]; then
     zstyle_update ':prompt:grml:*:items:percent' pre %F{red}OTR:%f
     HISTFILE="$OTR"
-else
 fi
 # dislapy R:% if in ranger sub-shell
 if [[ -n $RANGER_LEVEL ]]; then

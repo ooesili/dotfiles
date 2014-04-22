@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+use strict; use warnings;
+
+my @args = @ARGV;
+map {s/'/\\'/rg} @args;
+my $argstr = join("' '", @ARGV);
+exec 'sg', 'noip', '-c', "'$argstr'";

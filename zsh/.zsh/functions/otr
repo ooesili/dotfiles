@@ -1,8 +1,10 @@
 if [[ -z $OTR ]]; then
-    local temp_hist
+    local temp_hist precmd
+    # turn if network connection if called with -i
+    [[ $1 == '-i' ]] && precmd="noip"
     temp_hist="$(mktemp)"
     cp -f "$HISTFILE" "$temp_hist"
-    env "DIRSTACKFILE=/dev/null" "OTR=$temp_hist" "$SHELL"
+    $precmd env "DIRSTACKFILE=/dev/null" "OTR=$temp_hist" "$SHELL"
     rm "$temp_hist"
 else
     exit 0
