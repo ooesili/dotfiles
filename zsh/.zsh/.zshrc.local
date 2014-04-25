@@ -389,6 +389,13 @@ export LESS_TERMCAP_so="[0;34m"  # begin standout [info box]
 export LESS_TERMCAP_se="[0m"     # end standout
 
 # enable qfi directory-swiching
-emulate sh -c 'source /usr/share/qfi/wrapper.sh'
+if [[ -f '/usr/share/qfi/wrapper.sh' ]]; then
+    emulate sh -c 'source /usr/share/qfi/wrapper.sh'
+fi
+
+# turn on syntax highlighting
+if [[ -f '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' ]]; then
+    source '/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
+fi
 
 ## END OF FILE #################################################################
