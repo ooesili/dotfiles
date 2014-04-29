@@ -38,8 +38,7 @@ hc keyunbind --all
 Mod=Mod1    # Use alt as the main modifier
 #Mod=Mod4   # Use the super key as the main modifier
 
-hc keybind $Mod-Shift-q spawn sh -c\
-    "herbstclient emit_hook quit_panel; sleep 1; herbstclient quit"
+hc keybind $Mod-Shift-q emit_hook quit_panel
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
 hc keybind $Mod-Return spawn st

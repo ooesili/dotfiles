@@ -97,8 +97,10 @@ sub piper {
 }
 
 # generator functions
+my $ppid = $$;
 sub p_hooker {
-    exec "herbstclient", "--idle";
+    system "herbstclient", "--idle";
+    kill "TERM", $ppid;
 }
 
 sub p_conky {
@@ -129,8 +131,11 @@ sub p_conky {
     my $daemon_lock = 0;
     # keep track of whether any visual elements have changed
     my $redraw = 1, my $get_new_tags = 1;
-    # start pipes
+    # signal handling
     my @kids;
+    sub killall { for (@kids) { kill "SIGTERM", $_; } }
+    $SIG{"TERM"} = sub { &killall; exit; };
+    # start pipes
     push @kids, &piper(\&p_hooker); my $title = "";
     push @kids, &piper(\&p_conky);  my $conky  = "";
     # open pipe to dzen
@@ -236,10 +241,11 @@ sub p_conky {
                 }
                 $redraw = 1;
             }
-            elsif ($line eq "quit_panel" or $line eq "reload") {
-                # kill all children
-                for (@kids) { kill "SIGTERM", $_; }
-                exit;
+            elsif ($line eq "quit_panel") {
+                &killall; exec "herbstclient", "quit";
+            }
+            elsif ($line eq "reload") {
+                &killall; exit;
             }
         }
     }
