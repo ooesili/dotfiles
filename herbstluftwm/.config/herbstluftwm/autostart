@@ -124,6 +124,7 @@ hc keybind Mod3-v spawn sh -c "xdotool keyup v; xdotool key --clearmodifiers ctr
 hc keybind $Mod-m spawn launcher $CONF_DIR/apps
 hc keybind $Mod-Shift-m spawn launcher
 hc keybind $Mod-d spawn firefox -P default
+hc keybind $Mod-Escape spawn slimlock
 
 
 ########## SETUP TAGS AND RELATED KEYBINDINGS ##########
@@ -247,7 +248,7 @@ hc set window_border_inner_width 0
 hc set always_show_frame 0
 hc set frame_bg_transparent 1
 hc set frame_transparent_width 5
-hc set frame_gap 20
+hc set frame_gap 19
 # add overlapping window borders
 hc set window_gap -2
 hc set frame_padding 2
@@ -263,6 +264,7 @@ hc rule monitor=0
 # rules for various window types
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' monitor=$floatmon
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK)' monitor=$floatmon
+hc rule class='MPlayer' monitor=$floatmon
 hc rule title='AutoChord' monitor=$floatmon
 # non rules
 hc rule instance~"Non-(DAW|Mixer|Session-Manager)" monitor=$floatmon
