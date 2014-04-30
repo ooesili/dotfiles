@@ -11,5 +11,12 @@ if [[ -z $GPG_AGENT_INFO || $(echo $GPG_AGENT_INFO | cut -d: -f2\
     eval $(gpg-agent --daemon --write-env-file ~/.gnupg/agent-info)
 fi
 export GPG_AGENT_INFO
+# source ssh-agent environment file
+[[ -f $HOME/.ssh/agent-info ]] && source $HOME/.ssh/agent-info
+# run ssh-agent if it's not already active
+if [[ -z $SSH_AGENT_PID ||\
+        $(ps -o command= -c -p $SSH_AGENT_PID) != 'ssh-agent' ]]; then
+    eval $(ssh-agent -a $SSH_AUTH_SOCK | head -2 | tee ~/.ssh/agent-info)
+fi
 
 # vim: ft=sh
