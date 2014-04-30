@@ -1,23 +1,23 @@
 dotfiles
 ====================
 
-### Introduction
+# Introduction
 
 My configuration files are organized by application. I recommend cloning this
 repository into `$HOME/.dotfiles` and using [GNU Stow][1] to symlink the files
 into place. I use [Arch Linux][2], so these files will work best with Arch, but
 they will probably work just fine on another distribution (with a few tweaks).
 
-### Dependencies and Descriptions
+# Dependencies and Descriptions
 
-# bin
+### bin
 
 The scripts in `bin` depend on a variety of different programs. If they don't
 work, take a peep in to the code, none of them are complicated. Most of them
 are written in Perl, but you'll probably already have it installed, as `git`
 depends on it.
 
-# conky
+### conky
 
 The `conkyrc` file was made to be used with the [conky-cli][3] package (it's
 written to be text only).
@@ -28,7 +28,7 @@ more than likely have to change a few things in `conkyr` because your computer
 will probably have different names for network devices and different hardware
 thermometers than my computer.
 
-# ghc
+### ghc
 
 This directory contains my `ghci` prompt and a nifty wrapper that provides
 colour support for `ghci`. It goes without saying that depends on `ghc`. 
@@ -39,7 +39,7 @@ Haskell (and most programming languages) simply cannot be parsed with
 non-recursive regular expressions, so the output can sometimes look a little
 wonky.
 
-# git
+### git
 
 Depends on `git`. Duh.
 
@@ -47,13 +47,13 @@ Definitely check out the aliases. Also note that, if you use this, make sure to
 change `user.name` and `user.email`. I don't want anyone out there
 impersonating me :)
 
-# gtk
+### gtk
 
 You won't get any use out of this if you don't use any gtk2 applications. The
 theme is [Nmix Solarized][4], the icon theme is plain old [Numix][5], and the
 cursor theme is [OpenZone][6].
 
-# herbstluftwm
+### herbstluftwm
 
 I use [herbstluftwm-git][7], but it will probably work fine with the not-git
 version. You'll likely need to stow the Xorg and conky directories.
@@ -69,54 +69,50 @@ I have the 8th and 9th tags configured for use with [non-daw][19] and
 [qjackctl][20], so delete the appropriate rules in `autostart` (they labeled
 with comments) if you don't want the existing behavior.
 
-# htop
+### htop
 
 Depends on nothing else.
 
-# ncmpcpp
+### ncmpcpp
 
 `ncmpcpp` is a front end for [MPD][10], so you will need to have `mpd`
 installed and configured to use this one.
 
-# powerline
+### powerline
 
 This one should be stowed if you are going to use `tmux` or `vim`. It needs the
 [Terminess][9] font, and the [powerline][11] package.
 
-# ranger
+### ranger
 
 Depends on nothing else.
 
-# tmux
+### tmux
 
 Depends on the `powerline` directory and [Terminess][9] to work properly, but
 it will work (it won't look pretty), without them.
 
-# vim
+### vim
 
 Optionally depends on the `powerline` directory (python2 support is needed for
 this to work). The submodules need to be initialized for vim to properly.
 
-# w3m
+### w3m
 
 Depends on nothing else.
 
-# Xorg
+### Xorg
 
 This directory is for starting and configuring the `Xorg` environment. The
 `xinitrc` script calls quite a few program, which are listed here:
 
  * [unclutter][14]
-
  * [feh][15]
-
  * [xsetroot][16]
-
  * [xmodmap][17]
-
  * The `herbstluftwm` directory *needs* to be stowed for this work as is.
 
-# zsh
+### zsh
 
 The only things this one really "depends" on are the various programs used in
 the `aliases` file. It uses the [grml-zsh][13] system, but it's all bundled up
