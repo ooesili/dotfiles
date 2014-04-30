@@ -63,8 +63,8 @@ ${else}^fg(\#cb4b16)(stopped)${endif} ^fg()${mpd_bar} ^fg(\#dc322f)| \
 ^fg(\#b58900)vol: ^fg()${mpd_vol}% ^fg(\#dc322f)| \
 ^ca()\
 ^ca(1, dzen2_popup network)\
-^fg(\#268bd2)down: ^fg()${downspeed eth0} - \
-^fg(\#b58900)up: ^fg()${upspeed eth0} ^fg(\#dc322f)| \
+^fg(\#268bd2)down: ^fg()${downspeed enp1s0} - \
+^fg(\#b58900)up: ^fg()${upspeed enp1s0} ^fg(\#dc322f)| \
 ^ca()\
 ^ca(1, dzen2_popup cpu)\
 ^fg(\#2aa198)cpu: ^fg()${cpu cpu0}% - \
