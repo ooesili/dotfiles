@@ -16,6 +16,7 @@ export GPG_AGENT_INFO
 # run ssh-agent if it's not already active
 if [[ -z $SSH_AGENT_PID ||\
         $(ps -o command= -c -p $SSH_AGENT_PID) != 'ssh-agent' ]]; then
+    rm -f ~/.ssh/agent.ppid
     eval $(ssh-agent -a $SSH_AUTH_SOCK | head -2 | tee ~/.ssh/agent-info)
 fi
 
