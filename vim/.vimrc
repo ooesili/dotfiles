@@ -178,3 +178,8 @@ nmap <Leader>ss :SClangStart<CR>
 
 " powerline configurations
 set laststatus=2
+
+" emmet
+" only enable for css and html files
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall

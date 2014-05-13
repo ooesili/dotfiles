@@ -31,3 +31,6 @@
 [submodule ".vim/bundle/scvim"]
 	path = vim/.vim/bundle/scvim
 	url = git://github.com/sbl/scvim.git
+[submodule "vim/.vim/bundle/emmet-vim"]
+	path = vim/.vim/bundle/emmet-vim
+	url = https://github.com/mattn/emmet-vim.git
