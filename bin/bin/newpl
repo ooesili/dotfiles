@@ -1,12 +1,31 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use File::Basename;
+$0 = basename $0;
+
+# error reporting function
+sub err {
+    my $code = shift;
+    my $mesg = shift;
+    warn "$0: $mesg\n";
+    exit($code) if $code != 0;
+}
 
 # template for new perl script
 my $template = <<TEMPLATE;
 #!/usr/bin/perl
-use strict;
-use warnings;
+use strict; use warnings;
+use File::Basename;
+\$0 = basename \$0;
+
+# error reporting function
+sub err {
+    my \$code = shift;
+    my \$mesg = shift;
+    warn "\$0: \$mesg\\n";
+    exit(\$code) if \$code != 0;
+}
 
 TEMPLATE
 
