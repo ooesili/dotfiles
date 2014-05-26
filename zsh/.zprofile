@@ -3,6 +3,10 @@ export ZDOTDIR="$HOME/.zsh"
 export SSH_AUTH_SOCK="$HOME/.ssh/agent.ppid"
 export EDITOR="vim"
 export PYTHONPATH=/usr/lib/python3.3/site-packages/
+# XDG Base Directory Specification
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
 # source gpg-agent environment file
 [[ -f $HOME/.gnupg/agent-info ]] && source $HOME/.gnupg/agent-info
 # run gpg-agent if it is not already active
