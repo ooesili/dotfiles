@@ -339,7 +339,7 @@ autoload $(/usr/bin/ls $funcdir)
 unset funcdir
 
 HISTFILE=$ZDOTDIR/.histfile
-HISTORY_IGNORE="otr"
+HISTORY_IGNORE="otr*"
 source $ZDOTDIR/aliases
 export MANWIDTH=78
 bindkey -v
