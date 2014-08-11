@@ -8,4 +8,4 @@ url="https://www.archlinux.org/mirrorlist/?country=${country}&protocol=http&ip_v
 wget -qO- $url | grep -v '^## Score:' | sed 's/^#S/S/' | rankmirrors -n 5 - \
     | sudo tee /etc/pacman.d/mirrorlist > /dev/null
 
-yaourt -Syua
+sudo pacman -Syu

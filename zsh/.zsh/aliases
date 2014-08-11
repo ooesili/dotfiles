@@ -1,20 +1,19 @@
 # defaults
 alias info="info --vi-keys"
 
-# yaourt aliases
-alias yss="yaourt -Sas"
-alias yqs="yaourt -Qs"
-alias ysi="yaourt -Sai"
-alias yqi="yaourt -Qi"
-alias files="yaourt -Qlq"
-alias yu="yaourt -U"
-alias ys="yaourt -S"
-alias yr="yaourt -Rs"
-alias orphans="yaourt -Qdt"
+# pacman aliases
+alias pmss="pacman -Ss"
+alias pmqs="pacman -Qs"
+alias pmsi="pacman -Si"
+alias pmqi="pacman -Qi"
+alias files="pacman -Qlq"
+alias pmu="sudo pacman -U"
+alias pms="sudo pacman -S"
+alias pmr="sudo pacman -Rs"
+alias orphans="pacman -Qdt"
 alias paclog="less +G /var/log/pacman.log"
 alias pacerr="grep -A1 ALPM /var/log/pacman.log | less +G"
-alias update="yaourt -Syua"
-alias yg="yaourt -G"
+alias update="sudo pacman -Syu"
 
 # ls aliases
 alias ls="ls --color=auto --width=80 -h"
