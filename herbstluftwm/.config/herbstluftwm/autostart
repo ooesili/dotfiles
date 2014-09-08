@@ -102,11 +102,11 @@ hc keybind $Mod-Shift-Tab   cycle -1
 hc keybind $Mod-i jumpto urgent
 
 # ncmpcpp
-hc keybind $Mod-z spawn ncmpcpp prev
-hc keybind $Mod-x spawn ncmpcpp play
-hc keybind $Mod-c spawn ncmpcpp pause
-hc keybind $Mod-v spawn ncmpcpp stop
-hc keybind $Mod-b spawn ncmpcpp next
+hc keybind $Mod-z spawn mpc --quiet prev
+hc keybind $Mod-x spawn mpc --quiet play
+hc keybind $Mod-c spawn mpc --quiet pause
+hc keybind $Mod-v spawn mpc --quiet stop
+hc keybind $Mod-b spawn mpc --quiet next
 hc keybind $Mod-F1 spawn amixer --quiet set Master toggle
 hc keybind $Mod-F2 spawn amixer --quiet set Master 1-
 hc keybind $Mod-F3 spawn amixer --quiet set Master 1+
