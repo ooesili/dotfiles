@@ -55,26 +55,14 @@ use_spacer left
 pad_percents 3
 
 TEXT
-^ca(1, dzen2_popup mpd)\
 ^fg(\#2aa198)mpd: ${if_mpd_playing}^fg(\#859900)${mpd_title 30}\
-^ca()\
 ${else}^fg(\#cb4b16)(stopped)${endif} ^fg()${mpd_bar} ^fg(\#dc322f)| \
-^ca(1, dzen2_popup volume)\
 ^fg(\#b58900)vol: ^fg()${mpd_vol}% ^fg(\#dc322f)| \
-^ca()\
-^ca(1, dzen2_popup network)\
 ^fg(\#268bd2)down: ^fg()${downspeed enp1s0} - \
 ^fg(\#b58900)up: ^fg()${upspeed enp1s0} ^fg(\#dc322f)| \
-^ca()\
-^ca(1, dzen2_popup cpu)\
 ^fg(\#2aa198)cpu: ^fg()${cpu cpu0}% - \
-^fg(\#cb4b16)temp: ^fg()${platform coretemp.0 temp 2 1.8 32.0}F - \
-^fg(\#cb4b16)mb: ^fg()${platform coretemp.0 temp 4 1.8 32.0}F ^fg(\#dc322f)| \
-^ca()\
-^ca(1, dzen2_popup memory)\
+^fg(\#cb4b16)temp: ^fg()${platform coretemp.0/hwmon/hwmon1 temp 2 1.8 32.0}F - \
+^fg(\#cb4b16)mb: ^fg()${platform coretemp.0/hwmon/hwmon1 temp 4 1.8 32.0}F ^fg(\#dc322f)| \
 ^fg(\#d33682)ram: ^fg()${memperc}% ^fg()- \
 ^fg(\#6c71c4)swap: ^fg()${swapperc}% ^fg(\#dc323f)| \
-^ca()\
-^ca(1, dzen2_popup calendar)\
-^fg(\#b58900)${time %a %b %d %l:%M%P}\
-^ca()
+^fg(\#b58900)${time %a %b %d %l:%M%P} ^fg(\#dc323f)| \
