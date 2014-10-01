@@ -248,7 +248,7 @@ hc set window_border_inner_width 0
 hc set always_show_frame 0
 hc set frame_bg_transparent 1
 hc set frame_transparent_width 5
-hc set frame_gap 19
+hc set frame_gap 18
 # add overlapping window borders
 hc set window_gap -2
 hc set frame_padding 2
@@ -264,8 +264,9 @@ hc rule monitor=0
 # rules for various window types
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' monitor=$floatmon
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK)' monitor=$floatmon
-hc rule class='MPlayer' monitor=$floatmon
+hc rule class='mpv' monitor=$floatmon
 hc rule title='AutoChord' monitor=$floatmon
+hc rule class='feh' monitor=$floatmon
 # non rules
 hc rule instance~"Non-(DAW|Mixer|Session-Manager)" monitor=$floatmon
 hc rule title="Non Mixer"           monitor=0 tag=1000 index='0'
