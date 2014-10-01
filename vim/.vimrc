@@ -94,9 +94,9 @@ nmap <Leader>n :NERDTreeToggle<CR>
 nmap <Leader>qc :below cw<CR>
 nmap <Leader>ql :below lw<CR>
 nmap <Leader>d :bdelete<CR>
-nmap <F4> :!xmonad --recompile<CR>
-nmap <F5> :make<CR>
-nmap <F6> :nmap <buffer> <F5> :><Left>R<Left>C<Left><<Left>
+nmap <F4> :make clean<CR><CR>
+nmap <F5> :make -j9<CR><CR>
+nmap <F6> :nmap <buffer> <F5> :><Left>R<Left>C<Left><<Left>><Left>R<Left>C<Left><<Left>
 nmap q; A;<Esc>
 nmap gb :ls<CR>:b<Space>
 nmap gB :ls<CR>:bd<Space>
