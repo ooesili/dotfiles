@@ -35,7 +35,9 @@ my $monitor = @ARGV ? $ARGV[0] : 0;
 my $geometry = `herbstclient monitor_rect "$monitor"`;
 &errx("Invalid monitor `$monitor'") if ($geometry eq '');
 my ($x, $y, $screen_width, $screen_height) = split / /, $geometry;
-my $panel_height = 14;
+my $panel_height = 16;
+my $tray_width = 90;
+$screen_width -= $tray_width;
 
 # font and colors
 my $font = "-xos4-terminesspowerline-medium-r-normal--12-120-72-72-c-60-iso10646-1";
@@ -125,6 +127,15 @@ sub p_conky {
     }
 }
 
+sub p_trayer {
+    #my $bgcolor = $base02 =~ s/^#/0x/r;
+    exec qw(trayer --edge top --align right
+        --widthtype pixel --heighttype pixel
+        --transparent true --alpha 0),
+        "--tint", 0x073642,
+        "--width", $tray_width, "--height", $panel_height;
+}
+
 ##### PIPE GERNATOR FUNCTIONS TO DZEN2 #####
 {
     # keep track of daemon_lock and daemon_unlock hooks
@@ -138,6 +149,7 @@ sub p_conky {
     # start pipes
     push @kids, &piper(\&p_hooker); my $title = "";
     push @kids, &piper(\&p_conky);  my $conky  = "";
+    push @kids, &piper(\&p_trayer);
     # open pipe to dzen
     pipe (my $dzen_read, my $dzen);
     {
