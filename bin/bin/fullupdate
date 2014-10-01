@@ -5,7 +5,7 @@ country="US"
 
 url="https://www.archlinux.org/mirrorlist/?country=${country}&protocol=http&ip_version=4&use_mirror_status=on"
 
-wget -qO- $url | grep -v '^## Score:' | sed 's/^#S/S/' | rankmirrors -n 5 - \
+curl -s "$url" | grep -v '^## Score:' | sed 's/^#S/S/' | rankmirrors -n 5 - \
     | sudo tee /etc/pacman.d/mirrorlist > /dev/null
 
 sudo pacman -Syu
