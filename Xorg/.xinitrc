@@ -18,7 +18,7 @@ fi
 [[ -f ~/.zprofile ]] && source ~/.zprofile
 
 # startup applications
-unclutter -grab -jitter 5 &
+unclutter -jitter 5 &
 eval $(cat ~/.fehbg)
 xsetroot -cursor_name left_ptr
 xmodmap ~/.capscape
