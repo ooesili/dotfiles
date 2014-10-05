@@ -180,14 +180,22 @@ else
     isgrmlsmall() { return 1 }
 fi
 
+GRML_OSTYPE=$(uname -s)
+
+islinux(){
+    [[ $GRML_OSTYPE == "Linux" ]]
+}
+
 isdarwin(){
-    [[ $OSTYPE == darwin* ]] && return 0
-    return 1
+    [[ $GRML_OSTYPE == "Darwin" ]]
 }
 
 isfreebsd(){
-    [[ $OSTYPE == freebsd* ]] && return 0
-    return 1
+    [[ $GRML_OSTYPE == "FreeBSD" ]]
+}
+
+isopenbsd(){
+    [[ $GRML_OSTYPE == "OpenBSD" ]]
 }
 
 #f1# are we running within an utf environment?
@@ -339,19 +347,18 @@ NOMENU=${NOMENU:-0}
 NOPRECMD=${NOPRECMD:-0}
 COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
 GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/share/command-not-found/command-not-found}
-BATTERY=${BATTERY:-0}
+GRML_DISPLAY_BATTERY=${GRML_DISPLAY_BATTERY:-${BATTERY:-0}}
 GRMLSMALL_SPECIFIC=${GRMLSMALL_SPECIFIC:-1}
 ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 typeset -ga ls_options
 typeset -ga grep_options
-if ls --help 2> /dev/null | grep -q GNU; then
+if ls --color=auto / >/dev/null 2>&1; then
     ls_options=( --color=auto )
-elif [[ $OSTYPE == freebsd* ]]; then
+elif ls -G / >/dev/null 2>&1; then
     ls_options=( -G )
 fi
-if grep --help 2> /dev/null | grep -q GNU || \
-   [[ $OSTYPE == freebsd* ]]; then
+if grep --color=auto -q "a" <<< "a" >/dev/null 2>&1; then
     grep_options=( --color=auto )
 fi
 
@@ -536,7 +543,12 @@ export PAGER=${PAGER:-less}
 export MAIL=${MAIL:-/var/mail/$USER}
 
 # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
-export SHELL='/bin/zsh'
+if [[ -z "$SHELL" ]] ; then
+  SHELL="$(which zsh)"
+  if [[ -x "$SHELL" ]] ; then
+    export SHELL
+  fi
+fi
 
 # color setup for ls:
 check_com -c dircolors && eval $(dircolors -b)
@@ -813,21 +825,6 @@ beginning-or-end-of-somewhere() {
 zle -N beginning-of-somewhere beginning-or-end-of-somewhere
 zle -N end-of-somewhere beginning-or-end-of-somewhere
 
-## toggle the ,. abbreviation feature on/off
-# NOABBREVIATION: default abbreviation-state
-#                 0 - enabled (default)
-#                 1 - disabled
-NOABBREVIATION=${NOABBREVIATION:-0}
-
-grml_toggle_abbrev() {
-    if (( ${NOABBREVIATION} > 0 )) ; then
-        NOABBREVIATION=0
-    else
-        NOABBREVIATION=1
-    fi
-}
-zle -N grml_toggle_abbrev
-
 # add a command line to the shells history without executing it
 commit-to-history() {
     print -s ${(z)BUFFER}
@@ -1024,11 +1021,6 @@ zleiab() {
     setopt extendedglob
     local MATCH
 
-    if (( NOABBREVIATION > 0 )) ; then
-        LBUFFER="${LBUFFER},."
-        return 0
-    fi
-
     LBUFFER=${LBUFFER%%(#m)[.\-+:|_a-zA-Z0-9]#}
     LBUFFER+=${abk[$MATCH]:-$MATCH}
 }
@@ -1037,7 +1029,7 @@ zle -N zleiab
 
 help-show-abk()
 {
-  zle -M "$(print "Type ,. after these abbreviations to expand them:"; print -a -C 2 ${(kv)abk})"
+  zle -M "$(print "Available abbreviations for expansion:"; print -a -C 2 ${(kv)abk})"
 }
 
 zle -N help-show-abk
@@ -1119,7 +1111,6 @@ inplaceMkDirs() {
     fi
 }
 
-#k# mkdir -p <dir> from string under cursor or marked area
 zle -N inplaceMkDirs
 
 #v1# set number of lines to display per page
@@ -1403,9 +1394,11 @@ bind2maps       viins vicmd -- Left   vi-backward-char
 bind2maps emacs             -- Right  forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
 bind2maps       viins vicmd -- Right  vi-forward-char
-#k# Display list of abbreviations that expand when followed by ,.
+#k# Perform abbreviation expansion
 bind2maps emacs viins       -- -s '^x.' zleiab
+#k# Display list of abbreviations that would expand
 bind2maps emacs viins       -- -s '^xb' help-show-abk
+#k# mkdir -p <dir> from string under cursor or marked area
 bind2maps emacs viins       -- -s '^xM' inplaceMkDirs
 #k# display help for keybindings and ZLE
 bind2maps emacs viins       -- -s '^xz' help-zle
@@ -1421,8 +1414,6 @@ bind2maps emacs viins       -- -s '^xP' history-beginning-search-forward-end
 bind2maps emacs viins       -- PageUp history-beginning-search-backward-end
 #k# search history forward for entry beginning with typed text
 bind2maps emacs viins       -- PageDown history-beginning-search-forward-end
-#k# Toggle abbreviation expansion on/off
-bind2maps emacs viins       -- -s '^xA' grml_toggle_abbrev
 bind2maps emacs viins       -- -s "^x^h" commit-to-history
 #k# Kill left-side word or everything up to next slash
 bind2maps emacs viins       -- -s '\ev' slash-backward-kill-word
@@ -1448,7 +1439,7 @@ bind2maps emacs viins       -- -s '^x1' jump_after_first_word
 bind2maps emacs viins       -- -s "^x^x" hist-complete
 
 # insert unicode character
-# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an ง
+# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an ยง
 # See for example http://unicode.org/charts/ for unicode characters code
 #k# Insert Unicode character
 bind2maps emacs viins       -- -s '^xi' insert-unicode-char
@@ -1613,7 +1604,16 @@ fi # is433
 # set colors for use in prompts (modern zshs allow for the use of %F{red}foo%f
 # in prompts to get a red "foo" embedded, but it's good to keep these for
 # backwards compatibility).
-if zrcautoload colors && colors 2>/dev/null ; then
+if is437; then
+    BLUE="%F{blue}"
+    RED="%F{red}"
+    GREEN="%F{green}"
+    CYAN="%F{cyan}"
+    MAGENTA="%F{magenta}"
+    YELLOW="%F{yellow}"
+    WHITE="%F{white}"
+    NO_COLOR="%f"
+elif zrcautoload colors && colors 2>/dev/null ; then
     BLUE="%{${fg[blue]}%}"
     RED="%{${fg_bold[red]}%}"
     GREEN="%{${fg[green]}%}"
@@ -1649,25 +1649,129 @@ PS4='+%N:%i:%_> '
 #    - debian_chroot
 #    - vcs_info setup and version specific fixes
 
-# display battery status on right side of prompt via running 'BATTERY=1 zsh'
-if [[ $BATTERY -gt 0 ]] ; then
-    if ! check_com -c acpi ; then
-        BATTERY=0
-    fi
-fi
+# display battery status on right side of prompt using 'GRML_DISPLAY_BATTERY=1' in .zshrc.pre
 
 battery() {
-if [[ $BATTERY -gt 0 ]] ; then
-    PERCENT="${${"$(acpi 2>/dev/null)"}/(#b)[[:space:]]#Battery <->: [^0-9]##, (<->)%*/${match[1]}}"
-    if [[ -z "$PERCENT" ]] ; then
-        PERCENT='acpi not present'
+if [[ $GRML_DISPLAY_BATTERY -gt 0 ]] ; then
+    if islinux ; then
+        batterylinux
+    elif isopenbsd ; then
+        batteryopenbsd
+    elif isfreebsd ; then
+        batteryfreebsd
+    elif isdarwin ; then
+        batterydarwin
     else
-        if [[ "$PERCENT" -lt 20 ]] ; then
-            PERCENT="warning: ${PERCENT}%%"
-        else
-            PERCENT="${PERCENT}%%"
-        fi
+        #not yet supported
+        GRML_DISPLAY_BATTERY=0
     fi
+fi
+}
+
+batterylinux(){
+GRML_BATTERY_LEVEL=''
+local batteries bat capacity
+batteries=( /sys/class/power_supply/BAT*(N) )
+if (( $#batteries > 0 )) ; then
+    for bat in $batteries ; do
+        capacity=$(< $bat/capacity)
+        case $(< $bat/status) in
+        Charging)
+            GRML_BATTERY_LEVEL+=" ^"
+            ;;
+        Discharging)
+            if (( capacity < 20 )) ; then
+                GRML_BATTERY_LEVEL+=" !v"
+            else
+                GRML_BATTERY_LEVEL+=" v"
+            fi
+            ;;
+        *) # Full, Unknown
+            GRML_BATTERY_LEVEL+=" ="
+            ;;
+        esac
+        GRML_BATTERY_LEVEL+="${capacity}%%"
+    done
+fi
+}
+
+batteryopenbsd(){
+GRML_BATTERY_LEVEL=''
+local bat batfull batwarn batnow num
+for num in 0 1 ; do
+    bat=$(sysctl -n hw.sensors.acpibat${num})
+    if [[ -n $bat ]]; then
+        batfull=${"$(sysctl -n hw.sensors.acpibat${num}.amphour0)"%% *}
+        batwarn=${"$(sysctl -n hw.sensors.acpibat${num}.amphour1)"%% *}
+        batnow=${"$(sysctl -n hw.sensors.acpibat${num}.amphour3)"%% *}
+        case "$(sysctl -n hw.sensors.acpibat${num}.raw0)" in
+            *" discharging"*)
+                if (( batnow < batwarn )) ; then
+                    GRML_BATTERY_LEVEL+=" !v"
+                else
+                    GRML_BATTERY_LEVEL+=" v"
+                fi
+                ;;
+            *" charging"*)
+                GRML_BATTERY_LEVEL+=" ^"
+                ;;
+            *)
+                GRML_BATTERY_LEVEL+=" ="
+                ;;
+        esac
+        GRML_BATTERY_LEVEL+="${$(( 100 * batnow / batfull ))%%.*}%%"
+    fi
+done
+}
+
+batteryfreebsd(){
+GRML_BATTERY_LEVEL=''
+local num
+local -A table
+for num in 0 1 ; do
+    table=( ${=${${${${${(M)${(f)"$(acpiconf -i $num)"}:#(State|Remaining capacity):*}%%( ##|%)}//:[ $'\t']##/@}// /-}//@/ }} )
+    if [[ $table[State] != "not-present" ]] ; then
+        case $table[State] in
+            *discharging*)
+                if (( $table[Remaining-capacity] < 20 )) ; then
+                    GRML_BATTERY_LEVEL+=" !v"
+                else
+                    GRML_BATTERY_LEVEL+=" v"
+                fi
+                ;;
+            *charging*)
+                GRML_BATTERY_LEVEL+=" ^"
+                ;;
+            *)
+                GRML_BATTERY_LEVEL+=" ="
+                ;;
+        esac
+        GRML_BATTERY_LEVEL+="$table[Remaining-capacity]%%"
+    fi
+done
+}
+
+batterydarwin(){
+GRML_BATTERY_LEVEL=''
+local -a table
+table=( ${$(pmset -g ps)[(w)7,8]%%(\%|);} )
+if [[ -n $table[2] ]] ; then
+    case $table[2] in
+        charging)
+            GRML_BATTERY_LEVEL+=" ^"
+            ;;
+        discharging)
+            if (( $table[1] < 20 )) ; then
+                GRML_BATTERY_LEVEL+=" !v"
+            else
+                GRML_BATTERY_LEVEL+=" v"
+            fi
+            ;;
+        *)
+            GRML_BATTERY_LEVEL+=" ="
+            ;;
+    esac
+    GRML_BATTERY_LEVEL+="$table[1]%%"
 fi
 }
 
@@ -1696,21 +1800,61 @@ if zrcautoload vcs_info; then
     fi
 fi
 
+typeset -A grml_vcs_coloured_formats
+typeset -A grml_vcs_plain_formats
+
+grml_vcs_plain_formats=(
+    format "(%s%)-[%b] "    "zsh: %r"
+    actionformat "(%s%)-[%b|%a] " "zsh: %r"
+    rev-branchformat "%b:%r"
+)
+
+grml_vcs_coloured_formats=(
+    format "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOR} "
+    actionformat "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} "
+    rev-branchformat "%b${RED}:${YELLOW}%r"
+)
+
+typeset GRML_VCS_COLOUR_MODE=xxx
+
+grml_vcs_info_toggle_colour () {
+    emulate -L zsh
+    if [[ $GRML_VCS_COLOUR_MODE == plain ]]; then
+        grml_vcs_info_set_formats coloured
+    else
+        grml_vcs_info_set_formats plain
+    fi
+    return 0
+}
+
+grml_vcs_info_set_formats () {
+    emulate -L zsh
+    #setopt localoptions xtrace
+    local mode=$1 AF F BF
+    if [[ $mode == coloured ]]; then
+        AF=${grml_vcs_coloured_formats[actionformat]}
+        F=${grml_vcs_coloured_formats[format]}
+        BF=${grml_vcs_coloured_formats[rev-branchformat]}
+        GRML_VCS_COLOUR_MODE=coloured
+    else
+        AF=${grml_vcs_plain_formats[actionformat]}
+        F=${grml_vcs_plain_formats[format]}
+        BF=${grml_vcs_plain_formats[rev-branchformat]}
+        GRML_VCS_COLOUR_MODE=plain
+    fi
+
+    zstyle ':vcs_info:*'              actionformats "$AF" "zsh: %r"
+    zstyle ':vcs_info:*'              formats       "$F"  "zsh: %r"
+    zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat  "$BF"
+    return 0
+}
+
 # Change vcs_info formats for the grml prompt. The 2nd format sets up
 # $vcs_info_msg_1_ to contain "zsh: repo-name" used to set our screen title.
-# TODO: The included vcs_info() version still uses $VCS_INFO_message_N_.
-#       That needs to be the use of $VCS_INFO_message_N_ needs to be changed
-#       to $vcs_info_msg_N_ as soon as we use the included version.
 if [[ "$TERM" == dumb ]] ; then
-    zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] " "zsh: %r"
-    zstyle ':vcs_info:*' formats       "(%s%)-[%b] "    "zsh: %r"
+    grml_vcs_info_set_formats plain
 else
-    # these are the same, just with a lot of colors:
-    zstyle ':vcs_info:*' actionformats "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOR} " \
-                                       "zsh: %r"
-    zstyle ':vcs_info:*' formats       "${MAGENTA}(${NO_COLOR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOR}%} " \
-                                       "zsh: %r"
-    zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
+    grml_vcs_info_set_formats coloured
 fi
 
 # Now for the fun part: The grml prompt themes in `promptsys' mode of operation
@@ -1884,7 +2028,7 @@ grml_prompt_post_default=(
 
 grml_prompt_token_default=(
     at                '@'
-    battery           'PERCENT'
+    battery           'GRML_BATTERY_LEVEL'
     change-root       'debian_chroot'
     date              '%D{%Y-%m-%d}'
     grml-chroot       'GRML_CHROOT'
@@ -2155,7 +2299,7 @@ fi
 if is437; then
     # The prompt themes use modern features of zsh, that require at least
     # version 4.3.7 of the shell. Use the fallback otherwise.
-    if [[ $BATTERY -gt 0 ]]; then
+    if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
         zstyle ':prompt:grml:right:setup' items sad-smiley battery
         add-zsh-hook precmd battery
     fi
@@ -2267,8 +2411,6 @@ hash -d linux=/lib/modules/$(command uname -r)/build/
 hash -d log=/var/log
 hash -d slog=/var/log/syslog
 hash -d src=/usr/src
-hash -d templ=/usr/share/doc/grml-templates
-hash -d tt=/usr/share/doc/texttools-doc
 hash -d www=/var/www
 #d# end
 
@@ -2293,22 +2435,22 @@ fi
 
 # do we have GNU ls with color-support?
 if [[ "$TERM" != dumb ]]; then
-    #a1# List files with colors (\kbd{ls -CF \ldots})
-    alias ls='ls -CF '${ls_options:+"${ls_options[*]}"}
+    #a1# List files with colors (\kbd{ls -F \ldots})
+    alias ls='command ls -F '${ls_options:+"${ls_options[*]}"}
     #a1# List all files, with colors (\kbd{ls -la \ldots})
-    alias la='ls -la '${ls_options:+"${ls_options[*]}"}
+    alias la='command ls -la '${ls_options:+"${ls_options[*]}"}
     #a1# List files with long colored list, without dotfiles (\kbd{ls -l \ldots})
-    alias ll='ls -l '${ls_options:+"${ls_options[*]}"}
+    alias ll='command ls -l '${ls_options:+"${ls_options[*]}"}
     #a1# List files with long colored list, human readable sizes (\kbd{ls -hAl \ldots})
-    alias lh='ls -hAl '${ls_options:+"${ls_options[*]}"}
+    alias lh='command ls -hAl '${ls_options:+"${ls_options[*]}"}
     #a1# List files with long colored list, append qualifier to filenames (\kbd{ls -lF \ldots})\\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
-    alias l='ls -lF '${ls_options:+"${ls_options[*]}"}
+    alias l='command ls -lF '${ls_options:+"${ls_options[*]}"}
 else
-    alias ls='ls -CF'
-    alias la='ls -la'
-    alias ll='ls -l'
-    alias lh='ls -hAl'
-    alias l='ls -lF'
+    alias ls='command ls -F'
+    alias la='command ls -la'
+    alias ll='command ls -l'
+    alias lh='command ls -hAl'
+    alias l='command ls -lF'
 fi
 
 alias mdstat='cat /proc/mdstat'
@@ -2398,7 +2540,8 @@ the zsh yet. :)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
   "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
                       preexec() and precmd() completely
-  "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt
+  "GRML_DISPLAY_BATTERY=1  zsh"
+                   => activate battery status on right side of prompt (WIP)
   "COMMAND_NOT_FOUND=1 zsh"
                    => Enable a handler if an external command was not found
                       The command called in the handler can be altered by setting
@@ -2532,6 +2675,7 @@ compdef _functions freload
 #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
 sll() {
     [[ -z "$1" ]] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
+    local file
     for file in "$@" ; do
         while [[ -h "$file" ]] ; do
             ls -l $file
@@ -2544,26 +2688,31 @@ sll() {
 #   PAGER='less -Mr' - If so, the use of $PAGER here needs fixing
 # with respect to wordsplitting. (ie. ${=PAGER})
 if check_com -c $PAGER ; then
-    #f3# View Debian's changelog of a given package
+    #f3# View Debian's changelog of given package(s)
     dchange() {
         emulate -L zsh
-        if [[ -r /usr/share/doc/$1/changelog.Debian.gz ]] ; then
-            $PAGER /usr/share/doc/$1/changelog.Debian.gz
-        elif [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
-            $PAGER /usr/share/doc/$1/changelog.gz
-        else
-            if check_com -c aptitude ; then
-                echo "No changelog for package $1 found, using aptitude to retrieve it."
-                if isgrml ; then
-                    aptitude -t unstable changelog $1
-                else
-                    aptitude changelog $1
-                fi
+        [[ -z "$1" ]] && printf 'Usage: %s <package_name(s)>\n' "$0" && return 1
+
+        local package
+        for package in "$@" ; do
+            if [[ -r /usr/share/doc/${package}/changelog.Debian.gz ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog.Debian.gz
+            elif [[ -r /usr/share/doc/${package}/changelog.gz ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog.gz
+            elif [[ -r /usr/share/doc/${package}/changelog ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog
             else
-                echo "No changelog for package $1 found, sorry."
-                return 1
+                if check_com -c aptitude ; then
+                    echo "No changelog for package $package found, using aptitude to retrieve it."
+                    aptitude changelog "$package"
+                elif check_com -c apt-get ; then
+                    echo "No changelog for package $package found, using apt-get to retrieve it."
+                    apt-get changelog "$package"
+                else
+                    echo "No changelog for package $package found, sorry."
+                fi
             fi
-        fi
+        done
     }
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
@@ -2749,11 +2898,6 @@ if check_com vim; then
     }
 fi
 
-# make a backup of a file
-bk() {
-    cp -a "$1" "${1}_$(date --iso-8601=seconds)"
-}
-
 ssl_hashes=( sha512 sha256 sha1 md5 )
 
 for sh in ${ssl_hashes}; do
@@ -2816,35 +2960,35 @@ alias j='jobs -l'
 
 # listing stuff
 #a2# Execute \kbd{ls -lSrah}
-alias dir="ls -lSrah"
+alias dir="command ls -lSrah"
 #a2# Only show dot-directories
-alias lad='ls -d .*(/)'
+alias lad='command ls -d .*(/)'
 #a2# Only show dot-files
-alias lsa='ls -a .*(.)'
+alias lsa='command ls -a .*(.)'
 #a2# Only files with setgid/setuid/sticky flag
-alias lss='ls -l *(s,S,t)'
+alias lss='command ls -l *(s,S,t)'
 #a2# Only show symlinks
-alias lsl='ls -l *(@)'
+alias lsl='command ls -l *(@)'
 #a2# Display only executables
-alias lsx='ls -l *(*)'
+alias lsx='command ls -l *(*)'
 #a2# Display world-{readable,writable,executable} files
-alias lsw='ls -ld *(R,W,X.^ND/)'
+alias lsw='command ls -ld *(R,W,X.^ND/)'
 #a2# Display the ten biggest files
-alias lsbig="ls -flh *(.OL[1,10])"
+alias lsbig="command ls -flh *(.OL[1,10])"
 #a2# Only show directories
-alias lsd='ls -d *(/)'
+alias lsd='command ls -d *(/)'
 #a2# Only show empty directories
-alias lse='ls -d *(/^F)'
+alias lse='command ls -d *(/^F)'
 #a2# Display the ten newest files
-alias lsnew="ls -rtlh *(D.om[1,10])"
+alias lsnew="command ls -rtlh *(D.om[1,10])"
 #a2# Display the ten oldest files
-alias lsold="ls -rtlh *(D.Om[1,10])"
+alias lsold="command ls -rtlh *(D.Om[1,10])"
 #a2# Display the ten smallest files
-alias lssmall="ls -Srl *(.oL[1,10])"
+alias lssmall="command ls -Srl *(.oL[1,10])"
 #a2# Display the ten newest directories and ten newest .directories
-alias lsnewdir="ls -rthdl *(/om[1,10]) .*(D/om[1,10])"
+alias lsnewdir="command ls -rthdl *(/om[1,10]) .*(D/om[1,10])"
 #a2# Display the ten oldest directories and ten oldest .directories
-alias lsolddir="ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])"
+alias lsolddir="command ls -rthdl *(/Om[1,10]) .*(D/Om[1,10])"
 
 # some useful aliases
 #a2# Remove current empty directory. Execute \kbd{cd ..; rmdir \$OLDCWD}
