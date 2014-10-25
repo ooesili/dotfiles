@@ -88,6 +88,7 @@ sub piper {
     if ($pid == 0) {
         # re-open stdout
         open STDOUT, ">&", $to_bar;
+        close $from_piper;
         # flush input after every line
         $| = 1;
         &{$func};
@@ -101,8 +102,7 @@ sub piper {
 # generator functions
 my $ppid = $$;
 sub p_hooker {
-    system "herbstclient", "--idle";
-    kill "TERM", $ppid;
+    exec "herbstclient", "--idle";
 }
 
 sub p_conky {
