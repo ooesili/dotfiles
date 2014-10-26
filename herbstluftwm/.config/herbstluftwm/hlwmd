@@ -106,25 +106,7 @@ sub p_hooker {
 }
 
 sub p_conky {
-    # prepare pipe for conky
-    my $line; my $old_line = "";
-    pipe(my $read_pipe, my $write_pipe)
-        or &errx("cannot create pipe for conky");
-    # fork and only print unique lines
-    my $pid = fork;
-    &errx("cannot fork: $!") if (not defined $pid);
-    if ($pid == 0) {
-        open STDOUT, ">&", $write_pipe;
-        exec "conky";
-    }
-    else {
-        while ($line = readline $read_pipe) {
-            if ($line ne $old_line) {
-                print "conky\t$line";
-                $old_line = $line;
-            }
-        }
-    }
+    exec 'conky';
 }
 
 sub p_trayer {
@@ -241,8 +223,11 @@ sub p_trayer {
                 $redraw = 1;
             }
             elsif ($cmd eq "conky") {
-                $conky = $data[0];
-                $redraw = 1;
+                # only redraw if the data changed
+                if ($conky ne $data[0]) {
+                    $conky = $data[0];
+                    $redraw = 1;
+                }
             }
             elsif ($cmd eq "focus_changed" or $cmd eq "window_title_changed") {
                 $title = $data[1];

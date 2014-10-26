@@ -55,7 +55,7 @@ use_spacer left
 pad_percents 3
 
 TEXT
-^fg(\#2aa198)mpd: ${if_mpd_playing}^fg(\#859900)${mpd_title 30}\
+conky	^fg(\#2aa198)mpd: ${if_mpd_playing}^fg(\#859900)${mpd_title 30}\
 ${else}^fg(\#cb4b16)(stopped)${endif} ^fg()${mpd_bar} ^fg(\#dc322f)| \
 ^fg(\#b58900)vol: ^fg()${mpd_vol}% ^fg(\#dc322f)| \
 ^fg(\#268bd2)down: ^fg()${downspeed enp1s0} - \
