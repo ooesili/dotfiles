@@ -226,11 +226,13 @@ sub p_trayer {
                 # only redraw if the data changed
                 if ($conky ne $data[0]) {
                     $conky = $data[0];
+                    $conky =~ s/\^([^f][^g][^(])/^^$1/g;
                     $redraw = 1;
                 }
             }
             elsif ($cmd eq "focus_changed" or $cmd eq "window_title_changed") {
                 $title = $data[1];
+                $title =~ s/\^/^^/g;
                 # slice title if it's too long
                 $title = "" if !defined $title;
                 if (length $title > $max_title_len) {
