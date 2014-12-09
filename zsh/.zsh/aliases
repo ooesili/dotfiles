@@ -19,7 +19,7 @@ alias update="sudo pacman -Syu"
 alias ls="ls --color=auto --width=80 -h"
 
 # application shortcuts
-alias audiocd="cdparanoia -rB; eject; flac --delete-input-file \
+alias audiocd="cdparanoia -rB && eject &; flac --delete-input-file \
     --endian=little --sign=signed --channels=2 --bps=16 --sample-rate=44100 *.raw"
 alias burncd="wodim -v speed=2 dev=/dev/cdrom -dao -swab"
 alias burniso="wodim -v dev=/dev/sr0"
