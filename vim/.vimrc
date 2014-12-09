@@ -180,6 +180,6 @@ nmap <Leader>ss :SClangStart<CR>
 set laststatus=2
 
 " emmet
-" only enable for css and html files
+" only enable for certain files
 let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
+autocmd FileType html,css,xml EmmetInstall
