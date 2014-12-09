@@ -527,12 +527,8 @@ def_key "K"
 def_key "h"
   previous_column
 def_key "l"
+  show_lyrics
   next_column
-
-def_key "h"
-  volume_down
-def_key "l"
-  volume_up
 
 def_key "d"
   delete_playlist_items

@@ -327,6 +327,8 @@ progressbar_look = "▄▄⎼"
 ##
 user_interface = alternative
 #
+#data_fetching_delay = yes
+#
 ## Available values: artist, album_artist, date, genre, composer, performer.
 ##
 #media_library_primary_tag = artist
