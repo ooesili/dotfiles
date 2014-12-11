@@ -18,11 +18,10 @@ fi
 [[ -f ~/.zprofile ]] && source ~/.zprofile
 
 # startup applications
-unclutter -jitter 5 &
+unclutter -grab -jitter 5 &
 eval $(cat ~/.fehbg)
 xsetroot -cursor_name left_ptr
 xmodmap ~/.capscape
-inithome &
 
 # start window manager
-exec herbstluftwm --locked
+exec i3 &> /dev/null

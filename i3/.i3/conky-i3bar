@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+use strict; use warnings;
+
+# send protocol version number
+print "{\"version\":1}\n";
+# start infinite JSON array
+print "[\n[],\n";
+exec 'conky';

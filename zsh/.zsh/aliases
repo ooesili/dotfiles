@@ -68,6 +68,5 @@ alias g="git"
 alias q="qfi"
 alias v="vim"
 alias sue="sudoedit"
-alias hc="herbstclient"
 
 # vim: ft=zsh:

@@ -53,21 +53,19 @@ You won't get any use out of this if you don't use any gtk2 applications. The
 theme is [Nmix Solarized][4], the icon theme is plain old [Numix][5], and the
 cursor theme is [OpenZone][6].
 
-### herbstluftwm
+### i3
 
-I use [herbstluftwm-git][7], but it will probably work fine with the not-git
-version. You'll likely need to stow the Xorg and conky directories.
-
-The panel script is written in Perl, and uses [dzen2][8] (and it's `textwidth`
-program) and `conky`. It uses the [Terminess][9] font. It also uses [st][12] as
-it's terminal by default.
+I use [i3][7] as a window manager, with the built i3bar program as a status
+bar. Instead of using `i3-status` for displaying the status bar text, I use
+conky. It uses the [Terminess][8] font. It also uses [st][11] as it's terminal
+by default.
 
 `Alt-d` runs `firefox`, so if you use something else, make sure to change it.
-`Alt-m` and `Alt-Shift-m` run [dmenu][18].
+`Alt-m` and `Alt-Shift-m` run [dmenu][17].
 
-I have the 8th and 9th tags configured for use with [non-daw][19] and
-[qjackctl][20], so delete the appropriate rules in `autostart` (they labeled
-with comments) if you don't want the existing behavior.
+I have the 8th and 9th workspaces configured for use with [non-daw][18] and
+[qjackctl][19]. `Alt-n` loads the mixer layout on the 8th workspace, and there
+is a wrapper for non-daw in `bin` that loads the layout for the 9th workspace.
 
 ### htop
 
@@ -75,13 +73,13 @@ Depends on nothing else.
 
 ### ncmpcpp
 
-`ncmpcpp` is a front end for [MPD][10], so you will need to have `mpd`
+`ncmpcpp` is a front end for [MPD][9], so you will need to have `mpd`
 installed and configured to use this one.
 
 ### powerline
 
 This one should be stowed if you are going to use `tmux` or `vim`. It needs the
-[Terminess][9] font, and the [powerline][11] package.
+[Terminess][8] font, and the [powerline][10] package.
 
 ### ranger
 
@@ -89,7 +87,7 @@ Depends on nothing else.
 
 ### tmux
 
-Depends on the `powerline` directory and [Terminess][9] to work properly, but
+Depends on the `powerline` directory and [Terminess][8] to work properly, but
 it will work (it won't look pretty), without them.
 
 ### vim
@@ -106,16 +104,16 @@ Depends on nothing else.
 This directory is for starting and configuring the `Xorg` environment. The
 `xinitrc` script calls quite a few program, which are listed here:
 
- * [unclutter][14]
- * [feh][15]
- * [xsetroot][16]
- * [xmodmap][17]
- * The `herbstluftwm` directory *needs* to be stowed for this work as is.
+ * [unclutter][13]
+ * [feh][14]
+ * [xsetroot][15]
+ * [xmodmap][16]
+ * The `i3` directory *needs* to be stowed for this work as is.
 
 ### zsh
 
 The only things this one really "depends" on are the various programs used in
-the `aliases` file. It uses the [grml-zsh][13] system, but it's all bundled up
+the `aliases` file. It uses the [grml-zsh][12] system, but it's all bundled up
 into a portable format here.
 
 
@@ -125,17 +123,16 @@ into a portable format here.
 [4]:  https://aur.archlinux.org/packages/gtk-theme-numix-solarized/
 [5]:  https://aur.archlinux.org/packages/numix-icon-theme-git/
 [6]:  https://aur.archlinux.org/packages/xcursor-openzone/
-[7]:  https://aur.archlinux.org/packages/herbstluftwm-git/
-[8]:  https://www.archlinux.org/packages/community/x86_64/dzen2/
-[9]:  https://aur.archlinux.org/packages/terminess-powerline-font/
-[10]: https://www.archlinux.org/packages/extra/x86_64/mpd/
-[11]: https://aur.archlinux.org/packages/python-powerline-git/
-[12]: https://aur.archlinux.org/packages/st
-[13]: http://grml.org/zsh/
-[14]: https://www.archlinux.org/packages/community/x86_64/unclutter/
-[15]: https://www.archlinux.org/packages/extra/x86_64/feh/
-[16]: https://www.archlinux.org/packages/extra/x86_64/xorg-xsetroot/
-[17]: https://www.archlinux.org/packages/extra/x86_64/xorg-xmodmap/
-[18]: https://www.archlinux.org/packages/community/x86_64/dmenu/
-[19]: https://aur.archlinux.org/packages/non-daw-git
-[20]: https://www.archlinux.org/packages/extra/x86_64/qjackctl/
+[7]:  https://www.archlinux.org/packages/community/x86_64/i3-wm/
+[8]:  https://aur.archlinux.org/packages/terminess-powerline-font/
+[9]: https://www.archlinux.org/packages/extra/x86_64/mpd/
+[10]: https://aur.archlinux.org/packages/python-powerline-git/
+[11]: https://aur.archlinux.org/packages/st
+[12]: http://grml.org/zsh/
+[13]: https://www.archlinux.org/packages/community/x86_64/unclutter/
+[14]: https://www.archlinux.org/packages/extra/x86_64/feh/
+[15]: https://www.archlinux.org/packages/extra/x86_64/xorg-xsetroot/
+[16]: https://www.archlinux.org/packages/extra/x86_64/xorg-xmodmap/
+[17]: https://www.archlinux.org/packages/community/x86_64/dmenu/
+[18]: https://aur.archlinux.org/packages/non-daw-git
+[19]: https://www.archlinux.org/packages/extra/x86_64/qjackctl/

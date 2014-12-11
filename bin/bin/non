@@ -1,3 +1,24 @@
-#!/bin/sh
-non-session-manager
-jack_control quit && jack_control exit
+#!/usr/bin/perl
+use strict; use warnings;
+use File::Basename;
+use AnyEvent::I3 qw(:all);
+$0 = basename $0;
+
+# error reporting function
+sub err {
+    my $code = shift;
+    my $mesg = shift;
+    warn "$0: $mesg\n";
+    exit($code) if $code != 0;
+}
+
+# connect to i3
+my $i3 = i3();
+$i3->connect->recv or &err(1, "error connecting to i3");
+# load layouts
+$i3->message(TYPE_COMMAND, "workspace 1001");
+$i3->message(TYPE_COMMAND, "append_layout $ENV{HOME}/.i3/workspace-1001.json");
+# run non
+system 'non-session-manager';
+# close jack
+system 'jack_control', 'exit';

@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+use strict; use warnings;
+use File::Basename;
+use AnyEvent::I3 qw(:all);
+$0 = basename $0;
+
+# error reporting function
+sub err {
+    my $code = shift;
+    my $mesg = shift;
+    warn "$0: $mesg\n";
+    exit($code) if $code != 0;
+}
+
+# connect to i3
+my $i3 = i3();
+$i3->connect->recv or &err(1, "error connecting to i3");
+# find current desktop
+my $focused_ws;
+for (@{$i3->get_workspaces->recv}) {
+    if ($_->{'focused'}) {
+        $focused_ws = $_->{'name'};
+    }
+}
+# load layout
+$i3->message(TYPE_COMMAND, "workspace 1000");
+$i3->message(TYPE_COMMAND, "append_layout $ENV{HOME}/.i3/workspace-1000.json");
+# load previous desktop
+$i3->message(TYPE_COMMAND, "workspace $focused_ws");

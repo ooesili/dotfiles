@@ -1,22 +1,27 @@
 #!/usr/bin/perl
 use strict; use warnings;
+use File::Basename;
+use AnyEvent::I3 qw(:all);
+$0 = basename $0;
 
+# error reporting function
+sub err {
+    my $code = shift;
+    my $mesg = shift;
+    warn "$0: $mesg\n";
+    exit($code) if $code != 0;
+}
 
-# setup layout
-system "herbstclient", "load", <<LAYOUT;
-(split horizontal:0.500000:0
-    (clients vertical:0)
-    (clients vertical:0))
-LAYOUT
-system qw(herbstclient rule --once instance=htop_home    index=1);
-system qw(herbstclient rule --once instance=ncmpcpp_home index=0);
-
+# connect to i3
+my $i3 = i3();
+$i3->connect->recv or &err(1, "error connecting to i3");
+# load layout
+$i3->message(TYPE_COMMAND, "append_layout $ENV{HOME}/.i3/workspace-home.json")->recv;
 # start htop, plain and simple
 system 'st -c htop_home -e htop &';
-
 # grab pid_file from mpd.conf
 open(my $mpdconf, '<', '/etc/mpd.conf')
-    or die "cannot open file: $!\n";
+    or &err(1, "cannot open file: $!");
 my $pidfile;
 # extract value from matching line
 while (<$mpdconf>) {
@@ -25,9 +30,7 @@ while (<$mpdconf>) {
         last; # optimise
     }
 }
-
 close $mpdconf;
-
 # wait 10 seconds for mpd to start
 for (1..10) {
     if ( -e $pidfile ) {
