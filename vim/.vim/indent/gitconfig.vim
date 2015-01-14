@@ -1,4 +1,4 @@
 " basic indent settings
-set shiftwidth=0
-set softtabstop=0
-set noexpandtab
+setlocal shiftwidth=0
+setlocal softtabstop=0
+setlocal noexpandtab
