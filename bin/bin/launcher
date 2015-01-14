@@ -44,9 +44,9 @@ pipe(my $read_choice, my $write_choice)
     or die "$0: cannot create pipe: $!\n";
 
 # fork dmenu, write to it, read from it, launch the result
-my $pid = fork;
-die "$0: cannot fork: $!\n" if !defined($pid);
-if ($pid == 0) {
+my $dmenu_pid = fork;
+die "$0: cannot fork: $!\n" if !defined($dmenu_pid);
+if ($dmenu_pid == 0) {
     # replace STDIN and STDOUT with pipes
     open STDIN, "<&", $read_list;
     open STDOUT, ">&", $write_choice;
@@ -71,14 +71,21 @@ else {
             open STDOUT, ">&", $write_list;
             exec "dmenu_path";
         }
-        else {
-            wait;
-        }
+        else { wait; }
     }
     close $write_list; wait;
     unless ($?) {
         chomp(my $choice = readline $read_choice);
         close $read_choice;
-        exec "$choice";
+        # double fork to reparent choice to init(8)
+        my $ppid = fork;
+        die "$0: cannot fork: $!\n" if !defined($ppid);
+        if ($ppid == 0) {
+            my $pid = fork;
+            die "$0: cannot fork: $!\n" if !defined($pid);
+            if ($pid == 0) {
+                exec "$choice";
+            }
+        }
     }
 }
