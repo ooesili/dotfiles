@@ -37,3 +37,15 @@
 [submodule "vim/.vim/bundle/vim-cpp-enhanced-highlight"]
 	path = vim/.vim/bundle/vim-cpp-enhanced-highlight
 	url = https://github.com/octol/vim-cpp-enhanced-highlight.git
+[submodule "vim/.vim/bundle/matchit.zip"]
+	path = vim/.vim/bundle/matchit.zip
+	url = https://github.com/vim-scripts/matchit.zip.git
+[submodule "vim/.vim/bundle/vim-rails"]
+	path = vim/.vim/bundle/vim-rails
+	url = https://github.com/tpope/vim-rails.git
+[submodule "vim/.vim/bundle/rubycomplete.vim"]
+	path = vim/.vim/bundle/rubycomplete.vim
+	url = https://github.com/vim-scripts/rubycomplete.vim
+[submodule "vim/.vim/bundle/vim-unimpaired"]
+	path = vim/.vim/bundle/vim-unimpaired
+	url = https://github.com/tpope/vim-unimpaired.git
