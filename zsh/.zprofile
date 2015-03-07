@@ -24,4 +24,9 @@ if [[ -z $SSH_AGENT_PID ||\
     eval $(ssh-agent -a $SSH_AUTH_SOCK | head -2 | tee ~/.ssh/agent-info)
 fi
 
+### Added by the Heroku Toolbelt
+if [[ -d '/usr/local/heroku/bin' ]]; then
+    export PATH="/usr/local/heroku/bin:$PATH"
+fi
+
 # vim: ft=sh
