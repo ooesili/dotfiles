@@ -67,6 +67,7 @@ alias jx="journalctl -xn"
 alias g="git"
 alias q="qfi"
 alias v="vim"
-alias sue="sudoedit"
+alias sue="sudo -e"
+alias be='bundle exec'
 
 # vim: ft=zsh:
