@@ -404,4 +404,7 @@ if which nvm &> /dev/null; then
   source "$(brew --prefix nvm)/nvm.sh"
 fi
 
+# go path
+export GOPATH="$HOME/golang"
+
 ## END OF FILE #################################################################
