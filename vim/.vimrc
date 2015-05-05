@@ -182,7 +182,7 @@ set laststatus=2
 " emmet
 " only enable for certain files
 let g:user_emmet_install_global = 0
-autocmd FileType html,css,xml EmmetInstall
+autocmd FileType html,css,xml,eruby,svg EmmetInstall
 
 " CtrlP
 " use regex by default
