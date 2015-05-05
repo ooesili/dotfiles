@@ -7,6 +7,8 @@
 	meta = blue
 [alias]
 	ci   = commit
+	cv   = commit --verbose
+	ca   = commit --amend --no-edit
 	l    = log
 	lg   = log --graph
 	lo   = log --oneline
