@@ -183,3 +183,16 @@ set laststatus=2
 " only enable for certain files
 let g:user_emmet_install_global = 0
 autocmd FileType html,css,xml EmmetInstall
+
+" CtrlP
+" use regex by default
+"let g:ctrlp_regexp = 1
+" open in current window by default, but allow a split
+let g:ctrlp_open_new_file = 'r'
+let g:ctrlp_arg_map = 1
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '/node_modules$'
+  \ }
+
+" javascript-libraries-syntax
+let g:used_javascript_libs = 'angularjs,jquery,jasmine,underscore'
