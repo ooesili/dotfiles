@@ -1,3 +1,5 @@
 .*.sw?
+.sw?
 cscope.out
+/doc/tags
 /.nvmrc
