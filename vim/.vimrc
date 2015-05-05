@@ -126,8 +126,8 @@ nmap <Leader>gc :Gcommit<CR>
 nmap <Leader>gC :Gcommit<Space>
 
 " indent options
-set shiftwidth=4
-set softtabstop=4
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 set foldmethod=syntax
 set nofoldenable
@@ -183,6 +183,7 @@ set laststatus=2
 " only enable for certain files
 let g:user_emmet_install_global = 0
 autocmd FileType html,css,xml,eruby,svg EmmetInstall
+let g:user_emmet_settings = {'indentation' : '  '}
 
 " CtrlP
 " use regex by default
