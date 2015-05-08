@@ -43,9 +43,6 @@
 [submodule "vim/.vim/bundle/vim-rails"]
 	path = vim/.vim/bundle/vim-rails
 	url = https://github.com/tpope/vim-rails.git
-[submodule "vim/.vim/bundle/rubycomplete.vim"]
-	path = vim/.vim/bundle/rubycomplete.vim
-	url = https://github.com/vim-scripts/rubycomplete.vim
 [submodule "vim/.vim/bundle/vim-unimpaired"]
 	path = vim/.vim/bundle/vim-unimpaired
 	url = https://github.com/tpope/vim-unimpaired.git
