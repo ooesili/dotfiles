@@ -186,11 +186,8 @@ autocmd FileType html,css,xml,eruby,svg EmmetInstall
 let g:user_emmet_settings = {'indentation' : '  '}
 
 " CtrlP
-" use regex by default
-"let g:ctrlp_regexp = 1
-" open in current window by default, but allow a split
+" open new files in current window
 let g:ctrlp_open_new_file = 'r'
-let g:ctrlp_arg_map = 1
 let g:ctrlp_custom_ignore = {
   \ 'dir': '/node_modules$'
   \ }
