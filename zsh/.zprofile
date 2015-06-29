@@ -1,4 +1,5 @@
-export PATH="$HOME/bin:$PATH"
+export GOPATH="$HOME/golang"
+export PATH="$HOME/bin:$GOPATH/bin:$PATH"
 export ZDOTDIR="$HOME/.zsh"
 export SSH_AUTH_SOCK="$HOME/.ssh/agent.ppid"
 export EDITOR="vim"
@@ -28,5 +29,6 @@ fi
 if [[ -d '/usr/local/heroku/bin' ]]; then
     export PATH="/usr/local/heroku/bin:$PATH"
 fi
+
 
 # vim: ft=sh
