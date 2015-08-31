@@ -1,9 +1,6 @@
 [submodule ".vim/bundle/vim-fugitive"]
 	path = vim/.vim/bundle/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule ".vim/bundle/javacomplete"]
-	path = vim/.vim/bundle/javacomplete
-	url = https://github.com/itszero/javacomplete.git
 [submodule ".vim/bundle/nerdcommenter"]
 	path = vim/.vim/bundle/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
