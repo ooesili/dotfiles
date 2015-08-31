@@ -1,31 +1,31 @@
-[submodule ".vim/bundle/vim-fugitive"]
+[submodule "vim/.vim/bundle/vim-fugitive"]
 	path = vim/.vim/bundle/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule ".vim/bundle/nerdcommenter"]
+[submodule "vim/.vim/bundle/nerdcommenter"]
 	path = vim/.vim/bundle/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
-[submodule ".vim/bundle/nerdtree"]
+[submodule "vim/.vim/bundle/nerdtree"]
 	path = vim/.vim/bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
-[submodule ".vim/bundle/vim-colors-solarized"]
+[submodule "vim/.vim/bundle/vim-colors-solarized"]
 	path = vim/.vim/bundle/vim-colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized.git
-[submodule ".vim/bundle/supertab"]
+[submodule "vim/.vim/bundle/supertab"]
 	path = vim/.vim/bundle/supertab
 	url = https://github.com/ervandew/supertab.git
-[submodule ".vim/bundle/vim-surround"]
+[submodule "vim/.vim/bundle/vim-surround"]
 	path = vim/.vim/bundle/vim-surround
 	url = https://github.com/tpope/vim-surround.git
-[submodule ".vim/bundle/tagbar"]
+[submodule "vim/.vim/bundle/tagbar"]
 	path = vim/.vim/bundle/tagbar
 	url = https://github.com/majutsushi/tagbar.git
-[submodule ".vim/bundle/vim-repeat"]
+[submodule "vim/.vim/bundle/vim-repeat"]
 	path = vim/.vim/bundle/vim-repeat
 	url = https://github.com/tpope/vim-repeat.git
-[submodule ".vim/bundle/snipmate.vim"]
+[submodule "vim/.vim/bundle/snipmate.vim"]
 	path = vim/.vim/bundle/snipmate.vim
 	url = https://github.com/ooesili/snipmate.vim.git
-[submodule ".vim/bundle/scvim"]
+[submodule "vim/.vim/bundle/scvim"]
 	path = vim/.vim/bundle/scvim
 	url = git://github.com/sbl/scvim.git
 [submodule "vim/.vim/bundle/emmet-vim"]
