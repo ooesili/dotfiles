@@ -89,6 +89,9 @@ set number
 set guioptions=ac
 set guifont=Terminus\ 9
 
+" set Leader to space
+let mapleader = " "
+
 nmap <Leader>t :TagbarOpen<CR>
 nmap <Leader>n :NERDTreeToggle<CR>
 nmap <Leader>qc :below cw<CR>
