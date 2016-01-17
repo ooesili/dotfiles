@@ -8,14 +8,6 @@ export PYTHONPATH=/usr/lib/python3.3/site-packages/
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
-# source gpg-agent environment file
-[[ -f $HOME/.gnupg/agent-info ]] && source $HOME/.gnupg/agent-info
-# run gpg-agent if it is not already active
-if [[ -z $GPG_AGENT_INFO || $(echo $GPG_AGENT_INFO | cut -d: -f2\
-        | xargs ps -o command= -c -p) != 'gpg-agent' ]]; then
-    eval $(gpg-agent --daemon --write-env-file ~/.gnupg/agent-info)
-fi
-export GPG_AGENT_INFO
 # source ssh-agent environment file
 [[ -f $HOME/.ssh/agent-info ]] && source $HOME/.ssh/agent-info
 # run ssh-agent if it's not already active
@@ -29,6 +21,5 @@ fi
 if [[ -d '/usr/local/heroku/bin' ]]; then
     export PATH="/usr/local/heroku/bin:$PATH"
 fi
-
 
 # vim: ft=sh
