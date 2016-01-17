@@ -405,4 +405,9 @@ if which nvm &> /dev/null; then
   source "$(brew --prefix nvm)/nvm.sh"
 fi
 
+# direnv setup
+if which direnv &> /dev/null; then
+  eval "$(direnv hook zsh)"
+fi
+
 ## END OF FILE #################################################################
