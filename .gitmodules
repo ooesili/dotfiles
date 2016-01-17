@@ -22,9 +22,6 @@
 [submodule "vim/.vim/bundle/vim-repeat"]
 	path = vim/.vim/bundle/vim-repeat
 	url = https://github.com/tpope/vim-repeat.git
-[submodule "vim/.vim/bundle/snipmate.vim"]
-	path = vim/.vim/bundle/snipmate.vim
-	url = https://github.com/ooesili/snipmate.vim.git
 [submodule "vim/.vim/bundle/scvim"]
 	path = vim/.vim/bundle/scvim
 	url = git://github.com/sbl/scvim.git
@@ -37,9 +34,6 @@
 [submodule "vim/.vim/bundle/matchit.zip"]
 	path = vim/.vim/bundle/matchit.zip
 	url = https://github.com/vim-scripts/matchit.zip.git
-[submodule "vim/.vim/bundle/vim-rails"]
-	path = vim/.vim/bundle/vim-rails
-	url = https://github.com/tpope/vim-rails.git
 [submodule "vim/.vim/bundle/vim-unimpaired"]
 	path = vim/.vim/bundle/vim-unimpaired
 	url = https://github.com/tpope/vim-unimpaired.git
