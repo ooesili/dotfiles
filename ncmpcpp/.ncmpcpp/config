@@ -68,7 +68,7 @@ visualizer_output_name = "ncmpcpp_visualizer"
 ## Multiply received samples by given value. Very
 ## useful for proper visualization of quiet music.
 ##
-#visualizer_sample_multipler = 1
+#visualizer_sample_multiplier = 1
 #
 ##
 ## Note: Below parameter defines how often ncmpcpp
@@ -85,11 +85,17 @@ visualizer_output_name = "ncmpcpp_visualizer"
 ## you need to compile ncmpcpp with fftw3 support.
 ##
 #
-## Available values: spectrum, wave.
+## Available values: spectrum, wave, wave_filled, ellipse.
 ##
 #visualizer_type = wave
 #
 #visualizer_look = ●▮
+#
+#visualizer_color = blue, cyan, green, yellow, magenta, red
+#
+## Alternative subset of 256 colors for terminals that support it.
+##
+#visualizer_color = 41, 83, 119, 155, 185, 215, 209, 203, 197, 161
 #
 ##### system encoding #####
 ##
@@ -121,7 +127,7 @@ visualizer_output_name = "ncmpcpp_visualizer"
 #
 ##### song format #####
 ##
-## for song format you can use:
+## For a song format you can use:
 ##
 ## %l - length
 ## %f - filename
@@ -141,22 +147,21 @@ visualizer_output_name = "ncmpcpp_visualizer"
 ## %P - priority
 ## $R - begin right alignment
 ##
-## you can also put them in { } and then it will be displayed
-## only if all requested values are available and/or define alternate
-## value with { }|{ } eg. {%a - %t}|{%f}
+## If you want to make sure that a part of the format is displayed
+## only when certain tags are present, you can archieve it by
+## grouping them with brackets, e.g. '{%a - %t}' will be evaluated
+## to 'ARTIST - TITLE' if both tags are present or '' otherwise.
+## It is also possible to define a list of alternatives by providing
+## several groups and separating them with '|', e.g. '{%t}|{%f}'
+## will be evaluated to 'TITLE' or 'FILENAME' if the former is not
+## present.
 ##
 ## Note: If you want to set limit on maximal length of a tag, just
 ## put the appropriate number between % and character that defines
 ## tag type, e.g. to make album take max. 20 terminal cells, use '%20b'.
 ##
-## Note: Format that is similar to "%a - %t" (i.e. without any additional
-## braces) is equal to "{%a - %t}", so if one of the tags is missing,
-## you'll get nothing.
-##
-## text can also have different color than the main window has,
-## eg. if you want length to be green, write "$3%l$9".
-##
-## Available values:
+## In addition, formats support markers used for text attributes.
+## They are followed by character '$'. After that you can put:
 ##
 ## - 0 - default window color (discards all other colors)
 ## - 1 - black
@@ -168,6 +173,23 @@ visualizer_output_name = "ncmpcpp_visualizer"
 ## - 7 - cyan
 ## - 8 - white
 ## - 9 - end of current color
+## - b - bold text
+## - u - underline text
+## - r - reverse colors
+## - a - use alternative character set
+##
+## If you don't want to use a non-color attribute anymore, just put it
+## again, but this time insert character '/' between '$' and attribute
+## character, e.g. {$b%t$/b}|{$r%f$/r} will display bolded title tag
+## or filename with reversed colors.
+##
+## If you want to use 256 colors and/or background colors in formats
+## (the naming scheme is described below in section about color
+## definitions), it can be done with the syntax $(COLOR), e.g. to set
+## the artist tag to one of the non-standard colors and make it have
+## yellow background, you need to write $(197_yellow)%a$(end). Note
+## that for standard colors this is interchangable with attributes
+## listed above.
 ##
 ## Note: colors can be nested.
 ##
@@ -178,44 +200,10 @@ visualizer_output_name = "ncmpcpp_visualizer"
 #
 #song_library_format = {%n - }{%t}|{%f}
 #
-#tag_editor_album_format = {(%y) }%b
-#
-##
-## Note: Below variables are used for sorting songs in browser.
-## The sort mode determines how songs are sorted, and can be used
-## in combination with a sort format to specify a custom sorting format.
-## Available values for browser_sort_mode are "name", "mtime", "format"
-## and "noop".
-##
-#
-#browser_sort_mode = name
-#
-#browser_sort_format = {%a - }{%t}|{%f} {(%l)}
-#
-##
-## Note: Below variables are for alternative version of user's interface.
-## Their syntax supports all tags and colors listed above plus some extra
-## markers used for text attributes. They are followed by character '$'.
-## After that you can put:
-##
-## - b - bold text
-## - u - underline text
-## - r - reverse colors
-## - a - use alternative character set
-##
-## If you don't want to use an attribute anymore, just put it again, but
-## this time insert character '/' between '$' and attribute character,
-## e.g. {$b%t$/b}|{$r%f$/r} will display bolded title tag or filename
-## with reversed colors.
-##
 #
 #alternative_header_first_line_format = $b$1$aqqu$/a$9 {%t}|{%f} $1$atqq$/a$9$/b
 #
 #alternative_header_second_line_format = {{$4$b%a$/b$9}{ - $7%b$9}{ ($4%y$9)}}|{%D}
-#
-##
-## Note: below variables also support text attributes listed above.
-##
 #
 #now_playing_prefix = $b
 #
@@ -229,9 +217,21 @@ visualizer_output_name = "ncmpcpp_visualizer"
 #
 #modified_item_prefix = $3> $9
 #
-## Note: colors are not supported for below variable.
+##
+## Note: attributes are not supported for the following variables.
 ##
 #song_window_title_format = {%a - }{%t}|{%f}
+##
+## Note: Below variables are used for sorting songs in browser.
+## The sort mode determines how songs are sorted, and can be used
+## in combination with a sort format to specify a custom sorting format.
+## Available values for browser_sort_mode are "name", "mtime", "format"
+## and "noop".
+##
+#
+#browser_sort_mode = name
+#
+#browser_sort_format = {%a - }{%t}|{%f} {(%l)}
 #
 ##### columns settings #####
 ##
@@ -239,15 +239,16 @@ visualizer_output_name = "ncmpcpp_visualizer"
 ##
 ## - syntax for each column is:
 ##
-## (width of column)[column's color]{displayed tag}
+## (width of the column)[color of the column]{displayed tag}
 ##
 ## Note: Width is by default in %, if you want a column to
 ## have fixed size, add 'f' after the value, e.g. (10)[white]{a}
-## will be the column that take 10% of screen (so the real column's
-## width will depend on actual screen size), whereas (10f)[white]{a}
+## will be the column that take 10% of screen (so the real width
+## will depend on actual screen size), whereas (10f)[white]{a}
 ## will take 10 terminal cells, no matter how wide the screen is.
 ##
-## - color is optional (if you want the default one, type [])
+## - color is optional (if you want the default one,
+##   leave the field empty).
 ##
 ## Note: You can give a column additional attributes by putting appropriate
 ## character after displayed tag character. Available attributes are:
@@ -277,10 +278,9 @@ song_columns_list_format = "(7f)[green]{l} (25)[cyan]{a} (3f)[white]{n} (40)[]{t
 ## Note: Custom command that will be executed each
 ## time song changes. Useful for notifications etc.
 ##
-## Attention: It doesn't support song format anymore.
-## Use `ncmpcpp --now-playing SONG_FORMAT` instead.
-##
 #execute_on_song_change = ""
+#
+#playlist_show_mpd_host = no
 #
 #playlist_show_remaining_time = no
 #
@@ -337,10 +337,6 @@ user_interface = alternative
 ##
 #default_find_mode = wrapped
 #
-## Available values: add, select.
-##
-#default_space_mode = add
-#
 #default_tag_editor_pattern = %n - %t
 #
 #header_visibility = yes
@@ -375,10 +371,6 @@ user_interface = alternative
 ##
 #lastfm_preferred_language = en
 #
-## Available values: add_remove, always_add.
-##
-#space_add_mode = always_add
-#
 #show_hidden_files_in_local_browser = no
 #
 ##
@@ -393,10 +385,19 @@ user_interface = alternative
 #screen_switcher_mode = playlist, browser
 #
 ##
-## Note: You can define startup screen for ncmpcpp
+## Note: You can define startup screen
 ## by choosing screen from the list above.
 ##
 #startup_screen = playlist
+#
+##
+## Note: You can define startup slave screen
+## by choosing screen from the list above or
+## an empty value for no slave screen.
+##
+#startup_slave_screen = ""
+#
+#startup_slave_screen_focus = no
 #
 ##
 ## Default width of locked screen (in %).
@@ -419,7 +420,7 @@ display_bitrate = yes
 #
 #display_remaining_time = no
 #
-## Available values: none, basic, extended.
+## Available values: none, basic, extended, perl.
 ##
 regular_expressions = extended
 #
@@ -467,6 +468,24 @@ external_editor = vim
 use_console_editor = yes
 #
 ##### colors definitions #####
+##
+## It is possible to set a background color by setting a color
+## value "<foreground>_<background>", e.g. red_black will set
+## foregound color to red and background color to black.
+##
+## In addition, for terminals that support 256 colors it
+## is possible to set one of them by using a number in range
+## [1, 256] instead of color name, e.g. numerical value
+## corresponding to red_black is 2_1. To find out if the
+## terminal supports 256 colors, run ncmpcpp and check out
+## the bottom of the help screen for list of available colors
+## and their numerical values.
+##
+## Note: due to technical limitations of ncurses, if 256 colors
+## are used, it is possible to either use only the colors with
+## default background color, or all pairs from 1_1 up to 254_127,
+## depending on the ncurses version used.
+##
 #
 #colors_enabled = yes
 #
@@ -497,8 +516,6 @@ use_console_editor = yes
 #alternative_ui_separator_color = black
 #
 #active_column_color = red
-#
-#visualizer_color = yellow
 #
 #window_border_color = green
 #
