@@ -197,3 +197,6 @@ let g:ctrlp_custom_ignore = {
 
 " javascript-libraries-syntax
 let g:used_javascript_libs = 'angularjs,jquery,jasmine,underscore'
+
+" turn off swapfiles
+set noswapfile
