@@ -7,7 +7,7 @@ if (@ARGV == 1) {
     my $file = "/usr/share/doc/rfc/txt/rfc$ARGV[0].txt" ;
     if (-f $file) {
         # display file if found
-        system("less $file");
+        system("less", "$file");
     } else {
         # file not found
         die "$0: error: RFC$ARGV[0] not found\n";
