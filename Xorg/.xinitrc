@@ -19,7 +19,7 @@ fi
 
 # startup applications
 unclutter -grab -jitter 5 &
-eval $(cat ~/.fehbg)
+sh ~/.fehbg
 xsetroot -cursor_name left_ptr
 xmodmap ~/.capscape
 
