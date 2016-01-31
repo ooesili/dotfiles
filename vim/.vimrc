@@ -78,9 +78,47 @@ if !exists(":DiffOrig")
 		  \ | wincmd p | diffthis
 endif
 
+" ------------------------- VUNDLE ------------------------- "
+
+" required by vundle
+set nocompatible
+filetype off
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'ervandew/supertab'
+Plugin 'tpope/vim-surround'
+Plugin 'majutsushi/tagbar'
+Plugin 'tpope/vim-repeat'
+Plugin 'sbl/scvim'
+Plugin 'mattn/emmet-vim'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'matchit.zip'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'pangloss/vim-javascript'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'fatih/vim-go'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'othree/yajs'
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+
 " ------------------------- USER SPACE ------------------------- "
-" run pathogen
-execute pathogen#infect()
 
 " look and feel
 set background=dark

@@ -1,2 +1,5 @@
 vim/.vim/.netrwhist
 vim/.vim/view
+
+vim/.vim/bundle
+!vim/.vim/bundle/Vundle.vim
