@@ -91,27 +91,53 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'tpope/vim-fugitive'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
+" color themes
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'ervandew/supertab'
-Plugin 'tpope/vim-surround'
-Plugin 'majutsushi/tagbar'
-Plugin 'tpope/vim-repeat'
-Plugin 'sbl/scvim'
-Plugin 'mattn/emmet-vim'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'matchit.zip'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'pangloss/vim-javascript'
-Plugin 'othree/javascript-libraries-syntax.vim'
-Plugin 'fatih/vim-go'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'othree/yajs'
 
+" general
+Plugin 'brysgo/quickfixfix'
+Plugin 'ervandew/supertab'
+Plugin 'godlygeek/tabular'
+Plugin 'majutsushi/tagbar'
+Plugin 'matchit.zip'
+Plugin 'scrooloose/syntastic'
+Plugin 'sjl/gundo.vim'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+" git
+Plugin 'tpope/vim-fugitive'
+
+" supercollider
+Plugin 'sbl/scvim'
+
+" c/c++
+Plugin 'octol/vim-cpp-enhanced-highlight'
+
+" navigation
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'epmatsw/ag.vim'
+Plugin 'scrooloose/nerdtree'
+
+" go
+Plugin 'fatih/vim-go'
+
+" javascript
+Plugin 'airblade/vim-gitgutter'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'mxw/vim-jsx'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'othree/yajs'
+Plugin 'pangloss/vim-javascript'
+
+" html
+Plugin 'mattn/emmet-vim'
+Plugin 'othree/html5.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
