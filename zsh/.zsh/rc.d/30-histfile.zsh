@@ -1,0 +1,2 @@
+HISTFILE=$ZDOTDIR/.histfile
+HISTORY_IGNORE="otr*"

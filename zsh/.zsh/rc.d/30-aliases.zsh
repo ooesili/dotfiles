@@ -1,0 +1,73 @@
+# defaults
+alias info="info --vi-keys"
+
+# pacman aliases
+alias pmss="pacman -Ss"
+alias pmqs="pacman -Qs"
+alias pmsi="pacman -Si"
+alias pmqi="pacman -Qi"
+alias files="pacman -Qlq"
+alias pmu="sudo pacman -U"
+alias pms="sudo pacman -S"
+alias pmr="sudo pacman -Rs"
+alias orphans="pacman -Qdt"
+alias paclog="less +G /var/log/pacman.log"
+alias pacerr="grep -A1 ALPM /var/log/pacman.log | less +G"
+alias update="sudo pacman -Syu"
+
+# ls aliases
+alias ls="ls --color=auto --width=80 -h"
+
+# application shortcuts
+alias audiocd="cdparanoia -rB && eject &; flac --delete-input-file \
+    --endian=little --sign=signed --channels=2 --bps=16 --sample-rate=44100 *.raw"
+alias burncd="wodim -v speed=2 dev=/dev/cdrom -dao -swab"
+alias burniso="wodim -v dev=/dev/sr0"
+alias start="sudo systemctl start"
+alias restart="sudo systemctl restart"
+alias stop="sudo systemctl stop"
+alias status="systemctl status"
+alias clearcache="sync; echo 3 | sudo tee /proc/sys/vm/drop_caches > /dev/null"
+alias regrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+alias walls="feh -F ~/images/wallpapers"
+alias lynx="lynx -vikeys"
+alias zreload="source $ZDOTDIR/.zshrc; source $ZDOTDIR/aliases"
+alias avd="android avd &"
+alias alog="less /var/log/httpd/access_log"
+alias elog="less +G /var/log/httpd/error_log"
+alias ehd="mount | grep /mnt/exthd"
+alias ssn="gpg -d ~/docs/ssnum.asc"
+alias sshl="journalctl -u sshd -b"
+alias sshad="ssh-add -d ~/.ssh/id_rsa"
+alias tpair="tmux -S /run/tmux/shared"
+alias tpaira="tmux -S /run/tmux/shared attach"
+alias iptsave="sudo cat /dev/null && sudo iptables-save |\
+    sudo tee /etc/iptables/iptables.rules > /dev/null"
+alias printon="sudo ptal-init start; sudo systemctl start cupsd"
+alias printoff="sudo systemctl stop cupsd colord; sudo ptal-init stop"
+alias torpdf="torsocks mupdf"
+alias ddg="w3m duckduckgo.com"
+alias mp3-dl="youtube-dl -x -f bestaudio --audio-format mp3 --audio-quality 0"
+
+# abbreviations
+alias a="alsamixer"
+alias f='ranger'
+alias h="htop"
+alias def="sdcv"
+alias d="docker"
+alias dc="docker-compose"
+alias n="ncmpcpp"
+alias b="journalctl -b"
+alias u="update"
+alias fu="fullupdate"
+alias lu="lastupdate"
+alias m="mysql -p -u root"
+alias s="sudo"
+alias t="tmux"
+alias ta="tmux attach"
+alias jx="journalctl -xn"
+alias g="git"
+alias q="qfi"
+alias v="vim"
+alias sue="sudo -e"
+alias be='bundle exec'
