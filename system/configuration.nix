@@ -28,6 +28,7 @@ in with lib; {
     alsaUtils
     bind
     binutils
+    file
     gcc
     git
     gnumake

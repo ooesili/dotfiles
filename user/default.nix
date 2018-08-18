@@ -11,6 +11,7 @@ in with pkgs; [
   firefox
   fzf
   ghc
+  gimp
   go_1_10
   htop
   httpie
