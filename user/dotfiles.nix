@@ -1,4 +1,4 @@
-{ lib, stdenv, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, ... }:
+{ lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, ... }:
 
 let
   inherit (lib.lists) last foldl;
@@ -87,7 +87,7 @@ let
     rev = "390b49653b441c958b82a0f78d9923aef4c1d9a2";
   }];
 
-  mkNeovimPlugin = plugin: stdenv.mkDerivation {
+  mkNeovimPlugin = plugin: stdenvNoCC.mkDerivation {
     name =
       let
         basename = path: last (builtins.split "/" path);
@@ -100,7 +100,7 @@ let
     installPhase = "cp -R $src $out";
   };
 
-  vimPathogen = stdenv.mkDerivation {
+  vimPathogen = stdenvNoCC.mkDerivation {
     name = "vim-pathogen";
     src = builtins.fetchGit {
       url = https://github.com/tpope/vim-pathogen.git;
@@ -120,7 +120,7 @@ let
     in
       foldl min 0 priorities;
 
-  ohMyZsh = stdenv.mkDerivation {
+  ohMyZsh = stdenvNoCC.mkDerivation {
     name = "oh-my-zsh";
     src = builtins.fetchGit {
       url = https://github.com/robbyrussell/oh-my-zsh.git;
@@ -131,7 +131,7 @@ let
     installPhase = "cp -p -R $src $out";
   };
 
-  fzfZsh = stdenv.mkDerivation {
+  fzfZsh = stdenvNoCC.mkDerivation {
     name = "fzf.zsh";
 
     phases = [ "installPhase" "fixupPhase" ];
@@ -141,7 +141,7 @@ let
     '';
   };
 
-in stdenv.mkDerivation rec {
+in stdenvNoCC.mkDerivation rec {
   name = "dotfiles";
   src = ./.;
   unpackPhase = "true";
