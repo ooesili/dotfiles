@@ -1,0 +1,107 @@
+# zprofile is idempotent
+. ~/.nix-profile/etc/zprofile
+
+# oh-my-zsh setup
+export ZSH='@@ohMyZsh'
+ZSH_THEME='daveverwer'
+plugins=(git z)
+source $ZSH/oh-my-zsh.sh
+
+# personal config
+export BROWSER="firefox"
+export MANWIDTH=78
+setopt NO_CLOBBER
+KEYTIMEOUT=1
+
+# history settings
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_SAVE_NO_DUPS
+
+if which direnv &> /dev/null; then
+  eval "$(direnv hook zsh)"
+fi
+
+if which fzf-share &> /dev/null; then
+  source "$(fzf-share)/key-bindings.zsh"
+fi
+
+# fzf configuration
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
+export FZF_TMUX=1
+
+# don't use fzf-tmux integration inside neovim terminal
+[[ -e "$NVIM_LISTEN_ADDRESS" ]] && unset FZF_TMUX
+
+# fzf and z magic
+if alias z &> /dev/null; then
+  unalias z
+fi
+z() {
+  if [[ $# -eq 0 ]]; then
+    local dir="$(_z 2>&1 | sed 's/^[0-9.]* *//'| fzf-tmux --tac  --tiebreak=index)"
+    cd "$dir"
+  else
+    _z "$@" 2>&1
+  fi
+}
+
+mkcd() {
+  if (( ARGC != 1 )); then
+    printf 'usage: mkcd <new-directory>\n'
+    return 1;
+  fi
+  if [[ ! -d "$1" ]]; then
+    command mkdir -p "$1"
+  else
+    printf '`%s'\'' already exists: cd-ing.\n' "$1"
+  fi
+  builtin cd "$1"
+}
+
+cdt() {
+  local t
+  t=$(mktemp -d)
+  echo "$t"
+  builtin cd "$t"
+}
+
+if which rbenv &>/dev/null; then
+  eval "$(rbenv init -)"
+fi
+
+# use the vi navigation keys (hjkl) besides cursor keys in menu completion
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+
+# be more like bash
+bindkey "^U" backward-kill-line
+
+# send escape key immediately
+KEYTIMEOUT=1
+
+# aliases
+alias audiocd="cdparanoia -rB && eject &; flac --delete-input-file \
+    --endian=little --sign=signed --channels=2 --bps=16 --sample-rate=44100 *.raw"
+alias burncd="wodim -v speed=2 dev=/dev/cdrom -dao -swab"
+alias burniso="wodim -v dev=/dev/sr0"
+alias de='direnv edit'
+alias dr='direnv reload'
+alias gpoh='git push -u origin HEAD'
+alias mp3-dl="youtube-dl -x -f bestaudio --audio-format mp3 --audio-quality 0"
+alias rg="rg --type-add 'tf:*.tf' --type-add 'tfvars:*.tfvars'"
+alias tx='tmux resize-pane -x'
+alias ty='tmux resize-pane -y'
+
+# less colors
+export LESS_TERMCAP_mb="[0;31m"  # begin blinking mode
+export LESS_TERMCAP_md="[0;32m"  # begin bold mode [headers]
+export LESS_TERMCAP_me="[0m"     # end blink/bold mode
+export LESS_TERMCAP_us="[0;33m"  # begin underline [variables]
+export LESS_TERMCAP_ue="[0m"     # end underline
+export LESS_TERMCAP_so="[0;34m"  # begin standout [info box]
+export LESS_TERMCAP_se="[0m"     # end standout

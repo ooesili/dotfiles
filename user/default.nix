@@ -1,0 +1,51 @@
+let
+  pkgs = import <nixpkgs> {};
+  dotfiles = import ./dotfiles.nix pkgs;
+in with pkgs; [
+  alacritty
+  coreutils
+  direnv
+  dotfiles
+  easytag
+  feh
+  firefox
+  fzf
+  ghc
+  go_1_10
+  htop
+  httpie
+  i3
+  i3lock
+  i3status
+  jack2Full
+  jq
+  keepassx
+  leiningen
+  lua
+  mpc_cli
+  mpv
+  mupdf
+  ncdu
+  ncmpcpp
+  neovim
+  openjdk8
+  p7zip
+  qjackctl
+  ranger
+  ripgrep
+  ruby_2_5
+  rustup
+  scrot
+  shellcheck
+  signal-desktop
+  stack
+  syncthing
+  tdesktop
+  tmux
+  unclutter-xfixes
+  xcape
+  xorg.xev
+  xorg.xmodmap
+  xorg.xsetroot
+  xsel
+]

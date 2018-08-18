@@ -1,0 +1,30 @@
+! caps_lock -> left control
+keycode 66 = Control_L
+
+! left control -> (none)
+keycode 37 = NoSymbol
+
+! remap modifiers
+clear Control
+clear Lock
+add Control = Control_L Control_R
+add Lock = Caps_Lock
+
+! leave these around for xcape
+keycode any = Escape
+
+! you win this time, Apple
+keycode 133 = Super_L
+keycode 134 = Super_R
+keycode 64 = Alt_L
+keycode 108 = Alt_R
+remove Mod4 = Super_L
+remove Mod4 = Super_R
+remove Mod1 = Alt_L
+remove Mod1 = Alt_R
+add Mod1 = Super_L
+add Mod1 = Super_R
+add Mod4 = Alt_L
+add Mod4 = Alt_R
+
+! vim: ft=xmodmap:

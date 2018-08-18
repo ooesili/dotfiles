@@ -1,0 +1,11 @@
+ask_before_clearing_playlists = no
+browser_display_mode = columns
+display_bitrate = yes
+ignore_leading_the = yes
+playlist_display_mode = columns
+playlist_editor_display_mode = columns
+progressbar_look = "▄▄⎼"
+regular_expressions = extended
+search_engine_display_mode = columns
+song_columns_list_format = "(7f)[green]{l} (25)[cyan]{a} (3f)[white]{n} (40)[]{t|f} (30)[red]{b}"
+user_interface = alternative

@@ -1,0 +1,35 @@
+# this file can be sourced multiple times
+[[ -z "$__OOESILI_ZPROFILE_SORUCED" ]] || return 0
+__OOESILI_ZPROFILE_SORUCED=1
+
+_path_add() {
+  if [[ ! ":$PATH:" =~ :$1: ]]; then
+    export PATH="$1:$PATH"
+  fi
+}
+
+export GOPATH="$HOME"
+_path_add "$HOME/.local/bin"
+_path_add "$HOME/bin"
+_path_add "$HOME/.cargo/bin"
+
+export SSH_AUTH_SOCK="$HOME/.ssh/agent.ppid"
+export EDITOR="nvim"
+
+# XDG Base Directory Specification
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# # source ssh-agent environment file
+# # shellcheck source=.ssh/agent-info
+# [[ -f ~/.ssh/agent-info ]] && source ~/.ssh/agent-info
+
+# # run ssh-agent if it's not already active
+# if [[ -z "$SSH_AGENT_PID" || \
+#       "$(ps -o command= -c -p "$SSH_AGENT_PID")" != 'ssh-agent' ]]; then
+#   rm -f ~/.ssh/agent.ppid
+#   eval "$(ssh-agent -a "$SSH_AUTH_SOCK" | head -2 | tee ~/.ssh/agent-info)"
+# fi
+
+# vim: ft=sh

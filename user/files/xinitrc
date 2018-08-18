@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# environment variables
+# shellcheck source=/dev/null
+. @@etc/zprofile
+
+# startup applications
+unclutter --jitter 5 &
+
+# custom keybindings
+xmodmap @@etc/xmodmap
+
+# tap left control to send escape
+xcape
+
+# set keyboard repeat rate
+delay=200 # ms
+rate=30 # Hz
+xset r rate "$delay" "$rate"
+
+exec i3
