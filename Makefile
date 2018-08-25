@@ -14,8 +14,8 @@ user:
 
 .PHONY: sys
 sys:
-	sudo install -m0644 system/configuration.nix /etc/nixos/configuration.nix
-	sudo nixos-rebuild switch
+	install -m0644 system/configuration.nix /etc/nixos/configuration.nix
+	nixos-rebuild switch
 
 .PHONY: clean
 clean:
