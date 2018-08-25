@@ -156,6 +156,7 @@ in stdenvNoCC.mkDerivation rec {
   inherit neovimPlugins;
   outputs = [ "out" ];
 
+  phases = [ "installPhase" "fixupPhase" ];
   installPhase = ''
     # alacritty
     install -Dm0644 $src/files/alacritty.yml $out/etc/alacritty.yml
