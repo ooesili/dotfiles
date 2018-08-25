@@ -1,7 +1,8 @@
+with import <nixpkgs> {};
+
 let
-  pkgs = import <nixpkgs> {};
-  dotfiles = import ./dotfiles.nix pkgs;
-in with pkgs; [
+  dotfiles = callPackage ./dotfiles.nix {};
+in [
   alacritty
   coreutils
   direnv
@@ -33,12 +34,14 @@ in with pkgs; [
   p7zip
   qjackctl
   ranger
+  redshift
   ripgrep
   ruby_2_5
   rustup
   scrot
   shellcheck
   signal-desktop
+  sqlite
   stack
   syncthing
   tdesktop

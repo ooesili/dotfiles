@@ -85,6 +85,9 @@ in with lib; {
 
   security.hideProcessInformation = true;
 
+  # to let jackd get realtime permissions
+  security.rtkit.enable = true;
+
   networking.firewall.allowedTCPPorts = [
     22000 # syncthing
     31337 # netcat
@@ -119,13 +122,6 @@ in with lib; {
     isNormalUser = true;
     shell = pkgs.zsh;
     uid = 1000;
-  };
-
-  users.users.guest = {
-    extraGroups = [ "wheel" ];
-    isNormalUser = true;
-    shell = pkgs.zsh;
-    uid = 1001;
   };
 
   # This value determines the NixOS release with which your system is to be
