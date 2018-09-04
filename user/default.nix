@@ -11,6 +11,7 @@ in [
   feh
   firefox
   fzf
+  gcc-arm-embedded
   ghc
   gimp
   go_1_10
@@ -32,6 +33,7 @@ in [
   neovim
   openjdk8
   p7zip
+  qemu
   qjackctl
   ranger
   redshift
@@ -47,6 +49,7 @@ in [
   tdesktop
   tmux
   unclutter-xfixes
+  vagrant
   xcape
   xorg.xev
   xorg.xmodmap

@@ -131,5 +131,5 @@ in with lib; {
   system.stateVersion = "18.03"; # Did you read the comment?
 
   virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.headless = true;
+  nixpkgs.config.virtualbox.enableExtensionPack = true;
 }
