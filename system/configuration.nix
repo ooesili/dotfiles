@@ -8,11 +8,14 @@ in with lib; {
     ./hardware-configuration.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.extraModprobeConfig = ''
-    blacklist snd_hda_intel
-  '';
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+    extraModprobeConfig = ''
+      blacklist snd_hda_intel
+    '';
+    kernelParams = [ "threadirq" ];
+  };
 
   networking.hostName = "nixbox";
   time.timeZone = "America/Chicago";
@@ -41,6 +44,7 @@ in with lib; {
     unzip
   ];
 
+  services.das_watchdog.enable = true;
   services.udev.extraRules =
     let axefx2-firmware = pkgs.stdenvNoCC.mkDerivation {
       name = "axefx2-firmware";
@@ -57,6 +61,10 @@ in with lib; {
     in ''
       # Fractal Audio Systems Axe-FX II
       ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="2466", ATTR{idProduct}=="0003", RUN+="${pkgs.fxload}/bin/fxload -t fx2 -I ${axefx2-firmware}/share/usb/axefx2.hex -D $env{DEVNAME}"
+
+      # realtime audio
+      KERNEL=="rtc0", GROUP="audio"
+      KERNEL=="hpet", GROUP="audio"
     '';
 
   fonts.fonts = with pkgs; [
@@ -102,6 +110,13 @@ in with lib; {
   };
 
   security.hideProcessInformation = true;
+
+  security.pam.loginLimits = [
+    { domain = "@audio"; item = "memlock"; type = "-"   ; value = "unlimited"; }
+    { domain = "@audio"; item = "rtprio" ; type = "-"   ; value = "99"       ; }
+    { domain = "@audio"; item = "nofile" ; type = "soft"; value = "99999"    ; }
+    { domain = "@audio"; item = "nofile" ; type = "hard"; value = "99999"    ; }
+  ];
 
   # to let jackd get realtime permissions
   security.rtkit.enable = true;

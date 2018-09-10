@@ -45,6 +45,7 @@ in [
   signal-desktop
   sqlite
   stack
+  supercollider
   syncthing
   tdesktop
   tmux
