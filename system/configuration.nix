@@ -150,6 +150,12 @@ in with lib; {
     '';
   }];
 
+  services.redshift = {
+    enable = true;
+    latitude = "41.882708";
+    longitude = "-87.623306";
+  };
+
   users.users."${primaryUser}" = {
     extraGroups = [ "audio" "wheel" ];
     isNormalUser = true;

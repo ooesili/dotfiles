@@ -25,24 +25,25 @@ in [
   keepassx
   leiningen
   lua
+  manpages
   mpc_cli
   mpv
   mupdf
   ncdu
   ncmpcpp
-  neovim
   openjdk8
   p7zip
   qemu
   qjackctl
   ranger
-  redshift
+  reflex
   ripgrep
   ruby_2_5
   rustup
   scrot
   shellcheck
   signal-desktop
+  socat
   sqlite
   stack
   supercollider
