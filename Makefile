@@ -12,7 +12,8 @@ user:
 	nix-env -rif user
 
 .PHONY: system
-system:
+system: system/local.nix
+	install -m0644 system/local.nix /etc/nixos/local.nix
 	install -m0644 system/${ROLE}.nix /etc/nixos/configuration.nix
 	install -m0644 system/base.nix /etc/nixos/base.nix
 	nixos-rebuild switch

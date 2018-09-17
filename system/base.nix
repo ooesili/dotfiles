@@ -19,6 +19,7 @@ let
 in with lib; {
   imports = [
     ./hardware-configuration.nix
+    ./local.nix
   ];
 
   options = {
