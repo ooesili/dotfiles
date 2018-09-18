@@ -10,4 +10,7 @@
 
   networking.hostName = "nixbook";
   networking.wireless.enable = true;
+
+  # touchpad support
+  services.xserver.libinput.enable = true;
 }
