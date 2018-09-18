@@ -9,7 +9,8 @@ build:
 
 .PHONY: user
 user:
-	nix-env -rif user --arg config '{ allowUnfree = true; }'
+	install -Dm0644 user/nixpkgs-config.nix ~/.nixpkgs/config.nix
+	nix-env -rif user
 
 .PHONY: system
 system: system/local.nix
