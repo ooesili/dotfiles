@@ -6,6 +6,7 @@ in [
   alacritty
   coreutils
   direnv
+  discord
   dotfiles
   easytag
   feh

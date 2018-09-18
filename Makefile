@@ -9,7 +9,7 @@ build:
 
 .PHONY: user
 user:
-	nix-env -rif user
+	nix-env -rif user --arg config '{ allowUnfree = true; }'
 
 .PHONY: system
 system: system/local.nix
