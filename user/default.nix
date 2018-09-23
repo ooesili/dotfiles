@@ -4,7 +4,9 @@ let
   dotfiles = callPackage ./dotfiles.nix {};
 in [
   alacritty
+  capnproto
   coreutils
+  cfssl
   direnv
   discord
   dotfiles
@@ -53,6 +55,7 @@ in [
   tmux
   unclutter-xfixes
   vagrant
+  wireguard
   xcape
   xorg.xev
   xorg.xmodmap

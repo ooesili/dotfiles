@@ -85,6 +85,9 @@ let
   }{
     url = https://github.com/junegunn/fzf.git;
     rev = "390b49653b441c958b82a0f78d9923aef4c1d9a2";
+  }{
+    url = https://github.com/cstrahan/vim-capnp.git;
+    rev = "98fcb039b97dbc978a964e36f2681e926b72524d";
   }];
 
   mkNeovimPlugin = plugin: stdenvNoCC.mkDerivation {
