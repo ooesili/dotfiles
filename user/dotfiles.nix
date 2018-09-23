@@ -147,7 +147,6 @@ let
 in stdenvNoCC.mkDerivation rec {
   name = "dotfiles";
   src = ./.;
-  unpackPhase = "true";
   buildInputs = [
     alacritty
     makeWrapper
@@ -159,45 +158,51 @@ in stdenvNoCC.mkDerivation rec {
   inherit neovimPlugins;
   outputs = [ "out" ];
 
-  phases = [ "installPhase" "fixupPhase" ];
+  patchPhase = ''
+    sed -i 's:@@z\.sh:${ohMyZsh}/plugins/z/z.sh:g' files/nvim/init.vim
+    sed -i "s:@@etc:$out/etc:g" files/xinitrc
+    sed -i 's:@@ohMyZsh:${ohMyZsh}:g' files/zshrc
+  '';
+
   installPhase = ''
+    mkdir -p $out/etc
+
     # alacritty
-    install -Dm0644 $src/files/alacritty.yml $out/etc/alacritty.yml
+    cp files/alacritty.yml $out/etc/alacritty.yml
     makeWrapper ${alacritty}/bin/alacritty $out/bin/alacritty \
       --add-flags "--config-file $out/etc/alacritty.yml"
 
     # i3
-    install -Dm0644 $src/files/i3-config $out/etc/i3/config
+    mkdir -p $out/etc/i3
+    cp files/i3-config $out/etc/i3/config
     makeWrapper ${i3}/bin/i3 $out/bin/i3 \
       --add-flags "-c $out/etc/i3/config"
 
     # ncmpcpp
-    cp -R $src/files/ncmpcpp $out/etc
+    cp -R files/ncmpcpp $out/etc
     makeWrapper ${ncmpcpp}/bin/ncmpcpp $out/bin/ncmpcpp \
       --add-flags "--config=$out/etc/ncmpcpp/config" \
       --add-flags "--bindings=$out/etc/ncmpcpp/bindings"
 
     # neovim
-    install -Dm0644 $src/files/init.vim $out/etc/xdg/nvim/init.vim
-    sed -i 's:@@z\.sh:${ohMyZsh}/plugins/z/z.sh:g' $out/etc/xdg/nvim/init.vim
-    install -Dm0644 ${vimPathogen} $out/etc/xdg/nvim/autoload/pathogen.vim
+    mkdir -p $out/etc/xdg/nvim/autoload
+    cp -R files/nvim $out/etc/xdg/
+    cp ${vimPathogen} $out/etc/xdg/nvim/autoload/pathogen.vim
     mkdir $out/etc/xdg/nvim/bundle
     ln -s $neovimPlugins $out/etc/xdg/nvim/bundle
 
     # tmux
-    cp $src/files/tmux.conf $out/etc/tmux.conf
+    cp files/tmux.conf $out/etc/tmux.conf
     makeWrapper ${tmux}/bin/tmux $out/bin/tmux \
       --add-flags "-f $out/etc/tmux.conf"
 
     # xorg
-    install -Dm0644 $src/files/xmodmap $out/etc/xmodmap
-    install -Dm0755 $src/files/xinitrc $out/etc/xinitrc
-    sed -i "s:@@etc:$out/etc:g" $out/etc/xinitrc
+    cp files/xmodmap $out/etc/xmodmap
+    cp files/xinitrc $out/etc/xinitrc
 
     # zsh
-    install -Dm0644 $src/files/zprofile $out/etc/zprofile
-    install -Dm0644 $src/files/zshrc $out/etc/zshrc
-    sed -i 's:@@ohMyZsh:${ohMyZsh}:g' $out/etc/zshrc
+    cp files/zprofile $out/etc/zprofile
+    cp files/zshrc $out/etc/zshrc
   '';
 
   meta = {
