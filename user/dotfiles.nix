@@ -188,7 +188,7 @@ in stdenvNoCC.mkDerivation rec {
     mkdir -p $out/etc/i3
     cp files/i3-config $out/etc/i3/config
     makeWrapper ${i3}/bin/i3 $out/bin/i3 \
-      --add-flags "-c $out/etc/i3/config"
+      --add-flags "-c ~/.nix-profile/etc/i3/config"
 
     # ncmpcpp
     cp -R files/ncmpcpp $out/etc
