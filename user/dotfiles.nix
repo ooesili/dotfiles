@@ -217,6 +217,7 @@ in stdenvNoCC.mkDerivation rec {
     # xorg
     cp files/xmodmap $out/etc/xmodmap
     cp files/xinitrc $out/etc/xinitrc
+    chmod +x $out/etc/xinitrc
 
     # zsh
     cp files/zprofile $out/etc/zprofile

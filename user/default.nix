@@ -5,8 +5,8 @@ let
 in [
   alacritty
   capnproto
-  coreutils
   cfssl
+  coreutils
   direnv
   discord
   dotfiles
@@ -36,6 +36,7 @@ in [
   ncmpcpp
   openjdk8
   p7zip
+  python3
   qemu
   qjackctl
   ranger
