@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, ... }:
+{ lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, rofi, ... }:
 
 let
   inherit (lib.lists) last foldl;
@@ -144,6 +144,17 @@ let
     '';
   };
 
+  rofiThemeBase16 = stdenvNoCC.mkDerivation {
+    name = "rofi-theme-base16";
+    src = builtins.fetchGit {
+      url = https://github.com/0xdec/base16-rofi.git;
+      rev = "c56ac76ea80daa2883d91afe580121591473504f";
+    };
+
+    phases = [ "installPhase" "fixupPhase" ];
+    installPhase = "cp -R $src $out";
+  };
+
 in stdenvNoCC.mkDerivation rec {
   name = "dotfiles";
   src = ./.;
@@ -153,6 +164,7 @@ in stdenvNoCC.mkDerivation rec {
     ncmpcpp
     neovim
     ohMyZsh
+    rofi
     tmux
   ];
   inherit neovimPlugins;
@@ -190,6 +202,12 @@ in stdenvNoCC.mkDerivation rec {
     cp ${vimPathogen} $out/etc/xdg/nvim/autoload/pathogen.vim
     mkdir $out/etc/xdg/nvim/bundle
     ln -s $neovimPlugins $out/etc/xdg/nvim/bundle
+
+    # rofi
+    mkdir -p $out/etc/rofi/themes
+    cp -R ${rofiThemeBase16}/themes/base16-default-dark.rasi $out/etc/rofi/themes/
+    makeWrapper ${rofi}/bin/rofi $out/bin/rofi \
+      --add-flags "-theme ~/.nix-profile/etc/rofi/themes/base16-default-dark.rasi"
 
     # tmux
     cp files/tmux.conf $out/etc/tmux.conf

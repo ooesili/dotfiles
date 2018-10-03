@@ -37,6 +37,8 @@ floating_modifier $mod
 bindsym $mod+Return exec alacritty
 bindsym $mod+Escape exec i3lock --color=000000
 bindsym $mod+d exec firefox
+bindsym $mod+m exec rofi -show run
+bindsym $mod+Shift+m exec rofi -show window
 
 # volume controls
 bindsym F10 exec --no-startup-id amixer --quiet set Master toggle

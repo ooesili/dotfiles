@@ -41,6 +41,7 @@ in [
   ranger
   reflex
   ripgrep
+  rofi
   ruby_2_5
   rustup
   scrot
