@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, rofi, ... }:
+{ lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, rofi, bash, ... }:
 
 let
   inherit (lib.lists) last foldl;
@@ -173,6 +173,7 @@ in stdenvNoCC.mkDerivation rec {
   patchPhase = ''
     sed -i 's:@@z\.sh:${ohMyZsh}/plugins/z/z.sh:g' files/nvim/init.vim
     sed -i "s:@@etc:$out/etc:g" files/xinitrc
+    sed -i "s:^#!/usr/bin/env bash:#!${bash}/bin/bash:g" files/xinitrc
     sed -i 's:@@ohMyZsh:${ohMyZsh}:g' files/zshrc
   '';
 
