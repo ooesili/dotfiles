@@ -49,6 +49,7 @@ in [
   shellcheck
   signal-desktop
   socat
+  spotify
   sqlite
   stack
   supercollider
