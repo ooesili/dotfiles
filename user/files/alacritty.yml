@@ -33,6 +33,29 @@ window:
   # Setting this to false will result in window without borders and title bar.
   decorations: true
 
+scrolling:
+  # How many lines of scrollback to keep,
+  # '0' will disable scrolling.
+  history: 10000
+
+  # Number of lines the viewport will move for every line
+  # scrolled when scrollback is enabled (history > 0).
+  multiplier: 3
+
+  # Faux Scrolling
+  #
+  # The `faux_multiplier` setting controls the number
+  # of lines the terminal should scroll when the alternate
+  # screen buffer is active. This is used to allow mouse
+  # scrolling for applications like `man`.
+  #
+  # To disable this completely, set `faux_multiplier` to 0.
+  faux_multiplier: 3
+
+  # Automatically scroll to the bottom when new text is written
+  # to the terminal.
+  auto_scroll: false
+
 # Display tabs using this many cells (changes require restart)
 tabspaces: 8
 
@@ -63,35 +86,41 @@ font:
   normal:
     family: Hack
     # Style can be specified to pick a specific face.
-    style: Regular
+    # style: Regular
 
   # The bold font face
   bold:
     family: Hack
     # Style can be specified to pick a specific face.
-    style: Bold
+    # style: Bold
 
   # The italic font face
   italic:
     family: Hack
     # Style can be specified to pick a specific face.
-    style: Italic
+    # style: Italic
 
   # Point size of the font
-  size: 8
+  size: 6.0
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increase the x offset to move the glyph to
   # the right, increase the y offset to move the glyph upward.
   glyph_offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
+
+  # Scale the font size based on the monitor's DPI. This will lead to bigger text on HiDPI
+  # screens and make reading text a little easier.
+  # On X11 it is possible to change the DPI for each instance of alacritty by using
+  # `WINIT_HIDPI_FACTOR=1.0 alacritty` to scale the font.
+  scale_with_dpi: true
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -193,16 +222,6 @@ mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
-  # Faux Scrollback
-  #
-  # The `faux_scrollback_lines` setting controls the number
-  # of lines the terminal should scroll when the alternate
-  # screen buffer is active. This is used to allow mouse
-  # scrolling for applications like `man`.
-  #
-  # To disable this completely, set `faux_scrollback_lines` to 0.
-  faux_scrollback_lines: 1
-
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
 
@@ -217,6 +236,9 @@ hide_cursor_when_typing: false
 # - Underline
 # - Beam
 cursor_style: Block
+
+# Whether the cursor should be a hollow block on window focus loss
+unfocused_hollow_cursor: true
 
 # Live config reload (changes require restart)
 live_config_reload: true
@@ -259,7 +281,18 @@ live_config_reload: true
 # around them.
 #
 # Either an `action`, `chars`, or `command` field must be present.
-#   `action` must be one of `Paste`, `PasteSelection`, `Copy`, or `Quit`.
+#   `action` must be one of the following:
+#       - `Paste`
+#       - `PasteSelection`
+#       - `Copy`
+#       - `IncreaseFontSize`
+#       - `DecreaseFontSize`
+#       - `ResetFontSize`
+#       - `ScrollPageUp`
+#       - `ScrollPageDown`
+#       - `ScrollToTop`
+#       - `ScrollToBottom`
+#       - `Quit`
 #   `chars` writes the specified string every time that binding is activated.
 #     These should generally be escape sequences, but they can be configured to
 #     send arbitrary strings of bytes.
@@ -273,6 +306,8 @@ live_config_reload: true
 key_bindings:
   - { key: V,        mods: Control|Shift,    action: Paste               }
   - { key: C,        mods: Control|Shift,    action: Copy                }
+  - { key: Paste,                   action: Paste                        }
+  - { key: Copy,                    action: Copy                         }
   - { key: Q,        mods: Command, action: Quit                         }
   - { key: W,        mods: Command, action: Quit                         }
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
