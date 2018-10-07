@@ -2,6 +2,10 @@ with import <nixpkgs> {};
 
 let
   dotfiles = callPackage ./dotfiles.nix {};
+  pythonPackages = py-pkgs: with py-pkgs; [
+    virtualenv
+  ];
+  python = python3.withPackages pythonPackages;
 in [
   alacritty
   capnproto
@@ -12,6 +16,7 @@ in [
   dotfiles
   easytag
   feh
+  ffmpeg
   firefox
   fzf
   gcc-arm-embedded
@@ -64,4 +69,5 @@ in [
   xorg.xmodmap
   xorg.xsetroot
   xsel
+  zip
 ]
