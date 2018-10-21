@@ -22,7 +22,7 @@ in [
   gcc-arm-embedded
   ghc
   gimp
-  go_1_10
+  go_1_11
   htop
   httpie
   i3
