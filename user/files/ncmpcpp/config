@@ -1,5 +1,9 @@
 ask_before_clearing_playlists = no
 browser_display_mode = columns
+current_item_inactive_column_prefix = $(yellow)$r
+current_item_inactive_column_suffix = $/r$(end)
+current_item_prefix = $(white)$r
+current_item_suffix = $/r$(end)
 display_bitrate = yes
 ignore_leading_the = yes
 playlist_display_mode = columns
