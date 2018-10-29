@@ -69,6 +69,7 @@ in with lib; {
         git
         gnumake
         gptfdisk
+        lsof
         neovim
         nmap
         pciutils

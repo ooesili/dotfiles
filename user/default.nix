@@ -28,12 +28,12 @@ in [
   i3
   i3lock
   i3status
+  ipfs
   jack2Full
   jq
   keepassx
   leiningen
   lua
-  manpages
   mpc_cli
   mpv
   mupdf
@@ -62,6 +62,7 @@ in [
   tdesktop
   tmux
   unclutter-xfixes
+  unixtools.xxd
   vagrant
   wireguard
   xcape
