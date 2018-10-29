@@ -15,6 +15,8 @@ in [
   discord
   dotfiles
   easytag
+  elmPackages.elm
+  elmPackages.elm-format
   feh
   ffmpeg
   firefox

@@ -88,6 +88,9 @@ let
   }{
     url = https://github.com/cstrahan/vim-capnp.git;
     rev = "98fcb039b97dbc978a964e36f2681e926b72524d";
+  }{
+    url = https://github.com/ElmCast/elm-vim.git;
+    rev = "e51e2e43ad617c26205a84453481d3ac152c8fec";
   }];
 
   mkNeovimPlugin = plugin: stdenvNoCC.mkDerivation {
