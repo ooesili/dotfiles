@@ -1,11 +1,18 @@
-with import <nixpkgs> {};
+{ pkgs, config }:
+
+with pkgs;
 
 let
-  dotfiles = callPackage ./dotfiles.nix {};
+  mergedConfig = {
+    xmodmap.enable = true;
+  } // config;
+
+  dotfiles = callPackage ./dotfiles.nix { config = mergedConfig; };
   pythonPackages = py-pkgs: with py-pkgs; [
     virtualenv
   ];
   python = python3.withPackages pythonPackages;
+
 in [
   alacritty
   capnproto

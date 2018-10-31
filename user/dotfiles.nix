@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, rofi, bash, ... }:
+{ config, writeText, writeScript, lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, rofi, bash, ... }:
 
 let
   inherit (lib.lists) last foldl;
@@ -158,6 +158,62 @@ let
     installPhase = "cp -R $src $out";
   };
 
+  xmodmaprc = writeText "xmodmaprc" ''
+    ! caps_lock -> left control
+    keycode 66 = Control_L
+
+    ! left control -> (none)
+    keycode 37 = NoSymbol
+
+    ! remap modifiers
+    clear Control
+    clear Lock
+    add Control = Control_L Control_R
+    add Lock = Caps_Lock
+
+    ! leave these around for xcape
+    keycode any = Escape
+
+    ! you win this time, Apple
+    keycode 133 = Super_L
+    keycode 134 = Super_R
+    keycode 64 = Alt_L
+    keycode 108 = Alt_R
+    remove Mod4 = Super_L
+    remove Mod4 = Super_R
+    remove Mod1 = Alt_L
+    remove Mod1 = Alt_R
+    add Mod1 = Super_L
+    add Mod1 = Super_R
+    add Mod4 = Alt_L
+    add Mod4 = Alt_R
+  '';
+
+  xinitrc = writeScript "xinitrc" ''
+    #!${bash}/bin/bash
+
+    # environment variables
+    . $out/etc/zprofile
+
+    # startup applications
+    unclutter --jitter 5 &
+
+    ${if config.xmodmap.enable then ''
+    # custom keybindings
+    xmodmap ${xmodmaprc}
+    '' else ""}
+
+    # tap left control to send escape
+    xcape
+
+    # set keyboard repeat rate
+    delay=200 # ms
+    rate=30 # Hz
+    xset r rate "$delay" "$rate"
+
+    exec i3
+  '';
+
 in stdenvNoCC.mkDerivation rec {
   name = "dotfiles";
   src = ./.;
@@ -175,8 +231,6 @@ in stdenvNoCC.mkDerivation rec {
 
   patchPhase = ''
     sed -i 's:@@z\.sh:${ohMyZsh}/plugins/z/z.sh:g' files/nvim/init.vim
-    sed -i "s:@@etc:$out/etc:g" files/xinitrc
-    sed -i "s:^#!/usr/bin/env bash:#!${bash}/bin/bash:g" files/xinitrc
     sed -i 's:@@ohMyZsh:${ohMyZsh}:g' files/zshrc
   '';
 
@@ -219,9 +273,7 @@ in stdenvNoCC.mkDerivation rec {
       --add-flags "-f $out/etc/tmux.conf"
 
     # xorg
-    cp files/xmodmap $out/etc/xmodmap
-    cp files/xinitrc $out/etc/xinitrc
-    chmod +x $out/etc/xinitrc
+    ln -s ${xinitrc} $out/etc/xinitrc
 
     # zsh
     cp files/zprofile $out/etc/zprofile
