@@ -42,8 +42,6 @@ nnoremap <C-e> 5<C-e>
 nnoremap <C-y> 5<C-y>
 nnoremap g<C-e> <C-e>
 nnoremap g<C-y> <C-y>
-nnoremap <C-n> 5<C-n>
-nnoremap <C-p> 5<C-p>
 " window navigation
 nnoremap <C-h> <C-w><C-h>
 nnoremap <C-j> <C-w><C-j>
