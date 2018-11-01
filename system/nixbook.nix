@@ -1,3 +1,5 @@
+{ config, pkgs, lib, ... }:
+
 {
   imports = [
     ./base.nix
@@ -7,6 +9,8 @@
     primaryUser = "ooesili";
     soundCard = "PCH";
   };
+
+  environment.systemPackages = with pkgs; [ xorg.xbacklight ];
 
   networking.hostName = "nixbook";
   networking.wireless.enable = true;
