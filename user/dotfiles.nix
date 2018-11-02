@@ -174,6 +174,7 @@ let
     ! leave these around for xcape
     keycode any = Escape
 
+    ${if config.xmodmap.swapAltSuper then ''
     ! you win this time, Apple
     keycode 133 = Super_L
     keycode 134 = Super_R
@@ -187,6 +188,7 @@ let
     add Mod1 = Super_R
     add Mod4 = Alt_L
     add Mod4 = Alt_R
+    '' else ""}
   '';
 
   xinitrc = writeScript "xinitrc" ''

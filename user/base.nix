@@ -3,9 +3,10 @@
 with pkgs;
 
 let
-  mergedConfig = {
+  mergedConfig = lib.recursiveUpdate {
     xmodmap.enable = true;
-  } // config;
+    xmodmap.swapAltSuper = true;
+  } config;
 
   dotfiles = callPackage ./dotfiles.nix { config = mergedConfig; };
   pythonPackages = py-pkgs: with py-pkgs; [
