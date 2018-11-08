@@ -1,6 +1,15 @@
 dotfiles
 ====================
 
+:warning: :no_entry: :warning: :no_entry: :warning: :no_entry: :warning:
+:no_entry: :warning: :no_entry:
+
+I haven't used this repository in a couple years. I've moved onto better things (NixOS). You can find my the current incarnation
+of my dotfiles [here on Gitlab](https://gitlab.com/ooesili/dotfiles).
+
+:warning: :no_entry: :warning: :no_entry: :warning: :no_entry: :warning:
+:no_entry: :warning: :no_entry:
+
 # Introduction
 
 My configuration files are organized by application. I recommend cloning this
