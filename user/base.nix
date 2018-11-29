@@ -38,6 +38,7 @@ in [
   i3
   i3lock
   i3status
+  imagemagick
   ipfs
   jack2Full
   jq
