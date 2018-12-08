@@ -93,6 +93,7 @@ alias de='direnv edit'
 alias dr='direnv reload'
 alias gpoh='git push -u origin HEAD'
 alias mp3-dl="youtube-dl -x -f bestaudio --audio-format mp3 --audio-quality 0"
+alias n='ncmpcpp'
 alias rg="rg --type-add 'tf:*.tf' --type-add 'tfvars:*.tfvars'"
 alias ta='tmux attach'
 alias ts='tmux new -s'
