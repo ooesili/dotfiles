@@ -127,13 +127,21 @@ in with lib; {
         musicDirectory = "/home/${cfg.primaryUser}/exthd/files/music";
         user = cfg.primaryUser;
 
-        extraConfig = ''
-          audio_output {
-            type       "alsa"
-            name       "Default Output"
-            device     "default:CARD=${cfg.soundCard}"
-          }
-        '';
+        extraConfig = if config.hardware.pulseaudio.enable then
+          ''
+            audio_output {
+              type "pulse"
+              name "pulse audio"
+            }
+          ''
+        else
+          ''
+            audio_output {
+              type   "alsa"
+              name   "Default Output"
+              device "default:CARD=${cfg.soundCard}"
+            }
+          '';
       };
 
       openssh.enable = true;
