@@ -124,6 +124,12 @@ endfunction
 command! -bang -nargs=* Z call s:z(<bang>0, <f-args>)
 nnoremap <Leader>z :Z<CR>
 
+function s:cd()
+  execute 'lcd ' . expand('%:h')
+  pwd
+endfunction
+command! CD call s:cd()
+
 command! -nargs=0 Delete call s:delete()
 function! s:delete()
   let file = expand("%:p")
