@@ -102,6 +102,9 @@ let
       in "neovim-plugin-${pluginName}-${version}";
     src = builtins.fetchGit plugin;
 
+    # don't move doc to share/doc
+    forceShare = [ "man" "info" ];
+
     phases = [ "installPhase" "fixupPhase" ];
     installPhase = "cp -R $src $out";
   };
