@@ -9,7 +9,8 @@ build: role
 
 .PHONY: user role
 user:
-	install -Dm0644 user/nixpkgs-config.nix ~/.nixpkgs/config.nix
+	mkdir -p ~/.nixpkgs
+	cp user/nixpkgs-config.nix ~/.nixpkgs/config.nix
 	nix-env -rif user/${ROLE}.nix
 
 .PHONY: system
