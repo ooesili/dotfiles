@@ -78,6 +78,7 @@ in [
   unixtools.xxd
   vagrant
   wireguard
+  xautolock
   xcape
   xorg.xev
   xorg.xmodmap

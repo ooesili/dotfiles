@@ -1,4 +1,4 @@
-{ config, writeText, writeScript, lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, rofi, bash, ... }:
+{ config, writeText, writeScript, lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, i3lock, rofi, bash, xorg, ... }:
 
 let
   inherit (lib.lists) last foldl;
@@ -206,6 +206,14 @@ let
     '' else ""}
   '';
 
+  lockScript = writeScript "lock-script" ''
+    #!${bash}/bin/bash
+    set -euo pipefail
+
+    ${i3lock}/bin/i3lock --color=000000
+    ${xorg.xset}/bin/xset dpms force off
+  '';
+
   xinitrc = writeScript "xinitrc" ''
     #!${bash}/bin/bash
 
@@ -250,6 +258,7 @@ in stdenvNoCC.mkDerivation rec {
     sed -i 's:@@z\.sh:${ohMyZsh}/plugins/z/z.sh:g' files/nvim/init.vim
     sed -i 's:@@ohMyZsh:${ohMyZsh}:g' files/zshrc
     sed -i 's:@@font-size:${config.alacritty.font.size}:g' files/alacritty.yml
+    sed -i 's:@@lockScript:${lockScript}:g' files/i3-config
   '';
 
   installPhase = ''

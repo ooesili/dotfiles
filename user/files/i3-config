@@ -12,6 +12,7 @@
 # set wallpaper
 exec feh --no-fehbg --bg-fill "$(cat ~/.wallpaper)"
 exec xsetroot -cursor_name left_ptr
+exec xautolock -time 15 -locker @@lockScript &
 
 set $mod Mod4
 
@@ -35,7 +36,7 @@ floating_modifier $mod
 
 # launch programs
 bindsym $mod+Return exec alacritty
-bindsym $mod+Escape exec i3lock --color=000000
+bindsym $mod+Escape exec @@lockScript
 bindsym $mod+d exec rofi -show run
 bindsym $mod+Shift+d exec rofi -show window
 
