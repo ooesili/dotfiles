@@ -1,4 +1,4 @@
-{ config, writeText, writeScript, lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, i3lock, rofi, bash, xorg, ... }:
+{ config, writeText, writeScript, lib, stdenvNoCC, makeWrapper, alacritty, fzf, ncmpcpp, neovim, tmux, i3, i3lock, rofi, bash, xorg, unclutter-xfixes, xcape, ... }:
 
 let
   inherit (lib.lists) last foldl;
@@ -224,20 +224,20 @@ let
     . $out/etc/zprofile
 
     # startup applications
-    unclutter --jitter 5 &
+    ${unclutter-xfixes}/bin/unclutter --jitter 5 &
 
     ${if config.xmodmap.enable then ''
     # custom keybindings
-    xmodmap ${xmodmaprc}
+    ${xorg.xmodmap}/bin/xmodmap ${xmodmaprc}
     '' else ""}
 
     # tap left control to send escape
-    xcape
+    ${xcape}/bin/xcape
 
     # set keyboard repeat rate
     delay=200 # ms
     rate=30 # Hz
-    xset r rate "$delay" "$rate"
+    ${xorg.xset}/bin/xset r rate "$delay" "$rate"
 
     exec i3
   '';
