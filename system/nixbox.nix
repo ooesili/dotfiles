@@ -14,6 +14,7 @@
 
   networking.hostName = "nixbox";
   nixpkgs.config.virtualbox.enableExtensionPack = true;
+  services.mpd.musicDirectory = "/home/ooesili/exthd/files/music";
   services.xserver.videoDrivers = [ "nvidia" ];
   virtualisation.virtualbox.host.enable = true;
 }

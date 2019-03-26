@@ -126,7 +126,6 @@ in with lib; {
         dataDir = "/home/${cfg.primaryUser}/.local/share/mpd";
         enable = true;
         group = "users";
-        musicDirectory = "/home/${cfg.primaryUser}/exthd/files/music";
         user = cfg.primaryUser;
 
         extraConfig = if config.hardware.pulseaudio.enable then

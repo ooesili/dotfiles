@@ -15,6 +15,8 @@
   networking.hostName = "nixbook";
   networking.wireless.enable = true;
 
+  services.mpd.musicDirectory = "/arch/home/ooesili/music";
+
   # touchpad support
   services.xserver.libinput.enable = true;
 }
