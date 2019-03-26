@@ -29,12 +29,14 @@ in [
   ffmpeg
   firefox
   fzf
-  gcc-arm-embedded
   ghc
   gimp
   go_1_11
+  graphviz
+  groff
   htop
   httpie
+  hydrogen
   i3
   i3lock
   i3status
@@ -52,8 +54,9 @@ in [
   ncmpcpp
   openjdk8
   p7zip
-  python3
-  qemu
+  posix_man_pages
+  pv
+  python
   qjackctl
   ranger
   reflex
@@ -69,7 +72,6 @@ in [
   sqlite
   stack
   supercollider
-  syncthing
   tdesktop
   tmux
   unclutter-xfixes
