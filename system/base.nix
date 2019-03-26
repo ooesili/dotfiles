@@ -99,6 +99,8 @@ in with lib; {
       ];
     };
 
+    networking.nameservers = [ "1.1.1.1" ];
+
     nixpkgs.config.allowUnfree = true;
 
     programs.zsh.enable = true;
