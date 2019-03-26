@@ -91,6 +91,18 @@ let
   }{
     url = https://github.com/ElmCast/elm-vim.git;
     rev = "e51e2e43ad617c26205a84453481d3ac152c8fec";
+  }{
+    url = https://github.com/leafgarland/typescript-vim;
+    rev = "0e9d92eead2df21abe342c4341c55536dd36b0af";
+  }{
+    url = https://github.com/Quramy/tsuquyomi;
+    rev = "a386d98189a4afe63f23a9174115467c6792aac6";
+  }{
+    url = https://github.com/pangloss/vim-javascript;
+    rev = "7b978de215d864cf6138275e237a5c1d055556a1";
+  }{
+    url = https://github.com/mxw/vim-jsx;
+    rev = "ffc0bfd9da15d0fce02d117b843f718160f7ad27";
   }];
 
   mkNeovimPlugin = plugin: stdenvNoCC.mkDerivation {

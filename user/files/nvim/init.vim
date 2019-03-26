@@ -141,7 +141,8 @@ endfunction
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
   \ 'go': ['gofmt', 'go build', 'go vet', 'golint'],
-  \ 'ruby': ['ruby']
+  \ 'ruby': ['ruby'],
+  \ 'javascript': ['standard', 'tsserver']
   \ }
 
 " direnv
