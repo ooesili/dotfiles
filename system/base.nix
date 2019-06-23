@@ -202,10 +202,12 @@ in with lib; {
     time.timeZone = "America/Chicago";
 
     users.users."${cfg.primaryUser}" = {
-      extraGroups = [ "audio" "wheel" ];
+      extraGroups = [ "audio" "docker" "wheel" ];
       isNormalUser = true;
       shell = pkgs.zsh;
       uid = 1000;
     };
+
+    virtualisation.docker.enable = true;
   };
 }
