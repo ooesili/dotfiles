@@ -59,9 +59,6 @@ let
     url = https://github.com/fatih/vim-go.git;
     rev = "8513febab5c698553acc7ac33f4185fb2da664d2";
   }{
-    url = https://github.com/fatih/vim-hclfmt.git;
-    rev = "155a26611b7358b4b2379d4f3e17c094a1ff38bd";
-  }{
     url = https://github.com/LnL7/vim-nix.git;
     rev = "e9abff9a0f4d594e360a5216c4e8f9ed3bcae2c0";
   }{
@@ -75,7 +72,7 @@ let
     rev = "597068870b8f093a8b2d11536c62ff31222ee8d0";
   }{
     url = https://github.com/hashivim/vim-terraform.git;
-    rev = "4e91b8c3a73fb9ecbf159fb5ca24ed6f39fad4f9";
+    rev = "8b0a0ee7f2463f6949a5ce778169a782b80cdab4";
   }{
     url = https://github.com/cespare/vim-toml.git;
     rev = "85ba8277a6e331a56fce920d62bfdacce5bc5a80";
