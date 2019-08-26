@@ -67,7 +67,6 @@ in [
   rustup
   scrot
   shellcheck
-  signal-desktop
   socat
   spotify
   sqlite
@@ -77,6 +76,7 @@ in [
   tmux
   unclutter-xfixes
   unixtools.xxd
+  unstable.signal-desktop
   vagrant
   wireguard
   xautolock
