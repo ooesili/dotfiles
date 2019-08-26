@@ -1,14 +1,21 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
+  unstable = import <unstable> {};
   cfg = config.dotfiles;
+  tmuxConfig = pkgs.callPackage ./pkgs/tmux-config {};
+  neovimConfig = pkgs.callPackage ./pkgs/neovim-config {};
+  zshConfig = pkgs.callPackage ./pkgs/zsh-config {};
 
 in with lib; {
   imports = [
     ./hardware-configuration.nix
     ./local.nix
-    ./modules/axefx2.nix
+    ./modules/desktop
+    ./modules/mpd
+    ./modules/pro-audio
     ./modules/quil.nix
+    ./modules/yubikey.nix
   ];
 
   options = {
@@ -29,43 +36,91 @@ in with lib; {
 
   config = {
     boot = {
-      # jack
-      kernelParams = [ "threadirq" ];
-
       loader.efi.canTouchEfiVariables = true;
       loader.systemd-boot.enable = true;
     };
 
+    dotfiles.desktop.shellProfile = "${zshConfig}/etc/zprofile";
+
     environment = {
-      etc."zprofile.local".text = ''
-        if test -f ~/.nix-profile/etc/zprofile; then
-          . ~/.nix-profile/etc/zprofile
-        fi
-      '';
+      etc."zprofile.local".text = ". ${zshConfig}/etc/zprofile";
+      etc."zshrc.local".text = ". ${zshConfig}/etc/zshrc";
 
-      etc."zshrc.local".text = ''
-        if test -f ~/.nix-profile/etc/zshrc; then
-          . ~/.nix-profile/etc/zshrc
-        fi
-      '';
-
-      systemPackages = with pkgs; [
-        alsaUtils
+      systemPackages = with pkgs; let
+        pythonPackages = py-pkgs: with py-pkgs; [ virtualenv ];
+        python = python3.withPackages pythonPackages;
+      in [
+        awscli
         bind
         binutils
+        capnproto
+        cfssl
+        coreutils
+        direnv
+        discord
+        easytag
+        elmPackages.elm
+        elmPackages.elm-format
+        exa
+        feh
+        ffmpeg
         file
+        firefox
+        fzf
         gcc
+        ghc
+        gimp
         git
         gnumake
+        go_1_11
         gptfdisk
+        graphviz
+        groff
+        htop
+        httpie
+        hydrogen
+        imagemagick
+        ipfs
+        jq
+        keepassx
+        leiningen
         lsof
+        lua
         man-pages
+        mpv
+        mupdf
+        ncdu
         neovim
+        neovimConfig
         nmap
+        openjdk8
+        p7zip
         pciutils
+        posix_man_pages
+        pv
+        python
+        ranger
+        reflex
+        ripgrep
+        ruby_2_5
+        rustup
+        shellcheck
+        socat
+        spotify
+        sqlite
+        stack
+        supercollider
         tcpdump
+        tdesktop
+        tmux
+        tmuxConfig
+        unixtools.xxd
+        unstable.signal-desktop
         unzip
         usbutils
+        vagrant
+        wireguard
+        zip
       ];
     };
 
@@ -90,90 +145,12 @@ in with lib; {
     };
 
     networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
-
     nixpkgs.config.allowUnfree = true;
-
     programs.zsh.enable = true;
-
-    security = {
-      hideProcessInformation = true;
-
-      # jack
-      pam.loginLimits = [
-        { domain = "@audio"; item = "memlock"; type = "-"   ; value = "unlimited"; }
-        { domain = "@audio"; item = "rtprio" ; type = "-"   ; value = "99"       ; }
-        { domain = "@audio"; item = "nofile" ; type = "soft"; value = "99999"    ; }
-        { domain = "@audio"; item = "nofile" ; type = "hard"; value = "99999"    ; }
-      ];
-      rtkit.enable = true;
-    };
+    security.hideProcessInformation = true;
 
     services = {
-      # jack
-      das_watchdog.enable = true;
-
-      mpd = {
-        dataDir = "/home/${cfg.primaryUser}/.local/share/mpd";
-        enable = true;
-        group = "users";
-        user = cfg.primaryUser;
-
-        extraConfig = if config.hardware.pulseaudio.enable then
-          ''
-            audio_output {
-              type "pulse"
-              name "pulse audio"
-            }
-          ''
-        else
-          ''
-            audio_output {
-              type   "alsa"
-              name   "Default Output"
-              device "default:CARD=${cfg.soundCard}"
-            }
-          '';
-      };
-
       openssh.enable = true;
-
-      pcscd.enable = true;
-
-      redshift = {
-        enable = true;
-        latitude = "41.882708";
-        longitude = "-87.623306";
-      };
-
-      xserver = {
-        enable = true;
-        desktopManager.default = "none";
-        displayManager.lightdm = {
-          enable = true;
-          autoLogin = {
-            enable = true;
-            user = cfg.primaryUser;
-          };
-        };
-        layout = "us";
-        windowManager = {
-          default = "xinitrc";
-          session = [{
-            name = "xinitrc";
-            start = ''
-              "$HOME/.nix-profile/etc/xinitrc" &
-              waitPID=$!
-            '';
-          }];
-        };
-      };
-    };
-
-    sound = {
-      enable = true;
-      extraConfig = ''
-        defaults.pcm.!card ${cfg.soundCard}
-      '';
     };
 
     time.timeZone = "America/Chicago";

@@ -1,5 +1,6 @@
-# zprofile is idempotent
-. ~/.nix-profile/etc/zprofile
+# TODO: see if this breaks anything commented out
+# # zprofile is idempotent
+# . ~/.nix-profile/etc/zprofile
 
 # oh-my-zsh setup
 export ZSH='@@ohMyZsh'

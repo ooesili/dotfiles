@@ -5,17 +5,27 @@
     ./base.nix
   ];
 
-  dotfiles = {
+  dotfiles = rec {
+    desktop = {
+      autoLoginUser = primaryUser;
+      alacritty.font.size = "7.0";
+      xmodmap.enable = true;
+      xmodmap.swapAltSuper = false;
+    };
     primaryUser = "ooesili";
-    soundCard = "PCH";
+    mpd = {
+      dataDir = "/home/${primaryUser}/.local/share/mpd";
+      musicDir = "/home/${primaryUser}/exthd/files/music";
+      soundCard = "PCH";
+      user = primaryUser;
+    };
   };
+
 
   environment.systemPackages = with pkgs; [ xorg.xbacklight ];
 
   networking.hostName = "nixbook";
   networking.wireless.enable = true;
-
-  services.mpd.musicDirectory = "/arch/home/ooesili/music";
 
   # touchpad support
   services.xserver.libinput.enable = true;

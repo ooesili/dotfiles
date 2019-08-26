@@ -7,13 +7,22 @@
     blacklist snd_hda_intel
   '';
 
-  dotfiles = {
+  dotfiles = rec {
+    desktop = {
+      autoLoginUser = primaryUser;
+      alacritty.font.size = "9.0";
+      xmodmap.enable = false;
+    };
     primaryUser = "ooesili";
-    soundCard = "Multibit";
+    mpd = {
+      dataDir = "/home/${primaryUser}/.local/share/mpd";
+      musicDir = "/home/${primaryUser}/exthd/files/music";
+      soundCard = "Multibit";
+      user = primaryUser;
+    };
   };
 
   networking.hostName = "nixbox";
-  services.mpd.musicDirectory = "/home/ooesili/exthd/files/music";
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database

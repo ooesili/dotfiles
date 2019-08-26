@@ -10,9 +10,9 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 # set wallpaper
-exec feh --no-fehbg --bg-fill "$(cat ~/.wallpaper)"
-exec xsetroot -cursor_name left_ptr
-exec xautolock -time 15 -locker @@lockScript &
+exec @feh@ --no-fehbg --bg-fill "$(cat ~/.wallpaper)"
+exec @xsetroot@ -cursor_name left_ptr
+exec @xautolock@ -time 15 -locker @lockScript@ &
 
 set $mod Mod4
 
@@ -35,22 +35,22 @@ font pango:monospace 8
 floating_modifier $mod
 
 # launch programs
-bindsym $mod+Return exec alacritty
-bindsym $mod+Escape exec @@lockScript
-bindsym $mod+d exec rofi -show run
-bindsym $mod+Shift+d exec rofi -show window
+bindsym $mod+Return exec @alacritty@ --config-file @alacrittyConfig@
+bindsym $mod+Escape exec @lockScript@
+bindsym $mod+d exec @rofiWrapped@ -show run
+bindsym $mod+Shift+d exec @rofiWrapped@ -show window
 
 # volume controls
-bindsym F10 exec --no-startup-id amixer --quiet set Master toggle
-bindsym F11 exec --no-startup-id amixer --quiet set Master 1-
-bindsym F12 exec --no-startup-id amixer --quiet set Master 1+
+bindsym F10 exec --no-startup-id @amixer@ --quiet set Master toggle
+bindsym F11 exec --no-startup-id @amixer@ --quiet set Master 1-
+bindsym F12 exec --no-startup-id @amixer@ --quiet set Master 1+
 
 # mpd controls
-bindsym $mod+z exec --no-startup-id mpc --quiet prev
-bindsym $mod+x exec --no-startup-id mpc --quiet play
-bindsym $mod+c exec --no-startup-id mpc --quiet pause
-bindsym $mod+v exec --no-startup-id mpc --quiet stop
-bindsym $mod+b exec --no-startup-id mpc --quiet next
+bindsym $mod+z exec --no-startup-id @mpc@ --quiet prev
+bindsym $mod+x exec --no-startup-id @mpc@ --quiet play
+bindsym $mod+c exec --no-startup-id @mpc@ --quiet pause
+bindsym $mod+v exec --no-startup-id @mpc@ --quiet stop
+bindsym $mod+b exec --no-startup-id @mpc@ --quiet next
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -153,7 +153,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "@i3@/bin/i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' '@i3@/bin/i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -185,9 +185,10 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+  i3bar_command @i3@/bin/i3bar
   colors {
     background #181818
   }
   position       top
-  status_command i3status
+  status_command @i3status@
 }
