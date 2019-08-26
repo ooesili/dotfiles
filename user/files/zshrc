@@ -99,6 +99,7 @@ alias ta='tmux attach'
 alias ts='tmux new -s'
 alias tx='tmux resize-pane -x'
 alias ty='tmux resize-pane -y'
+alias ls='exa'
 
 # less colors
 export LESS_TERMCAP_mb="[0;31m"  # begin blinking mode

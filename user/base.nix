@@ -26,6 +26,7 @@ in [
   easytag
   elmPackages.elm
   elmPackages.elm-format
+  exa
   feh
   ffmpeg
   firefox
