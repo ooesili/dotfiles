@@ -16,6 +16,7 @@ let
 
 in [
   alacritty
+  awscli
   capnproto
   cfssl
   coreutils
