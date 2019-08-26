@@ -1,6 +1,6 @@
 # this file can be sourced multiple times
-[[ -z "$__OOESILI_ZPROFILE_SORUCED" ]] || return 0
-__OOESILI_ZPROFILE_SORUCED=1
+[[ -z "$__OOESILI_ZPROFILE_SOURCED" ]] || return 0
+export __OOESILI_ZPROFILE_SOURCED=1
 
 _path_add() {
   if [[ ! ":$PATH:" =~ :$1: ]]; then
