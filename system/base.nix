@@ -148,6 +148,8 @@ in with lib; {
 
       openssh.enable = true;
 
+      pcscd.enable = true;
+
       redshift = {
         enable = true;
         latitude = "41.882708";

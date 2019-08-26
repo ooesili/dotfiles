@@ -1,4 +1,4 @@
-{ pkgs, config }:
+{ pkgs, unstable, config }:
 
 with pkgs;
 
@@ -82,5 +82,6 @@ in [
   xorg.xev
   xorg.xsetroot
   xsel
+  unstable.yubikey-manager
   zip
 ]
