@@ -8,6 +8,7 @@ in with lib; {
     ./hardware-configuration.nix
     ./local.nix
     ./modules/axefx2.nix
+    ./modules/quil.nix
   ];
 
   options = {
