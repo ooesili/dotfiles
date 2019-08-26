@@ -57,7 +57,7 @@ let
     rev = "81deb6333aeca6e4a266346b0f02945f95dad4d5";
   }{
     url = https://github.com/fatih/vim-go.git;
-    rev = "40ffc87ba3eabf299c50ace52be39c1573d0976a";
+    rev = "8513febab5c698553acc7ac33f4185fb2da664d2";
   }{
     url = https://github.com/fatih/vim-hclfmt.git;
     rev = "155a26611b7358b4b2379d4f3e17c094a1ff38bd";
