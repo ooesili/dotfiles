@@ -79,9 +79,7 @@ in [
   vagrant
   wireguard
   xautolock
-  xcape
   xorg.xev
-  xorg.xmodmap
   xorg.xsetroot
   xsel
   zip
