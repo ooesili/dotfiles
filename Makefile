@@ -19,6 +19,8 @@ system: role system/local.nix
 	install -m0644 system/${ROLE}.nix /etc/nixos/configuration.nix
 	install -m0644 system/base.nix /etc/nixos/base.nix
 	install -m0644 system/libreswan.nix /etc/nixos/libreswan.nix
+	rm -rf /etc/nixos/modules
+	cp -R modules /etc/nixos/
 	nixos-rebuild switch
 
 .PHONY: clean
