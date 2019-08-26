@@ -70,12 +70,13 @@ in with lib; {
         gnumake
         gptfdisk
         lsof
+        man-pages
         neovim
         nmap
         pciutils
         tcpdump
-        usbutils
         unzip
+        usbutils
       ];
     };
 
