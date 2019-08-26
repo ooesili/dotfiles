@@ -14,5 +14,4 @@
 
   networking.hostName = "nixbox";
   services.mpd.musicDirectory = "/home/ooesili/exthd/files/music";
-  services.xserver.videoDrivers = [ "nvidia" ];
 }
