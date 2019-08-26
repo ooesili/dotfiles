@@ -142,7 +142,8 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_linters = {
   \ 'go': ['gofmt', 'go build', 'go vet', 'golint'],
   \ 'ruby': ['ruby'],
-  \ 'javascript': ['standard', 'tsserver']
+  \ 'javascript': ['standard', 'tsserver'],
+  \ 'typescript': ['tslint']
   \ }
 
 " direnv
@@ -158,3 +159,6 @@ autocmd BufEnter *.tfvars autocmd! terraform BufWritePre *.tfvars
 " rust
 let g:rustfmt_autosave = 1
 let g:rustfmt_fail_silently = 1
+
+" typescript
+autocmd BufNewFile,BufRead *.ts,*.tsx setlocal filetype=typescript

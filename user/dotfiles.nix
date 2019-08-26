@@ -103,6 +103,9 @@ let
   }{
     url = https://github.com/uarun/vim-protobuf;
     rev = "0d0f4e4b4087e0e608066aa2ba295e396d039931";
+  }{
+    url = https://github.com/peitalin/vim-jsx-typescript;
+    rev = "5cfc3e3ef516177f9dd5e073c091bc82eae68098";
   }];
 
   mkNeovimPlugin = plugin: stdenvNoCC.mkDerivation {
