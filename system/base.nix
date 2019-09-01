@@ -3,7 +3,10 @@
 let
   unstable = import <unstable> {};
   cfg = config.dotfiles;
-  tmuxConfig = pkgs.callPackage ./pkgs/tmux-config {};
+  tmuxConfig = with pkgs; callPackage ./pkgs/tmux-config {
+    copyCommand = "${xsel}/bin/xsel -b";
+    pasteCommand = "${xsel}/bin/xsel -b";
+  };
   neovimConfig = pkgs.callPackage ./pkgs/neovim-config {};
   zshConfig = pkgs.callPackage ./pkgs/zsh-config {};
 
