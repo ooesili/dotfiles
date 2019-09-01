@@ -13,7 +13,6 @@ _path_add "$HOME/.local/bin"
 _path_add "$HOME/bin"
 _path_add "$HOME/.cargo/bin"
 
-export SSH_AUTH_SOCK="$HOME/.ssh/agent.ppid"
 export EDITOR="nvim"
 
 # XDG Base Directory Specification
@@ -21,6 +20,9 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 
+@profileExtra@
+
+# export SSH_AUTH_SOCK="$HOME/.ssh/agent.ppid"
 # # source ssh-agent environment file
 # # shellcheck source=.ssh/agent-info
 # [[ -f ~/.ssh/agent-info ]] && source ~/.ssh/agent-info

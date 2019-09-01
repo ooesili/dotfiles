@@ -1,9 +1,11 @@
-# TODO: see if this breaks anything commented out
-# # zprofile is idempotent
-# . ~/.nix-profile/etc/zprofile
+# NixOS won't have this
+if [[ -f ~/.nix-profile/etc/zprofile ]]; then
+  # # zprofile is idempotent
+  . ~/.nix-profile/etc/zprofile
+fi
 
 # oh-my-zsh setup
-export ZSH='@@ohMyZsh'
+export ZSH='@ohMyZsh@'
 ZSH_THEME='daveverwer'
 plugins=(git z)
 source $ZSH/oh-my-zsh.sh
