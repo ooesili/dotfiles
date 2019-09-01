@@ -4,7 +4,7 @@ let
   cfg = config.dotfiles.desktop;
 
   alacrittyWrapped = pkgs.callPackage ../../pkgs/alacritty-config {
-    config.alacritty.font.size = cfg.alacritty.font.size;
+    config.fontSize = cfg.alacritty.font.size;
   };
 
   rofiThemeBase16 = builtins.fetchGit {
