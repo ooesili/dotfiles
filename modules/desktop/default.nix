@@ -3,6 +3,10 @@
 let
   cfg = config.dotfiles.desktop;
 
+  alacrittyWrapped = pkgs.callPackage ../../pkgs/alacritty-config {
+    config.alacritty.font.size = cfg.alacritty.font.size;
+  };
+
   rofiThemeBase16 = builtins.fetchGit {
     name = "base46-rofi-theme";
     url = https://github.com/0xdec/base16-rofi.git;
@@ -61,8 +65,7 @@ let
     name = "i3-config";
     src = ./i3-config;
 
-    alacritty = "${alacritty}/bin/alacritty";
-    alacrittyConfig = alacrittyConfig;
+    alacritty = "${alacrittyWrapped}/bin/alacritty";
     amixer = "${alsaUtils}/bin/amixer";
     feh = "${feh}/bin/feh";
     i3 = i3;
@@ -72,12 +75,6 @@ let
     rofiWrapped = "${rofiWrapped}/bin/rofi";
     xautolock = "${xautolock}/bin/xautolock";
     xsetroot = "${xorg.xsetroot}/bin/xsetroot";
-  };
-
-  alacrittyConfig = with pkgs; substituteAll {
-    name = "alacritty-config";
-    src = ./alacritty.yml;
-    fontSize = cfg.alacritty.font.size;
   };
 
   xinitrc = with pkgs; writeScript "xinitrc" ''
@@ -142,6 +139,8 @@ in with lib; {
 
   config = {
     environment.systemPackages = with pkgs; [
+      alacritty
+      alacrittyWrapped
       scrot
       xorg.xev
       xsel

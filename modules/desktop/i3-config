@@ -35,7 +35,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # launch programs
-bindsym $mod+Return exec @alacritty@ --config-file @alacrittyConfig@
+bindsym $mod+Return exec @alacritty@
 bindsym $mod+Escape exec @lockScript@
 bindsym $mod+d exec @rofiWrapped@ -show run
 bindsym $mod+Shift+d exec @rofiWrapped@ -show window
