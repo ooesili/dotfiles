@@ -93,7 +93,7 @@ in with lib; {
         mpv
         mupdf
         ncdu
-        neovim
+        unstable.neovim
         neovimConfig
         nmap
         openjdk8
