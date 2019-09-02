@@ -104,14 +104,14 @@ nnoremap <Leader>h :History<CR>
 " fzf + z
 function! s:z(fullscreen, ...)
   if a:0 == 0
-    call fzf#run(fzf#wrap('Z', {'source': "bash -c '. @@z.sh; _z 2>&1 | sed \"s/^[0-9.]* *//\"'", 'sink': 'lcd', 'options': '--tac --tiebreak=index'}, a:fullscreen))
+    call fzf#run(fzf#wrap('Z', {'source': "bash -c '. @z@; _z 2>&1 | sed \"s/^[0-9.]* *//\"'", 'sink': 'lcd', 'options': '--tac --tiebreak=index'}, a:fullscreen))
   else
     let args = []
     for arg in a:000
       call add(args, shellescape(arg))
     endfor
 
-    let lines = systemlist('. @@z.sh; _z 2>&1 -l ' . join(args) . ' | tail -n 1 | sed "s/^[0-9.]* *//"')
+    let lines = systemlist('. @z@; _z 2>&1 -l ' . join(args) . ' | tail -n 1 | sed "s/^[0-9.]* *//"')
     if len(lines) == 0
       echoerr "z: no match found: "
       return

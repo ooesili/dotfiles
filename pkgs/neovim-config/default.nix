@@ -23,20 +23,22 @@ let
     rev = "06da921608b971fb47603671bcafdb2843992eb3";
   };
 
-  zrupa = builtins.fetchGit {
+  z = builtins.fetchGit {
     name = "zrupa";
     url = https://github.com/rupa/z.git;
     rev = "9d5a3fe0407101e2443499e4b95bca33f7a9a9ca";
   };
 
-in stdenvNoCC.mkDerivation rec {
+in stdenvNoCC.mkDerivation {
   name = "neovim-config";
   src = ./.;
   outputs = [ "out" ];
+
+  z = "${z}/z.sh";
   inherit neovimPlugins;
 
   patchPhase = ''
-    # sed -i 's:@@z\.sh:${zrupa}/z.sh:g' files/nvim/init.vim
+    substituteAllInPlace nvim/init.vim
   '';
 
   installPhase = ''
