@@ -192,3 +192,6 @@ bar {
   position       top
   status_command @i3status@
 }
+
+# Application settings
+for_window [class="qjackctl" instance="qjackctl"] floating enable
