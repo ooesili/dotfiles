@@ -117,6 +117,7 @@ in with lib; {
         tdesktop
         tmux
         tmuxConfig
+        tokei
         unixtools.xxd
         unstable.signal-desktop
         unzip
