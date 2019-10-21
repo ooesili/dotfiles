@@ -146,8 +146,11 @@ in with lib; {
       xsel
     ];
 
+    location.provider = "geoclue2";
+
     services = {
       geoclue2.enable = true;
+      redshift.enable = true;
 
       xserver = {
         enable = true;
@@ -171,11 +174,6 @@ in with lib; {
             '';
           }];
         };
-      };
-
-      redshift = {
-        enable = true;
-        provider = "geoclue2";
       };
     };
   };

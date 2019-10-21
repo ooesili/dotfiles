@@ -7,6 +7,7 @@ let
     copyCommand = "${xsel}/bin/xsel -b";
     pasteCommand = "${xsel}/bin/xsel -b";
   };
+  direnvNoTrace = pkgs.callPackage ./pkgs/direnv {};
   neovimConfig = pkgs.callPackage ./pkgs/neovim-config {};
   zshConfig = pkgs.callPackage ./pkgs/zsh-config {};
 
@@ -59,7 +60,7 @@ in with lib; {
         capnproto
         cfssl
         coreutils
-        direnv
+        direnvNoTrace
         discord
         easytag
         elmPackages.elm
@@ -75,7 +76,7 @@ in with lib; {
         gimp
         git
         gnumake
-        go_1_11
+        go_1_12
         gptfdisk
         graphviz
         groff
@@ -93,7 +94,6 @@ in with lib; {
         mpv
         mupdf
         ncdu
-        unstable.neovim
         neovimConfig
         nmap
         openjdk8
@@ -114,17 +114,17 @@ in with lib; {
         stack
         supercollider
         tcpdump
-        tdesktop
         tmux
         tmuxConfig
         tokei
         unixtools.xxd
+        unstable.go
+        unstable.neovim
         unstable.signal-desktop
-        unzip
+        unstable.tdesktop
         usbutils
         vagrant
         wireguard
-        zip
       ];
     };
 
