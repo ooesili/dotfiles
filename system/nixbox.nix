@@ -8,6 +8,10 @@
   '';
 
   dotfiles = rec {
+    cloudflareDDNS = {
+      enable = true;
+      environmentFile = "/etc/secrets/cloudflare-ddns";
+    };
     desktop = {
       autoLoginUser = primaryUser;
       alacritty.font.size = "9.0";

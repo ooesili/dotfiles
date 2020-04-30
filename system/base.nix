@@ -15,6 +15,7 @@ in with lib; {
   imports = [
     ./hardware-configuration.nix
     ./local.nix
+    ./modules/cloudflare-ddns
     ./modules/desktop
     ./modules/mpd
     ./modules/pro-audio
