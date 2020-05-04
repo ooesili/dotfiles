@@ -194,4 +194,5 @@ bar {
 }
 
 # Application settings
-for_window [class="qjackctl" instance="qjackctl"] floating enable
+for_window [class="qjackctl"] floating enable
+for_window [class="VirtualBox Machine"] floating enable

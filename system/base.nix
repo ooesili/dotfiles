@@ -45,6 +45,9 @@ in with lib; {
       loader.systemd-boot.enable = true;
     };
 
+    console.font = "Lat2-Terminus16";
+    console.keyMap = "us";
+
     dotfiles.desktop.shellProfile = "${zshConfig}/etc/zprofile";
 
     environment = {
@@ -77,7 +80,7 @@ in with lib; {
         gimp
         git
         gnumake
-        go_1_12
+        go_1_14
         gptfdisk
         graphviz
         groff
@@ -95,6 +98,7 @@ in with lib; {
         mpv
         mupdf
         ncdu
+        neofetch
         neovimConfig
         nmap
         openjdk8
@@ -133,11 +137,7 @@ in with lib; {
       hack-font
     ];
 
-    i18n = {
-      consoleFont = "Lat2-Terminus16";
-      consoleKeyMap = "us";
-      defaultLocale = "en_US.UTF-8";
-    };
+    i18n.defaultLocale = "en_US.UTF-8";
 
     networking.firewall = {
       allowedTCPPorts = [

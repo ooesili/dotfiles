@@ -154,7 +154,7 @@ in with lib; {
 
       xserver = {
         enable = true;
-        desktopManager.default = "none";
+        displayManager.defaultSession = "none+xinitrc";
         displayManager.lightdm = {
           enable = true;
           autoLogin = mkIf (cfg.autoLoginUser != null) {
@@ -165,7 +165,6 @@ in with lib; {
 
         layout = "us";
         windowManager = {
-          default = "xinitrc";
           session = [{
             name = "xinitrc";
             start = ''
