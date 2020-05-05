@@ -20,6 +20,7 @@ set smartcase
 set softtabstop=2
 set tabstop=2
 set wildmode=longest:full,full
+set breakindent
 set undofile
 
 " ripgrep
