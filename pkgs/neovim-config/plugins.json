@@ -45,7 +45,7 @@
   },
   {
     "url": "https://github.com/ntpeters/vim-better-whitespace.git",
-    "rev": "70a38fa9683e8cd0635264dd1b69c6ccbee4e3e7"
+    "rev": "8cf4b2175dd61416c2fe7d3234324a6c59d678de"
   },
   {
     "url": "https://github.com/tpope/vim-commentary.git",
@@ -69,7 +69,7 @@
   },
   {
     "url": "https://github.com/fatih/vim-go.git",
-    "rev": "8513febab5c698553acc7ac33f4185fb2da664d2"
+    "rev": "7c14e8ae5de7f4562c365249c83abc4d0e0d906c"
   },
   {
     "url": "https://github.com/LnL7/vim-nix.git",
@@ -134,5 +134,17 @@
   {
     "url": "https://github.com/peitalin/vim-jsx-typescript",
     "rev": "5cfc3e3ef516177f9dd5e073c091bc82eae68098"
+  },
+  {
+    "url": "https://github.com/neovimhaskell/haskell-vim.git",
+    "rev": "b1ac46807835423c4a4dd063df6d5b613d89c731"
+  },
+  {
+    "url": "https://github.com/aklt/plantuml-syntax.git",
+    "rev": "eb3df3092a767c844db3f3ff355da840abd0aa97"
+  },
+  {
+    "url": "https://github.com/vmchale/dhall-vim.git",
+    "rev": "77d1c165bcbe6bb7f9eedbeafe390c2107d3c52e"
   }
 ]
