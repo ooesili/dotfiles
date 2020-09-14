@@ -7,10 +7,12 @@ let
     rev = "db94f60d342ba2be7dbe3bfd86f4edb335c2a6a7";
   };
 
+  zshCustom = ./custom;
+
 in stdenvNoCC.mkDerivation {
   name = "zsh-config-wrapped";
   src = ./.;
-  inherit ohMyZsh profileExtra;
+  inherit ohMyZsh profileExtra zshCustom;
 
   installPhase = ''
     mkdir -p $out/etc

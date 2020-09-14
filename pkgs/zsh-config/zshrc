@@ -2,7 +2,8 @@
 
 # oh-my-zsh setup
 export ZSH='@ohMyZsh@'
-ZSH_THEME='daveverwer'
+export ZSH_CUSTOM='@zshCustom@'
+ZSH_THEME='ooesili'
 plugins=(git z)
 source $ZSH/oh-my-zsh.sh
 
