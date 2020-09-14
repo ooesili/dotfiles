@@ -20,9 +20,6 @@ set smartcase
 set softtabstop=2
 set tabstop=2
 set wildmode=longest:full,full
-
-" netrw
-let g:netrw_liststyle = 3 " tree view
 set undofile
 
 " ripgrep
