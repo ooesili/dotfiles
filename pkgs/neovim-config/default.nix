@@ -34,6 +34,7 @@ in stdenvNoCC.mkDerivation {
   src = ./.;
   outputs = [ "out" ];
 
+  goTemplateFile = ./go-templates/main.go;
   z = "${z}/z.sh";
   inherit neovimPlugins;
 
