@@ -50,9 +50,7 @@ nnoremap <C-k> <C-w><C-k>
 nnoremap <C-l> <C-w><C-l>
 
 " snippets
-let g:UltiSnipsExpandTrigger="<c-e>"
 let g:UltiSnipsEditSplit="context"
-" let g:UltiSnipsSnippetsDir=""
 
 " go
 let g:go_fmt_fail_silently = 1

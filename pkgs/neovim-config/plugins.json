@@ -21,7 +21,7 @@
   },
   {
     "url": "https://github.com/rust-lang/rust.vim.git",
-    "rev": "2fa74427456a68e9e90f542567f851df50d48a8c"
+    "rev": "953b10061f595496b35aec84b75c413ee5751a23"
   },
   {
     "url": "https://github.com/edkolev/tmuxline.vim.git",
@@ -29,7 +29,7 @@
   },
   {
     "url": "https://github.com/SirVer/ultisnips.git",
-    "rev": "6fdc3647f72e0a1f321ea6bd092ecd01f7c187ba"
+    "rev": "e83c82099d9bd43dc7895e3cb5b114ee5a2a07c6"
   },
   {
     "url": "https://github.com/tpope/vim-abolish.git",
@@ -81,7 +81,7 @@
   },
   {
     "url": "https://github.com/honza/vim-snippets.git",
-    "rev": "1143432afdb3a97b606b081700eead5b4f499d4d"
+    "rev": "900bf93c6680e38ce568dba26c3f48b4365ac730"
   },
   {
     "url": "https://github.com/tpope/vim-surround.git",
@@ -146,5 +146,9 @@
   {
     "url": "https://github.com/vmchale/dhall-vim.git",
     "rev": "77d1c165bcbe6bb7f9eedbeafe390c2107d3c52e"
+  },
+  {
+    "url": "https://github.com/supercollider/scvim.git",
+    "rev": "2f0f16c3a518f82b760665a780063364f2cc4ba5"
   }
 ]
