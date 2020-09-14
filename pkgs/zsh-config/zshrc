@@ -1,8 +1,4 @@
-# NixOS won't have this
-if [[ -f ~/.nix-profile/etc/zprofile ]]; then
-  # # zprofile is idempotent
-  . ~/.nix-profile/etc/zprofile
-fi
+. @zprofile@
 
 # oh-my-zsh setup
 export ZSH='@ohMyZsh@'

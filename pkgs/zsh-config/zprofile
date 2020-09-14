@@ -8,11 +8,6 @@ _path_add() {
   fi
 }
 
-export GOPATH="$HOME"
-_path_add "$HOME/.local/bin"
-_path_add "$HOME/bin"
-_path_add "$HOME/.cargo/bin"
-
 export EDITOR="nvim"
 
 # XDG Base Directory Specification
@@ -21,6 +16,12 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 
 @profileExtra@
+
+export GOPATH="$HOME"
+_path_add /usr/local/bin
+_path_add "$HOME/.local/bin"
+_path_add "$HOME/bin"
+_path_add "$HOME/.cargo/bin"
 
 # export SSH_AUTH_SOCK="$HOME/.ssh/agent.ppid"
 # # source ssh-agent environment file
