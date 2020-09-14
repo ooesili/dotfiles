@@ -1,11 +1,10 @@
-{ config, lib, runCommand, makeWrapper, tmux, substituteAll, copyCommand, pasteCommand, ... }:
+{ config, lib, runCommand, makeWrapper, tmux, substituteAll, copyCommand, pasteCommand, zsh, ... }:
 
 let
   configFile = substituteAll {
     name = "tmux.conf";
     src = ./tmux.conf;
-    copyCommand = copyCommand;
-    pasteCommand = pasteCommand;
+    inherit copyCommand pasteCommand zsh;
   };
 
 in runCommand "tmux-config-wrap" {
