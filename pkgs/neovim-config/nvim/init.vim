@@ -23,6 +23,7 @@ set wildmode=longest:full,full
 
 " netrw
 let g:netrw_liststyle = 3 " tree view
+set undofile
 
 " ripgrep
 if executable("rg")
