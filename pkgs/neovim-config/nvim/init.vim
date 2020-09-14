@@ -36,6 +36,7 @@ let mapleader=' '
 nnoremap <Leader>e :Explore<CR>
 nnoremap <Leader>w :update<CR>
 nnoremap <Leader>l :botright copen<CR>
+nnoremap <Leader>a :ALEResetBuffer<CR>
 nnoremap <C-e> 5<C-e>
 nnoremap <C-y> 5<C-y>
 nnoremap g<C-e> <C-e>
