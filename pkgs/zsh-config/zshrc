@@ -32,8 +32,9 @@ if which fzf-share &> /dev/null; then
 fi
 
 # fzf configuration
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*" 2> /dev/null'
 export FZF_TMUX=1
+export FZF_DEFAULT_OPTS='--exact'
 
 # don't use fzf-tmux integration inside neovim terminal
 [[ -e "$NVIM_LISTEN_ADDRESS" ]] && unset FZF_TMUX
