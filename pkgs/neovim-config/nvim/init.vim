@@ -79,7 +79,6 @@ augroup InitVimFiletypes
   autocmd!
   autocmd BufNewFile,BufRead .envrc set filetype=sh
   autocmd BufNewFile,BufRead Vagrantfile,Berksfile set filetype=ruby
-  autocmd BufNewFile,BufRead *.tfvars set filetype=conf
   autocmd BufNewFile,BufRead tmux.conf set filetype=tmux.conf
   autocmd BufNewFile,BufRead *.hcl set filetype=terraform
   autocmd BufNewFile,BufRead *.tfstate setlocal filetype=json shiftwidth=4 softtabstop=4
@@ -153,7 +152,6 @@ augroup END
 
 " terraform
 let g:terraform_fmt_on_save = 1
-autocmd BufEnter *.tfvars autocmd! terraform BufWritePre *.tfvars
 
 " rust
 let g:rustfmt_autosave = 1
