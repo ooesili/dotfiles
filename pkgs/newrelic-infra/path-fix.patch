@@ -1,0 +1,68 @@
+diff --git a/internal/plugins/linux/kernel_modules.go b/internal/plugins/linux/kernel_modules.go
+index 32a8ce7..659f000 100644
+--- a/internal/plugins/linux/kernel_modules.go
++++ b/internal/plugins/linux/kernel_modules.go
+@@ -67,7 +67,7 @@ func (self KernelModulesPlugin) getKernelModulesDataset() agent.PluginInventoryD
+ }
+ 
+ func (self *KernelModulesPlugin) populateKernelModuleInfo(modInfo *KernelModule) (err error) {
+-	output, err := helpers.RunCommand("/sbin/modinfo", "", modInfo.Name)
++	output, err := helpers.RunCommand("modinfo", "", modInfo.Name)
+ 	if err != nil {
+ 		err = fmt.Errorf("Unable to get module info for '%s': %s", modInfo.Name, err)
+ 		return
+@@ -94,9 +94,9 @@ func (self *KernelModulesPlugin) populateKernelModuleInfo(modInfo *KernelModule)
+ }
+ 
+ func (self *KernelModulesPlugin) getKernelModuleStatus() (err error) {
+-	output, err := helpers.RunCommand("/sbin/lsmod", "")
++	output, err := helpers.RunCommand("lsmod", "")
+ 	if err != nil {
+-		err = fmt.Errorf("Unable to list kernel modules. err: %s ouput: %s", err, output)
++    err = fmt.Errorf("Unable to list kernel modules. err: %s ouput: %s PATH: %s", err, output, os.Getenv("PATH"))
+ 		return
+ 	}
+ 
+diff --git a/internal/plugins/linux/systemd.go b/internal/plugins/linux/systemd.go
+index c7d574a..f5d56df 100644
+--- a/internal/plugins/linux/systemd.go
++++ b/internal/plugins/linux/systemd.go
+@@ -99,7 +99,7 @@ func getPidFromName(line string) string {
+ }
+ 
+ func (self *SystemdPlugin) getSystemdServiceStatus() {
+-	output, err := helpers.RunCommand("/bin/systemctl", "", "--plain", "-l", "--no-pager", "--no-legend", "--all", "--type=service", "list-units")
++	output, err := helpers.RunCommand("systemctl", "", "--plain", "-l", "--no-pager", "--no-legend", "--all", "--type=service", "list-units")
+ 	if err != nil {
+ 		sdlog.WithError(err).Error("unable to get systemd service status")
+ 	}
+@@ -118,7 +118,7 @@ func (self *SystemdPlugin) getSystemdServiceStatus() {
+ 		if loaded == "active" {
+ 			switch status {
+ 			case "running":
+-				output, err := helpers.RunCommand("/bin/systemctl", "", "--property=MainPID", "show", name)
++				output, err := helpers.RunCommand("systemctl", "", "--property=MainPID", "show", name)
+ 				if err != nil {
+ 					sdlog.WithError(err).Error("systemctl unable to get pid")
+ 				}
+diff --git a/test/harvest/systemd_test.go b/test/harvest/systemd_test.go
+index c685fd5..35a8b0a 100644
+--- a/test/harvest/systemd_test.go
++++ b/test/harvest/systemd_test.go
+@@ -9,6 +9,7 @@ import (
+ 	"github.com/newrelic/infrastructure-agent/pkg/entity"
+ 	"net/http"
+ 	"os"
++	"os/exec"
+ 	"testing"
+ 	"time"
+ 
+@@ -24,7 +25,7 @@ import (
+ func TestSystemdPlugin(t *testing.T) {
+ 	t.Skip("untestable plugin, refactor required")
+ 
+-	if _, err := os.Stat("/bin/systemctl"); os.IsNotExist(err) {
++	if _, err := exec.LookPath("systemctl"); err != nil {
+ 		t.Skip("This test must be executed in a SystemD supporting OS")
+ 	}
+ 

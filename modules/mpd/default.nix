@@ -1,13 +1,13 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, unstable, ... }:
 
 let
   cfg = config.dotfiles.mpd;
 
-  ncmpcppWrapped = with pkgs; runCommand "ncmpcpp-config-wrapped" {
-    buildInputs = [ makeWrapper ];
-    meta.priority = ncmpcpp.meta.priority or 0;
+  ncmpcppWrapped = pkgs.runCommand "ncmpcpp-config-wrapped" {
+    buildInputs = [ pkgs.makeWrapper ];
+    meta.priority = pkgs.ncmpcpp.meta.priority or 0;
   } ''
-    makeWrapper ${ncmpcpp}/bin/ncmpcpp $out/bin/ncmpcpp \
+    makeWrapper ${pkgs.ncmpcpp}/bin/ncmpcpp $out/bin/ncmpcpp \
       --add-flags "--config=${./ncmpcpp-config}" \
       --add-flags "--bindings=${./ncmpcpp-bindings}"
   '';
@@ -22,17 +22,16 @@ let
 
     audio_buffer_size "16384"
     audio_output {
-      ${if config.hardware.pulseaudio.enable
-        then ''
-          type "pulse"
-          name "pulse audio"
-        ''
-        else ''
-          type   "alsa"
-          name   "Default Output"
-          device "default:CARD=${cfg.soundCard}"
-        ''
-      }
+      type "pulse"
+      name "pulse audio"
+    }
+
+    audio_output {
+      type        "fifo"
+      name        "viz"
+      path        "/tmp/mpd.fifo"
+      format      "44100:16:2"
+      buffer_time "5000" # microseconds
     }
 
     audio_output {
@@ -48,42 +47,43 @@ let
     }
   '';
 
-in with lib; {
+in {
   options = {
     dotfiles.mpd = {
-      dataDir = mkOption {
+      enable = lib.mkOption {
+        description = "Whether to enable mpd and related services.";
+        default = false;
+        type = lib.types.bool;
+      };
+
+      dataDir = lib.mkOption {
         description = ''
           The directory where MPD stores its state, tag cache,
           playlists etc.
         '';
-        type = types.str;
+        type = lib.types.str;
       };
 
-      musicDir = mkOption {
+      musicDir = lib.mkOption {
         description = ''
           The directory or where mpd reads music from.
         '';
-        type = types.str;
+        type = lib.types.str;
       };
 
-      soundCard = mkOption {
-        description = "Primary sound card name (from /proc/asound/cards).";
-        example = "PCH";
-        type = types.str;
-      };
-
-      user = mkOption {
+      user = lib.mkOption {
         description = "User to run the mpd daemon as.";
         example = "ooesili";
-        type = types.str;
+        type = lib.types.str;
       };
     };
   };
 
-  config = {
-    environment.systemPackages = with pkgs; [
-      alsaUtils
-      ncmpcpp
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = [
+      pkgs.alsaUtils
+      pkgs.mpc_cli
+      pkgs.ncmpcpp
       ncmpcppWrapped
     ];
 
@@ -103,11 +103,16 @@ in with lib; {
       };
     };
 
-    sound = {
-      enable = true;
-      extraConfig = ''
-        defaults.pcm.!card ${cfg.soundCard}
-      '';
+    systemd.user.services.mpd-mpris = {
+      description = "An implementation of the MPRIS protocol for MPD.";
+      after = [ "mpd.service" ];
+      wantedBy = [ "mpd.service" ];
+
+      serviceConfig = {
+        ExecStart = "${unstable.mpd-mpris}/bin/mpd-mpris";
+        ProtectSystem = "strict";
+        Restart = "always";
+      };
     };
   };
 }

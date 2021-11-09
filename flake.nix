@@ -1,0 +1,95 @@
+{
+  description = "ooesili's NixOS configurations";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, unstable, nixos-hardware, rust-overlay }:
+    let
+      overlays = import ./overlays;
+      opts = {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+      pkgs = import nixpkgs (opts // {
+        overlays = [ rust-overlay.overlays.default ] ++ overlays;
+      });
+      unstablePkgs = import unstable (opts // { inherit overlays; });
+
+      overlayModule.nixpkgs = {
+        inherit overlays;
+        config.allowUnfree = true;
+      };
+
+    in {
+      devShells.x86_64-linux.rustybox = pkgs.mkShell {
+        buildInputs = [
+          pkgs.rust-bin.stable.latest.default
+        ];
+      };
+
+      lib = {
+        nixosSystem = args@{ modules, specialArgs ? {}, ... }: nixpkgs.lib.nixosSystem (args // {
+          modules = args.modules ++ [ overlayModule ];
+          specialArgs = { unstable = unstablePkgs; } // specialArgs;
+        });
+
+        extendConfig = name: args@{ modules, system ? "x86_64-linux", ... }:
+          self.lib.nixosSystem (args // {
+            inherit system;
+            modules = modules ++ [ (builtins.getAttr name self.nixosModules.base) ];
+          });
+      };
+
+      packages.x86_64-linux = {
+        inherit (unstablePkgs) neovim;
+        inherit (pkgs) rustybox;
+      };
+
+      # These are turned into NixOS configurations by a private flake with some
+      # additional bits I don't want to share with the world.
+      nixosModules = {
+        base.nixbox.imports = [
+          ./system/nixbox/configuration.nix
+        ];
+
+        base.framework.imports = [
+          nixos-hardware.nixosModules.framework
+          ./system/framework/configuration.nix
+        ];
+      };
+
+      nixosConfigurations = {
+        pinix = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [ overlayModule ./system/pinix/configuration.nix ];
+        };
+
+        pi-installer = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [
+            overlayModule
+            "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix"
+            ./system/pi-installer.nix
+          ];
+        };
+
+        iso = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            overlayModule
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            ./modules/trusts.nix
+          ];
+        };
+      };
+    };
+}

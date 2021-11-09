@@ -12,10 +12,11 @@ let
     in builtins.fetchGit {
       name = "neovim-plugin-${pluginName}-${version}";
       inherit (plugin) url rev;
+      ref = plugin.ref or "HEAD";
     };
 
   neovimPluginRefs = lib.importJSON ./plugins.json;
-  neovimPlugins = map mkNeovimPlugin neovimPluginRefs;
+  neovimPlugins = (map mkNeovimPlugin neovimPluginRefs);
 
   pathogen = builtins.fetchGit {
     name = "vim-pathogen";
@@ -23,7 +24,7 @@ let
     rev = "06da921608b971fb47603671bcafdb2843992eb3";
   };
 
-  z = builtins.fetchGit {
+  z = lib.fetchgit {
     name = "zrupa";
     url = https://github.com/rupa/z.git;
     rev = "9d5a3fe0407101e2443499e4b95bca33f7a9a9ca";

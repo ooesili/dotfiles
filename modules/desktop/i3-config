@@ -9,11 +9,6 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-# set wallpaper
-exec @feh@ --no-fehbg --bg-fill "$(cat ~/.wallpaper)"
-exec @xsetroot@ -cursor_name left_ptr
-exec @xautolock@ -time 15 -locker @lockScript@ &
-
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -37,20 +32,26 @@ floating_modifier $mod
 # launch programs
 bindsym $mod+Return exec @alacritty@
 bindsym $mod+Escape exec @lockScript@
-bindsym $mod+d exec @rofiWrapped@ -show run
-bindsym $mod+Shift+d exec @rofiWrapped@ -show window
+bindsym $mod+d exec @rofi@ -show run
+bindsym $mod+Shift+d exec @rofi@ -show window
+bindsym $mod+Shift+a exec @audioMode@
 
 # volume controls
 bindsym F10 exec --no-startup-id @amixer@ --quiet set Master toggle
 bindsym F11 exec --no-startup-id @amixer@ --quiet set Master 1-
 bindsym F12 exec --no-startup-id @amixer@ --quiet set Master 1+
 
-# mpd controls
-bindsym $mod+z exec --no-startup-id @mpc@ --quiet prev
-bindsym $mod+x exec --no-startup-id @mpc@ --quiet play
-bindsym $mod+c exec --no-startup-id @mpc@ --quiet pause
-bindsym $mod+v exec --no-startup-id @mpc@ --quiet stop
-bindsym $mod+b exec --no-startup-id @mpc@ --quiet next
+# media controls
+bindsym $mod+z exec --no-startup-id @playerctl@ previous --ignore-player=firefox
+bindsym $mod+x exec --no-startup-id @playerctl@ play --ignore-player=firefox
+bindsym $mod+c exec --no-startup-id @playerctl@ pause --ignore-player=firefox
+bindsym $mod+v exec --no-startup-id @playerctl@ stop --ignore-player=firefox
+bindsym $mod+b exec --no-startup-id @playerctl@ next --ignore-player=firefox
+bindsym XF86MonBrightnessUp exec --no-startup-id @brightnessctl@ set +1%
+bindsym XF86MonBrightnessDown exec --no-startup-id @brightnessctl@ set 1%-
+bindsym XF86AudioMute exec --no-startup-id @pamixer@ --toggle-mute
+bindsym XF86AudioLowerVolume exec --no-startup-id @pamixer@ --decrease 2
+bindsym XF86AudioRaiseVolume exec --no-startup-id @pamixer@ --increase 2
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -101,6 +102,9 @@ bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
+
+# focus urgent window
+bindsym $mod+p [urgent=latest] focus
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -194,5 +198,14 @@ bar {
 }
 
 # Application settings
-for_window [class="qjackctl"] floating enable
+for_window [class="QjackCtl"] floating enable
 for_window [class="VirtualBox Machine"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [title="^Steam - News .*"] floating enable
+
+# i3-gaps
+for_window [class=".*"] border pixel 3
+gaps inner 15
+
+# Don't automatically move the mouse when switching monitors.
+mouse_warping none

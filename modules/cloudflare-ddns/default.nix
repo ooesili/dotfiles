@@ -3,30 +3,40 @@
 let
   cfg = config.dotfiles.cloudflareDDNS;
 
-  ddnsScript = with pkgs; writeScript "cloudflare-ddns" ''
-    #!${bash}/bin/bash
-    set -euo pipefail
+  ddnsScript = pkgs.writeShellApplication {
+    name = "cloudflare-ddns";
 
-    record_uri="https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$RECORD_ID"
+    runtimeInputs = [
+      pkgs.curl
+      pkgs.jq
+    ];
 
-    curl() {
-      ${curl}/bin/curl --proto '=https' --tlsv1.2 --silent --show-error --fail "$@"
-    }
-    cf_curl() {
-      curl -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$@"
-    }
+    text = ''
+      record_uri="https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$RECORD_ID"
 
-    desired_ip="$(curl https://www.cloudflare.com/cdn-cgi/trace | grep '^ip=' | cut -d= -f2)"
-    actual_ip="$(cf_curl "$record_uri" | ${jq}/bin/jq -r .result.content)"
+      _curl() {
+        curl --proto '=https' --tlsv1.2 --silent --show-error --fail "$@"
+      }
+      cf_curl() {
+        _curl -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$@"
+      }
 
-    if [[ "$desired_ip" != "$actual_ip" ]]; then
-      cf_curl -X PUT \
-        -H 'Content-Type: application/json' \
-        -d '{"type":"A","name":"home","ttl":1,"content":"'"$desired_ip"'"}' \
-        "$record_uri" > /dev/null
-      echo "updated from $actual_ip to $desired_ip"
-    fi
-  '';
+      while true; do
+        desired_ip="$(_curl https://www.cloudflare.com/cdn-cgi/trace | grep '^ip=' | cut -d= -f2)"
+        actual_ip="$(cf_curl "$record_uri" | jq -r .result.content)"
+
+        if [[ "$desired_ip" != "$actual_ip" ]]; then
+          cf_curl -X PUT \
+            -H 'Content-Type: application/json' \
+            -d '{"type":"A","name":"home","ttl":1,"content":"'"$desired_ip"'"}' \
+            "$record_uri" > /dev/null
+          echo "updated from $actual_ip to $desired_ip"
+        fi
+
+        sleep 10s
+      done
+    '';
+  };
 
 in with lib; {
   options = {
@@ -38,6 +48,7 @@ in with lib; {
       };
 
       environmentFile = mkOption {
+        default = "/etc/secrets/cloudflare-ddns";
         description = ''
           A file with environment variables to configure access to manage a
           CloudFlare DNS record. The file must be formatted to work with the
@@ -55,11 +66,9 @@ in with lib; {
   config = {
     systemd.services.cloudflare-ddns = mkIf cfg.enable {
       serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${ddnsScript}";
+        ExecStart = "${ddnsScript}/bin/cloudflare-ddns";
         EnvironmentFile = cfg.environmentFile;
       };
-      startAt = "*:0/10";
     };
   };
 }

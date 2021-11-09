@@ -85,6 +85,24 @@ bindkey "^U" backward-kill-line
 # send escape key immediately
 KEYTIMEOUT=1
 
+gclone() {
+  local repo=$1
+  local full_path="$HOME/src/github.com/$repo"
+  local url="git@github.com:$repo.git"
+
+  if [[ -d "$full_path" ]]; then
+    echo >&2 "directory already exists; cd-ing into $full_path"
+    cd "$full_path"
+  fi
+
+  echo >&2 "cloning from GitHub: $url"
+  if git clone "$url" "$full_path"; then
+    cd "$full_path"
+  else
+    return 1
+  fi
+}
+
 # aliases
 alias audiocd="cdparanoia -rB && eject &; flac --delete-input-file \
     --endian=little --sign=signed --channels=2 --bps=16 --sample-rate=44100 *.raw"
@@ -101,6 +119,8 @@ alias ts='tmux new -s'
 alias tx='tmux resize-pane -x'
 alias ty='tmux resize-pane -y'
 alias ls='exa'
+alias l='exa -l'
+alias la='exa -la'
 
 # less colors
 export LESS_TERMCAP_mb="[0;31m"  # begin blinking mode
@@ -115,3 +135,18 @@ fork() {
   "$@" &> /dev/null &
   disown
 }
+
+sysnix() {
+  if [[ $# -lt 1 ]]; then
+    nix
+  else
+    local subcmd=$1; shift
+    nix "$subcmd" --inputs-from dotfiles "$@"
+  fi
+}
+
+# aliased to allow a dash in the command name
+_nix_source() {
+  cd "$(nix flake metadata --inputs-from . ${1:-nixpkgs} --json | jq -r '.path')"
+}
+alias nix-source='_nix_source'

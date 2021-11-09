@@ -9,6 +9,8 @@ with lib; {
       qjackctl
     ];
 
+    # powerManagement.cpuFreqGovernor = "performance";
+
     security = {
       pam.loginLimits = [
         { domain = "@audio"; item = "memlock"; type = "-"   ; value = "unlimited"; }

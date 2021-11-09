@@ -1,0 +1,13 @@
+diff --git a/stdlib.sh b/stdlib.sh
+index 372e76d..1aed5e1 100755
+--- a/stdlib.sh
++++ b/stdlib.sh
+@@ -1162,7 +1162,7 @@ use_nodenv() {
+ # (e.g `use nix -p ocaml`).
+ #
+ use_nix() {
+-  direnv_load nix-shell --show-trace "$@" --run "$(join_args "$direnv" dump)"
++  direnv_load nix-shell "$@" --run "$(join_args "$direnv" dump)"
+   if [[ $# == 0 ]]; then
+     watch_file default.nix shell.nix
+   fi
