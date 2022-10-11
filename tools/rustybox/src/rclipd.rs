@@ -79,13 +79,13 @@ fn handle_conn(mut conn: TcpStream) -> Result<()> {
     Ok(())
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Action {
     Copy = 0,
     Paste = 1,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Selection {
     Primary = 0,
     Clipboard = 1,
@@ -100,7 +100,7 @@ impl Selection {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Header {
     pub action: Action,
     pub selection: Selection,

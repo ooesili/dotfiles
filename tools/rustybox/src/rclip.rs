@@ -39,8 +39,8 @@ fn cmd_paste(selection: Selection) -> Result<()> {
                 action: Action::Paste,
                 selection,
             };
-            let mut header_byte = [header.into()];
-            conn.write_all(&mut header_byte)
+            let header_byte = [header.into()];
+            conn.write_all(&header_byte)
                 .context("writing header byte")?;
             let stdout = io::stdout();
             io::copy(&mut conn, &mut stdout.lock()).context("copying clipboard over network")?;
@@ -71,8 +71,8 @@ fn cmd_copy(selection: Selection) -> Result<()> {
                 action: Action::Copy,
                 selection,
             };
-            let mut header_byte = [header.into()];
-            conn.write_all(&mut header_byte)
+            let header_byte = [header.into()];
+            conn.write_all(&header_byte)
                 .context("writing action byte")?;
             let stdin = io::stdin();
             io::copy(&mut stdin.lock(), &mut conn).context("copying clipboard over network")?;

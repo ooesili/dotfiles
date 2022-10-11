@@ -8,7 +8,7 @@ fn main() -> Result<()> {
         .file_name()
         .context("reading filename from argv[0]")?;
 
-    let subcmd = env::var("RUSTYBOX_CMD").unwrap_or(path.to_str().unwrap().to_owned());
+    let subcmd = env::var("RUSTYBOX_CMD").unwrap_or_else(|_| path.to_str().unwrap().to_owned());
 
     match subcmd.as_str() {
         "batteryd" => rustybox::batteryd::main(args),

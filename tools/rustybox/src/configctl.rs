@@ -177,7 +177,7 @@ impl ConfigSetSpec {
         };
 
         let mut files = HashMap::new();
-        for xdg_config_dir in xdg_config_dirs.split(":") {
+        for xdg_config_dir in xdg_config_dirs.split(':') {
             // TODO: iterate over all of XDG_CONFIG_DIRS
             let config_dir = Path::new(xdg_config_dir).join("configctl");
 
@@ -192,7 +192,7 @@ impl ConfigSetSpec {
 
                 let name = os_to_string(&source_file.file_name())?;
 
-                if let Some(_) = files.insert(name, source_file.path()) {
+                if files.insert(name, source_file.path()).is_some() {
                     bail!(
                         "detected duplicate file: {}",
                         source_file.file_name().to_string_lossy()
