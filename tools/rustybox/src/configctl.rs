@@ -1,6 +1,7 @@
-use anyhow::{anyhow, bail, Context, Result};
+use anyhow::{anyhow, bail, ensure, Context, Result};
 use std::ffi::OsStr;
 use std::os::unix;
+use std::process::Command;
 use std::{
     collections::HashMap,
     env, fs, io,
@@ -11,6 +12,7 @@ pub fn main(mut args: env::Args) -> Result<()> {
     match args.next() {
         Some(arg) => match arg.as_str() {
             "checkout" => checkout(args),
+            "diff" => diff(args),
             "init" => init(args),
             "reset" => reset(args),
             "status" => status(args),
@@ -139,6 +141,32 @@ fn status(_args: env::Args) -> Result<()> {
         }
     }
 
+    Ok(())
+}
+
+fn diff(_args: env::Args) -> Result<()> {
+    let config_set = ConfigSet::gather()?;
+
+    for (name, source_file) in config_set.spec.files.iter() {
+        match config_set.status.files.get(name) {
+            Some(file) => print_diff(&source_file, &file)?,
+            None => eprintln!("warning: file is missing: {}", name),
+        }
+    }
+
+    Ok(())
+}
+
+fn print_diff(file1: &Path, file2: &Path) -> Result<()> {
+    Command::new("diff")
+        .arg("-u")
+        .arg("--")
+        .arg(file1)
+        .arg(file2)
+        .spawn()
+        .context("starting diff command")?
+        .wait()
+        .context("diff command failed")?;
     Ok(())
 }
 
