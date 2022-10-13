@@ -58,10 +58,12 @@ fn checkout(mut args: env::Args) -> Result<()> {
 
     let runtime_dir = env::var("XDG_RUNTIME_DIR").context("XDG_RUNTIME_DIR not set")?;
     let link_dir = Path::new(&runtime_dir).join("configctl");
-
     let checkout_file = env::current_dir().context("getting pwd")?.join(&name);
     let link_file = link_dir.join(&name);
-    replace_symlink(&checkout_file, &link_file)?;
+
+    if !fs::metadata(&checkout_file).is_ok() {
+        replace_symlink(&checkout_file, &link_file)?;
+    }
 
     // Manually copy to use current umask instead of nix store's 0444 permissions.
     let mut source = fs::File::open(&source_file).context("opening source file for reading")?;
