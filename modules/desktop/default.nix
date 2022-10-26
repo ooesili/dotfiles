@@ -135,6 +135,7 @@ in with lib; {
       alacrittyWrapped
       flameshot
       i3-config
+      i3-gaps
       libnotify
       lockScript
       rofi
