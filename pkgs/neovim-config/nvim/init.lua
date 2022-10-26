@@ -19,7 +19,7 @@ vim.api.nvim_command('colorscheme base16-default-dark')
 
 -- basics
 vim.o.breakindent = true
-vim.o.completeopt = 'menuone'
+vim.o.completeopt = 'menu,menuone,noselect'
 vim.o.cursorline = true
 vim.o.expandtab = true
 vim.o.ignorecase = true
@@ -141,6 +141,34 @@ noremap('n', '<Leader>g', ':Telescope live_grep<CR>')
 noremap('n', '<Leader>z', ':lua require("z").telescope()<CR>')
 noremap('n', 'z=', ':Telescope spell_suggest<CR>')
 
+-- nvim-cmp
+local cmp = require('cmp')
+local cmp_lsp_capabilities = require('cmp_nvim_lsp').default_capabilities
+cmp.setup({
+  mapping = cmp.mapping.preset.insert({
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  }),
+
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'nvim_lsp_signature_help' },
+  }, {
+    { name = 'buffer' },
+  })
+})
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  })
+})
+
 -- lsp
 local lsp_on_attach = function(_, bufnr)
   local opts = { noremap=true, silent=true }
@@ -170,7 +198,8 @@ local setup_config = {
   flags = {
     -- This will be the default in neovim 0.7+
     debounce_text_changes = 150,
-  }
+  },
+  capabilities = cmp_lsp_capabilities,
 }
 lspconfig.bashls.setup(setup_config)
 lspconfig.gopls.setup(setup_config)

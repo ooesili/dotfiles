@@ -39,57 +39,82 @@ let
       plugins.tree-sitter-yaml
       plugins.tree-sitter-zig
     ]);
+
+    cmp-nvim-lsp-signature-help = buildVimPluginFrom2Nix {
+      pname = "cmp-nvim-lsp-signature-help";
+      version = "2022-10-26";
+      src = prev.fetchFromGitHub {
+        owner = "hrsh7th";
+        repo = "cmp-nvim-lsp-signature-help";
+        rev = "d2768cb1b83de649d57d967085fe73c5e01f8fd7";
+        sha256 = "sha256-QISg2HRSXG7tlO1EI4J7lvh/gmyVii4+QUBzD3ZjNY4=";
+      };
+      meta.homepage = "https://github.com/hrsh7th/cmp-nvim-lsp/";
+    };
   };
+
+  language-plugins = [
+    vimPlugins.dhall-vim
+    vimPlugins.elm-vim
+    vimPlugins.fennel-vim
+    vimPlugins.haskell-vim
+    vimPlugins.plantuml-syntax
+    vimPlugins.rust-vim
+    vimPlugins.typescript-vim
+    vimPlugins.vim-glsl
+    vimPlugins.vim-javascript
+    vimPlugins.vim-jsx-pretty
+    vimPlugins.vim-nix
+    vimPlugins.vim-protobuf
+    vimPlugins.vim-pug
+    vimPlugins.vim-solidity
+    vimPlugins.vim-terraform
+    vimPlugins.vim-toml
+    vimPlugins.vim-vue
+    vimPlugins.zig-vim
+  ];
+
+  general-plugins = [
+    vimPlugins.ale
+    vimPlugins.aniseed
+    vimPlugins.auto-pairs
+    vimPlugins.auto-pairs
+    vimPlugins.base16-vim
+    vimPlugins.cmp-buffer
+    vimPlugins.cmp-cmdline
+    vimPlugins.cmp-nvim-lsp
+    vimPlugins.cmp-nvim-lsp-signature-help
+    vimPlugins.cmp-path
+    vimPlugins.conjure
+    vimPlugins.nvim-cmp
+    vimPlugins.nvim-lspconfig
+    vimPlugins.nvim-tree-lua
+    vimPlugins.nvim-treesitter
+    vimPlugins.nvim-treesitter-context
+    vimPlugins.nvim-treesitter-textobjects
+    vimPlugins.plenary-nvim
+    vimPlugins.surround
+    vimPlugins.telescope-fzf-native-nvim
+    vimPlugins.telescope-nvim
+    vimPlugins.telescope-ui-select-nvim
+    vimPlugins.vim-abolish
+    vimPlugins.vim-airline
+    vimPlugins.vim-airline-themes
+    vimPlugins.vim-better-whitespace
+    vimPlugins.vim-commentary
+    vimPlugins.vim-endwise
+    vimPlugins.vim-eunuch
+    vimPlugins.vim-fugitive
+    vimPlugins.vim-repeat
+    vimPlugins.vim-unimpaired
+  ];
 
 in {
   neovim = prev.neovim.override {
     configure = {
       customRC = "luafile ${initLua}";
 
-      packages.myVimPackage.start = [
-        myConfig
-
-        vimPlugins.ale
-        vimPlugins.aniseed
-        vimPlugins.auto-pairs
-        vimPlugins.base16-vim
-        vimPlugins.conjure
-        vimPlugins.dhall-vim
-        vimPlugins.elm-vim
-        vimPlugins.fennel-vim
-        vimPlugins.haskell-vim
-        vimPlugins.nvim-lspconfig
-        vimPlugins.nvim-treesitter
-        vimPlugins.nvim-treesitter-context
-        vimPlugins.plantuml-syntax
-        vimPlugins.plenary-nvim
-        vimPlugins.rust-vim
-        vimPlugins.surround
-        vimPlugins.telescope-fzf-native-nvim
-        vimPlugins.telescope-nvim
-        vimPlugins.telescope-ui-select-nvim
-        vimPlugins.typescript-vim
-        vimPlugins.vim-abolish
-        vimPlugins.vim-airline
-        vimPlugins.vim-airline-themes
-        vimPlugins.vim-better-whitespace
-        vimPlugins.vim-commentary
-        vimPlugins.vim-endwise
-        vimPlugins.vim-eunuch
-        vimPlugins.vim-fugitive
-        vimPlugins.vim-glsl
-        vimPlugins.vim-javascript
-        vimPlugins.vim-jsx-pretty
-        vimPlugins.vim-nix
-        vimPlugins.vim-protobuf
-        vimPlugins.vim-pug
-        vimPlugins.vim-repeat
-        vimPlugins.vim-solidity
-        vimPlugins.vim-terraform
-        vimPlugins.vim-toml
-        vimPlugins.vim-unimpaired
-        vimPlugins.zig-vim
-      ];
+      packages.myVimPackage.start = [ myConfig ] ++ language-plugins ++ general-plugins;
     };
   };
 }
