@@ -28,6 +28,10 @@ let overlay = final: prev: {
     buildGoModule = prev.buildGo119Module;
   };
 
+  sops = prev.sops.overrideAttrs (oldAttrs: {
+    patches = [ ./sops-yaml-indent.patch ];
+  });
+
   zdirs = final.writeTextFile {
     name = "zdirs";
     executable = true;

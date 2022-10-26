@@ -1,0 +1,22 @@
+diff --git a/stores/yaml/store.go b/stores/yaml/store.go
+index da9b946..a4d384f 100644
+--- a/stores/yaml/store.go
++++ b/stores/yaml/store.go
+@@ -319,7 +319,7 @@ func (store *Store) LoadPlainFile(in []byte) (sops.TreeBranches, error) {
+ func (store *Store) EmitEncryptedFile(in sops.Tree) ([]byte, error) {
+     var b bytes.Buffer
+ 	e := yaml.NewEncoder(io.Writer(&b))
+-	e.SetIndent(4)
++	e.SetIndent(2)
+ 	for _, branch := range in.Branches {
+ 		// Document root
+ 		var doc = yaml.Node{}
+@@ -351,7 +351,7 @@ func (store *Store) EmitEncryptedFile(in sops.Tree) ([]byte, error) {
+ func (store *Store) EmitPlainFile(branches sops.TreeBranches) ([]byte, error) {
+     var b bytes.Buffer
+ 	e := yaml.NewEncoder(io.Writer(&b))
+-	e.SetIndent(4)
++	e.SetIndent(2)
+ 	for _, branch := range branches {
+ 		// Document root
+ 		var doc = yaml.Node{}

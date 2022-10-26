@@ -146,6 +146,7 @@ in with lib; {
         shellcheck
         slack
         socat
+        sops
         tcpdump
         tmate
         tmux
