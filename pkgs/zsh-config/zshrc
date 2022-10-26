@@ -147,6 +147,6 @@ sysnix() {
 
 # aliased to allow a dash in the command name
 _nix_source() {
-  cd "$(nix flake metadata --inputs-from . ${1:-nixpkgs} --json | jq -r '.path')"
+  cd "$(nix flake metadata --inputs-from dotfiles ${1:-nixpkgs} --json | jq -r '.path')"
 }
 alias nix-source='_nix_source'
