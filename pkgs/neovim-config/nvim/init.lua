@@ -145,12 +145,34 @@ noremap('n', 'z=', ':Telescope spell_suggest<CR>')
 local cmp = require('cmp')
 local cmp_lsp_capabilities = require('cmp_nvim_lsp').default_capabilities
 cmp.setup({
+  enabled = function()
+    -- keep command mode completion enabled when cursor is in a comment
+    if vim.api.nvim_get_mode().mode == 'c' then
+      return true
+    end
+
+    -- disable completion in comments
+    local context = require('cmp.config.context')
+    return not context.in_treesitter_capture("comment")
+      and not context.in_syntax_group("Comment")
+  end,
+
   mapping = cmp.mapping.preset.insert({
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-y>'] = cmp.mapping.scroll_docs(-3),
+    ['<C-e>'] = cmp.mapping.scroll_docs(3),
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if not cmp.visible() then
+        fallback()
+        return
+      end
+      if cmp.get_selected_entry() then
+        cmp.confirm()
+      else
+        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+      end
+    end, {'i','s','c',}),
   }),
 
   sources = cmp.config.sources({
@@ -159,6 +181,12 @@ cmp.setup({
   }, {
     { name = 'buffer' },
   })
+})
+cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
 })
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
@@ -240,11 +268,11 @@ vim.g.fugitive_pty = 0
 vim.g.clipboard = {
   name = 'rclip',
   copy = {
-    ['*'] = {"rclip", "copy", "--primary"},
-    ['+'] = {"rclip", "copy", "--clipboard"}
+    ['*'] = {'rclip', 'copy', '--primary'},
+    ['+'] = {'rclip', 'copy', '--clipboard'}
   },
   paste = {
-    ['*'] = {"rclip", "paste", "--primary"},
-    ['+'] = {"rclip", "paste", "--clipboard"}
+    ['*'] = {'rclip', 'paste', '--primary'},
+    ['+'] = {'rclip', 'paste', '--clipboard'}
   }
 }
