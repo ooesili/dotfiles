@@ -162,6 +162,7 @@ cmp.setup({
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-y>'] = cmp.mapping.scroll_docs(-3),
     ['<C-e>'] = cmp.mapping.scroll_docs(3),
+    ['<C-Space>'] = cmp.mapping.complete(),
     ["<Tab>"] = cmp.mapping(function(fallback)
       if not cmp.visible() then
         fallback()
