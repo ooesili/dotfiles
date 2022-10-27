@@ -36,6 +36,13 @@
         ];
       };
 
+      templates = {
+        rust = {
+          description = "Rust template using the oxalica Rust overlay.";
+          path = ./templates/rust;
+        };
+      };
+
       lib = {
         nixosSystem = args@{ modules, specialArgs ? {}, ... }: nixpkgs.lib.nixosSystem (args // {
           modules = args.modules ++ [ overlayModule ];
