@@ -1,4 +1,4 @@
-use anyhow::{anyhow, bail, ensure, Context, Result};
+use anyhow::{anyhow, bail, Context, Result};
 use std::ffi::OsStr;
 use std::os::unix;
 use std::process::Command;
@@ -61,7 +61,7 @@ fn checkout(mut args: env::Args) -> Result<()> {
     let checkout_file = env::current_dir().context("getting pwd")?.join(&name);
     let link_file = link_dir.join(&name);
 
-    if !fs::metadata(&checkout_file).is_ok() {
+    if fs::metadata(&checkout_file).is_err() {
         replace_symlink(&checkout_file, &link_file)?;
     }
 
@@ -151,7 +151,7 @@ fn diff(_args: env::Args) -> Result<()> {
 
     for (name, source_file) in config_set.spec.files.iter() {
         match config_set.status.files.get(name) {
-            Some(file) => print_diff(&source_file, &file)?,
+            Some(file) => print_diff(source_file, file)?,
             None => eprintln!("warning: file is missing: {}", name),
         }
     }
