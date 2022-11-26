@@ -1,4 +1,4 @@
-{ lib, buildGo119Module, fetchFromGitHub, fetchgit }:
+{ buildGo119Module, fetchgit }:
 
 buildGo119Module {
   pname = "godoc";
