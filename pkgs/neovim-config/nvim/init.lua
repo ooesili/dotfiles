@@ -52,6 +52,13 @@ noremap('n', '<C-y>', '5<C-y>')
 noremap('n', 'g<C-e>', '<C-e>')
 noremap('n', 'g<C-y>', '<C-y>')
 noremap('n', 'g<C-l>', '<C-l>')
+-- telescope
+noremap('n', '<Leader>f', ':Telescope find_files<CR>')
+noremap('n', '<Leader>b', ':Telescope buffers<CR>')
+noremap('n', '<Leader>o', ':Telescope oldfiles<CR>')
+noremap('n', '<Leader>g', ':Telescope live_grep<CR>')
+noremap('n', '<Leader>z', ':lua require("z").telescope()<CR>')
+noremap('n', 'z=', ':Telescope spell_suggest<CR>')
 -- window navigation
 noremap('n', '<C-h>', '<C-w><C-h>')
 noremap('n', '<C-j>', '<C-w><C-j>')
@@ -134,12 +141,6 @@ telescope.setup({
 })
 telescope.load_extension('fzf')
 telescope.load_extension('ui-select')
-noremap('n', '<Leader>f', ':Telescope find_files<CR>')
-noremap('n', '<Leader>b', ':Telescope buffers<CR>')
-noremap('n', '<Leader>o', ':Telescope oldfiles<CR>')
-noremap('n', '<Leader>g', ':Telescope live_grep<CR>')
-noremap('n', '<Leader>z', ':lua require("z").telescope()<CR>')
-noremap('n', 'z=', ':Telescope spell_suggest<CR>')
 
 -- nvim-cmp
 local cmp = require('cmp')
