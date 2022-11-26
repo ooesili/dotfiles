@@ -59,6 +59,8 @@
       packages.x86_64-linux = {
         inherit (unstablePkgs) neovim;
         inherit (pkgs) rustybox;
+
+        inherit pkgs unstable;
       };
 
       # These are turned into NixOS configurations by a private flake with some
