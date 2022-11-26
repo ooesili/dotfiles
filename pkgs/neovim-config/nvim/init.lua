@@ -174,6 +174,11 @@ cmp.setup({
         cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
       end
     end, {'i','s','c',}),
+    ['<C-f>'] = cmp.mapping.complete({
+      config = {
+        sources = { { name = "path" } },
+      },
+    }),
   }),
 
   sources = cmp.config.sources({
