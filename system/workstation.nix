@@ -49,7 +49,6 @@ in with lib; {
 
       loader.efi.canTouchEfiVariables = true;
       loader.systemd-boot.enable = true;
-      kernelPackages = pkgs.linuxPackages_latest;
 
       # Disables this warning:
       # warning: Enabling both boot.enableContainers & virtualisation.containers on system.stateVersion < 22.05 is unsupported.
