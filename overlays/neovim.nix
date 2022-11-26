@@ -78,7 +78,6 @@ let
     vimPlugins.ale
     vimPlugins.aniseed
     vimPlugins.auto-pairs
-    vimPlugins.auto-pairs
     vimPlugins.base16-vim
     vimPlugins.cmp-buffer
     vimPlugins.cmp-cmdline
