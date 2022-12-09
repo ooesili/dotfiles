@@ -5,7 +5,7 @@ let trustedUserCAKeys = pkgs.writeText "ssh-ca.pub" ''
 '';
 
 in {
-  nix.binaryCachePublicKeys = [
+  nix.settings.trusted-public-keys = [
     "192.168.101.2:D1DpppsXiUjx6rLygZ9D2kleWUI+vNlinPvLEUqydeQ="
   ];
 

@@ -144,7 +144,7 @@ telescope.load_extension('ui-select')
 
 -- nvim-cmp
 local cmp = require('cmp')
-local cmp_lsp_capabilities = require('cmp_nvim_lsp').default_capabilities
+local cmp_lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 cmp.setup({
   enabled = function()
     -- keep command mode completion enabled when cursor is in a comment

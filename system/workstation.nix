@@ -152,7 +152,7 @@ in with lib; {
         tmuxConfig
         tokei
         unixtools.xxd
-        unstable.go_1_18
+        unstable.go_1_19
         unstable.godoc
         unstable.gopls
         unstable.inkscape
