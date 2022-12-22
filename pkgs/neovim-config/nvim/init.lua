@@ -153,6 +153,11 @@ cmp.setup({
       return true
     end
 
+    -- disable completion when using telescope
+    if vim.api.nvim_buf_get_option(0, 'filetype') == 'TelescopePrompt' then
+      return false
+    end
+
     -- disable completion in comments
     local context = require('cmp.config.context')
     return not context.in_treesitter_capture("comment")
