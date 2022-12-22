@@ -65,6 +65,9 @@ in with lib; {
 
   config = {
     systemd.services.cloudflare-ddns = mkIf cfg.enable {
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+
       serviceConfig = {
         ExecStart = "${ddnsScript}/bin/cloudflare-ddns";
         EnvironmentFile = cfg.environmentFile;
