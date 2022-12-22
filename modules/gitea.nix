@@ -46,11 +46,11 @@ in {
   ];
 
   services.gitea = {
-    disableRegistration = true;
     dump.enable = true;
     enable = true;
     enableUnixSocket = true;
     rootUrl = "https://git.ooesili.me";
+    settings.service.DISABLE_REGISTRATION = true;
     settings.ui.DEFAULT_THEME = "arc-green";
   };
 }

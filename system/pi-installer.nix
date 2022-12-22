@@ -6,7 +6,7 @@
   ];
 
   sdImage.compressImage = false;
-  nix.trustedUsers = [ "root" "@wheel" ];
+  nix.settings.trusted-users = [ "root" "@wheel" ];
 
   users.users.ooesili = {
     extraGroups = [ "wheel" ];

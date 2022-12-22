@@ -114,7 +114,7 @@
       python
     ];
 
-  nix.trustedUsers = [ "root" "@wheel" ];
+  nix.settings.trusted-users = [ "root" "@wheel" ];
 
   security.sudo.extraRules = [
     {
