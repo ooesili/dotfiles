@@ -1,0 +1,17 @@
+{
+  "package main with error handling": {
+    "prefix": "main",
+    "body": "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\nfunc main() {\n\tif err := mainErr(); err != nil {\n\t\tfmt.Fprintf(os.Stderr, \"error: %s\\n\", err)\n\t\tos.Exit(1)\n\t}\n}\n\nfunc mainErr() error {\n\t$1\n\treturn nil\n}\n",
+    "description": "Main package with error handling"
+  },
+  "graceful HTTP server": {
+    "prefix": "graceful",
+    "body": "func gracefulServe(server *http.Server) error {\n\tshutdown := make(chan os.Signal, 1)\n\tsignal.Notify(shutdown, syscall.SIGTERM, syscall.SIGINT)\n\n\tlistenErr := make(chan error)\n\tlog.Printf(\"listening on %s\", server.Addr)\n\tgo func() {\n\t\tlistenErr <- server.ListenAndServe()\n\t}()\n\n\tselect {\n\tcase err := <-listenErr:\n\t\treturn err\n\n\tcase signal := <-shutdown:\n\t\tlog.Printf(\"received signal %s: shutting down\", signal)\n\t\treturn server.Shutdown(context.Background())\n\t}\n}\n",
+    "description": "Serve an HTTP server with graceful shutdown"
+  },
+  "fmt.Errorf": {
+    "prefix": "errf",
+    "body": "fmt.Errorf(\"$1: %w\", err)",
+    "description": "Wrap an error with fmt.Errorf"
+  }
+}

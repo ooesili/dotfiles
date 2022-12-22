@@ -9,9 +9,13 @@ let
   };
 
   myConfig = buildVimPluginFrom2Nix {
-    pname = "my-nvim-config";
+    name = "my-nvim-config";
     src = ../pkgs/neovim-config/nvim;
-    version = "latest";
+  };
+
+  mySnippets = buildVimPluginFrom2Nix {
+    name = "my-nvim-snippets";
+    src = ../pkgs/neovim-config/snippets;
   };
 
   vimPlugins = prev.vimPlugins // {
@@ -85,6 +89,9 @@ let
     vimPlugins.cmp-nvim-lsp-signature-help
     vimPlugins.cmp-path
     vimPlugins.conjure
+    vimPlugins.cmp_luasnip
+    vimPlugins.friendly-snippets
+    vimPlugins.luasnip
     vimPlugins.nvim-cmp
     vimPlugins.nvim-lspconfig
     vimPlugins.nvim-tree-lua
@@ -113,7 +120,8 @@ in {
     configure = {
       customRC = "luafile ${initLua}";
 
-      packages.myVimPackage.start = [ myConfig ] ++ language-plugins ++ general-plugins;
+      packages.myVimPackage.start = [ myConfig mySnippets ]
+        ++ language-plugins ++ general-plugins;
     };
   };
 }

@@ -65,9 +65,6 @@ noremap('n', '<C-j>', '<C-w><C-j>')
 noremap('n', '<C-k>', '<C-w><C-k>')
 noremap('n', '<C-l>', '<C-w><C-l>')
 
--- snippets
-vim.g.UltiSnipsEditSplit = 'context'
-
 -- status line
 vim.g.airline_theme = 'base16'
 vim.g['airline#extensions#tmuxline#enabled'] = 0
@@ -142,6 +139,10 @@ telescope.setup({
 telescope.load_extension('fzf')
 telescope.load_extension('ui-select')
 
+-- luasnip
+local luasnip = require('luasnip')
+require('luasnip.loaders.from_vscode').lazy_load()
+
 -- nvim-cmp
 local cmp = require('cmp')
 local cmp_lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -158,23 +159,39 @@ cmp.setup({
       and not context.in_syntax_group("Comment")
   end,
 
+  preselect = cmp.PreselectMode.None,
+
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
+
   mapping = cmp.mapping.preset.insert({
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-y>'] = cmp.mapping.scroll_docs(-3),
     ['<C-e>'] = cmp.mapping.scroll_docs(3),
     ['<C-Space>'] = cmp.mapping.complete(),
+
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if not cmp.visible() then
-        fallback()
-        return
-      end
       if cmp.get_selected_entry() then
         cmp.confirm()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
       else
-        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        fallback()
       end
-    end, {'i','s','c',}),
+    end, {'i','s'}), -- {'i','s','c'}
+
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, {'i','s'}),
+
     ['<C-f>'] = cmp.mapping.complete({
       config = {
         sources = { { name = "path" } },
@@ -185,6 +202,7 @@ cmp.setup({
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'nvim_lsp_signature_help' },
+    { name = 'luasnip' },
   }, {
     { name = 'buffer' },
   })
