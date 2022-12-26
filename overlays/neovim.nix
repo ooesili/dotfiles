@@ -91,18 +91,24 @@ let
     vimPlugins.conjure
     vimPlugins.cmp_luasnip
     vimPlugins.friendly-snippets
+    vimPlugins.gitsigns-nvim
+    vimPlugins.indent-blankline-nvim
     vimPlugins.luasnip
+    vimPlugins.neodev-nvim
     vimPlugins.nvim-cmp
     vimPlugins.nvim-lspconfig
     vimPlugins.nvim-tree-lua
     vimPlugins.nvim-treesitter
     vimPlugins.nvim-treesitter-context
     vimPlugins.nvim-treesitter-textobjects
+    vimPlugins.nvim-web-devicons
     vimPlugins.plenary-nvim
     vimPlugins.surround
+    vimPlugins.symbols-outline-nvim
     vimPlugins.telescope-fzf-native-nvim
     vimPlugins.telescope-nvim
     vimPlugins.telescope-ui-select-nvim
+    vimPlugins.trouble-nvim
     vimPlugins.vim-abolish
     vimPlugins.vim-airline
     vimPlugins.vim-airline-themes
@@ -111,8 +117,10 @@ let
     vimPlugins.vim-endwise
     vimPlugins.vim-eunuch
     vimPlugins.vim-fugitive
+    vimPlugins.vim-illuminate
     vimPlugins.vim-repeat
     vimPlugins.vim-unimpaired
+    vimPlugins.which-key-nvim
   ];
 
 in {
