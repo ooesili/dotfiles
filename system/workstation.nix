@@ -120,7 +120,6 @@ in with lib; {
         mupdf
         ncdu
         neofetch
-        neovim
         nmap
         nodePackages.bash-language-server
         nodejs-16_x
@@ -152,13 +151,17 @@ in with lib; {
         tmuxConfig
         tokei
         unixtools.xxd
+        unstable.alejandra
+        unstable.deadnix
         unstable.go_1_19
         unstable.godoc
         unstable.gopls
         unstable.inkscape
+        unstable.neovim
         unstable.nodePackages.typescript-language-server
         unstable.rust-analyzer
         unstable.spotify
+        unstable.statix
         unstable.tdesktop
         unstable.zig
         usbutils

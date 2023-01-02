@@ -395,3 +395,21 @@ require('symbols-outline').setup({
 		fold_reset = 'zi'
 	}
 })
+
+-- null-ls
+local null_ls = require('null-ls')
+null_ls.setup({
+  on_attach = lsp_on_attach,
+  sources = {
+    null_ls.builtins.code_actions.eslint,
+    null_ls.builtins.code_actions.statix,
+    null_ls.builtins.diagnostics.deadnix,
+    null_ls.builtins.diagnostics.eslint,
+    null_ls.builtins.diagnostics.statix,
+    null_ls.builtins.formatting.alejandra,
+    null_ls.builtins.formatting.eslint,
+    null_ls.builtins.formatting.jq,
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.terraform_fmt,
+  }
+})

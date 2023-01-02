@@ -95,6 +95,7 @@ let
     vimPlugins.indent-blankline-nvim
     vimPlugins.luasnip
     vimPlugins.neodev-nvim
+    vimPlugins.null-ls-nvim
     vimPlugins.nvim-cmp
     vimPlugins.nvim-lspconfig
     vimPlugins.nvim-tree-lua
