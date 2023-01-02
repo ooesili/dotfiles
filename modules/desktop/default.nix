@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   cfg = config.dotfiles.desktop;
 
   alacrittyWrapped = pkgs.callPackage ../../pkgs/alacritty-config {
@@ -36,21 +39,25 @@ let
     ! leave these around for xcape
     keycode any = Escape
 
-    ${if cfg.xmodmap.swapAltSuper then ''
-    ! you win this time, Apple
-    keycode 133 = Super_L
-    keycode 134 = Super_R
-    keycode 64 = Alt_L
-    keycode 108 = Alt_R
-    remove Mod4 = Super_L
-    remove Mod4 = Super_R
-    remove Mod1 = Alt_L
-    remove Mod1 = Alt_R
-    add Mod1 = Super_L
-    add Mod1 = Super_R
-    add Mod4 = Alt_L
-    add Mod4 = Alt_R
-    '' else ""}
+    ${
+      if cfg.xmodmap.swapAltSuper
+      then ''
+        ! you win this time, Apple
+        keycode 133 = Super_L
+        keycode 134 = Super_R
+        keycode 64 = Alt_L
+        keycode 108 = Alt_R
+        remove Mod4 = Super_L
+        remove Mod4 = Super_R
+        remove Mod1 = Alt_L
+        remove Mod1 = Alt_R
+        add Mod1 = Super_L
+        add Mod1 = Super_R
+        add Mod4 = Alt_L
+        add Mod4 = Alt_R
+      ''
+      else ""
+    }
   '';
 
   xinitrc = pkgs.writeShellApplication {
@@ -67,11 +74,15 @@ let
       feh --no-fehbg --bg-fill "$(cat ~/.wallpaper)"
       xsetroot -cursor_name left_ptr
 
-      ${if cfg.xmodmap.enable then ''
-      # custom keybindings
-      # xmodmap exits 1 always for whatever reason
-      xmodmap ${xmodmaprc} || true
-      '' else ""}
+      ${
+        if cfg.xmodmap.enable
+        then ''
+          # custom keybindings
+          # xmodmap exits 1 always for whatever reason
+          xmodmap ${xmodmaprc} || true
+        ''
+        else ""
+      }
 
       # set keyboard repeat rate
       delay=200 # ms
@@ -80,131 +91,134 @@ let
     '';
   };
 
-  i3-config = pkgs.runCommand "i3-config" {
-    alacritty = "${alacrittyWrapped}/bin/alacritty";
-    amixer = "${pkgs.alsaUtils}/bin/amixer";
-    audioMode = "${pkgs.audio-mode}/bin/audio-mode";
-    brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
-    i3 = pkgs.i3-gaps;
-    i3status = "${pkgs.i3status}/bin/i3status";
-    lockScript = "${lockScript}/bin/lock-script";
-    pamixer = "${pkgs.pamixer}/bin/pamixer";
-    playerctl = "${pkgs.playerctl}/bin/playerctl";
-    rofi = "${pkgs.rofi}/bin/rofi";
-  } ''
-    mkdir -p $out/etc/xdg/configctl
-    substituteAll ${./i3-config} $out/etc/xdg/configctl/i3-config
-  '';
-
-in with lib; {
-  options.dotfiles.desktop = {
-    alacritty.font.size = mkOption {
-      default = "10.0";
-      description = "Font size of Alacritty terminal windows.";
-      type = types.str;
-    };
-
-    autoLoginUser = mkOption {
-      default = null;
-      description = "Automatically login as this user on startup.";
-      type = types.nullOr types.str;
-    };
-
-    shellProfile = mkOption {
-      description = "Shell profile file to source on login.";
-      type = types.str;
-    };
-
-    xmodmap = {
-      enable = mkOption {
-        default = true;
-        description = "Remap capslock and escape using xmodmap.";
-        type = types.bool;
+  i3-config =
+    pkgs.runCommand "i3-config" {
+      alacritty = "${alacrittyWrapped}/bin/alacritty";
+      amixer = "${pkgs.alsaUtils}/bin/amixer";
+      audioMode = "${pkgs.audio-mode}/bin/audio-mode";
+      brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+      i3 = pkgs.i3-gaps;
+      i3status = "${pkgs.i3status}/bin/i3status";
+      lockScript = "${lockScript}/bin/lock-script";
+      pamixer = "${pkgs.pamixer}/bin/pamixer";
+      playerctl = "${pkgs.playerctl}/bin/playerctl";
+      rofi = "${pkgs.rofi}/bin/rofi";
+    } ''
+      mkdir -p $out/etc/xdg/configctl
+      substituteAll ${./i3-config} $out/etc/xdg/configctl/i3-config
+    '';
+in
+  with lib; {
+    options.dotfiles.desktop = {
+      alacritty.font.size = mkOption {
+        default = "10.0";
+        description = "Font size of Alacritty terminal windows.";
+        type = types.str;
       };
 
-      swapAltSuper = mkOption {
-        default = true;
-        description = "Swap Alt and Super.";
-      };
-    };
-  };
-
-  config = {
-    environment.systemPackages = with pkgs; [
-      alacritty
-      alacrittyWrapped
-      flameshot
-      i3-config
-      i3-gaps
-      libnotify
-      lockScript
-      rofi
-      xorg.xev
-      xsel
-    ];
-
-    services.redshift.enable = true;
-
-    systemd.user.services = {
-      unclutter = {
-        description = "Hides the X11 cursor on inactivity.";
-        wantedBy = [ "graphical-session.target" ];
-        serviceConfig.ExecStart = "${pkgs.unclutter-xfixes}/bin/unclutter --jitter 5";
+      autoLoginUser = mkOption {
+        default = null;
+        description = "Automatically login as this user on startup.";
+        type = types.nullOr types.str;
       };
 
-      xautolock = {
-        description = "Locks the screen after a period of inactivity";
-        wantedBy = [ "graphical-session.target" ];
-        serviceConfig.ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker ${lockScript}/bin/lock-script";
+      shellProfile = mkOption {
+        description = "Shell profile file to source on login.";
+        type = types.str;
       };
 
-      xcape = {
-        description = "Tap the control key to send escape.";
-        wantedBy = [ "graphical-session.target" ];
-        serviceConfig.ExecStart = "${pkgs.xcape}/bin/xcape -f";
-        after = [ "xinit.service" ];
-      };
+      xmodmap = {
+        enable = mkOption {
+          default = true;
+          description = "Remap capslock and escape using xmodmap.";
+          type = types.bool;
+        };
 
-      xinit = {
-        description = "X11 one-time startup commands.";
-        wantedBy = [ "graphical-session.target" ];
-        serviceConfig = {
-          ExecStart = "${xinitrc}/bin/xinitrc";
-          Type = "oneshot";
+        swapAltSuper = mkOption {
+          default = true;
+          description = "Swap Alt and Super.";
         };
       };
     };
 
-    services.xserver = {
-      enable = true;
+    config = {
+      environment.systemPackages = with pkgs; [
+        alacritty
+        alacrittyWrapped
+        flameshot
+        i3-config
+        i3-gaps
+        libnotify
+        lockScript
+        rofi
+        xorg.xev
+        xsel
+      ];
 
-      displayManager = {
-        defaultSession = "none+i3";
-        lightdm.enable = true;
+      services.redshift.enable = true;
 
-        autoLogin = mkIf (cfg.autoLoginUser != null) {
-          enable = true;
-          user = cfg.autoLoginUser;
+      systemd.user.services = {
+        unclutter = {
+          description = "Hides the X11 cursor on inactivity.";
+          wantedBy = ["graphical-session.target"];
+          serviceConfig.ExecStart = "${pkgs.unclutter-xfixes}/bin/unclutter --jitter 5";
+        };
+
+        xautolock = {
+          description = "Locks the screen after a period of inactivity";
+          wantedBy = ["graphical-session.target"];
+          serviceConfig.ExecStart = "${pkgs.xautolock}/bin/xautolock -time 15 -locker ${lockScript}/bin/lock-script";
+        };
+
+        xcape = {
+          description = "Tap the control key to send escape.";
+          wantedBy = ["graphical-session.target"];
+          serviceConfig.ExecStart = "${pkgs.xcape}/bin/xcape -f";
+          after = ["xinit.service"];
+        };
+
+        xinit = {
+          description = "X11 one-time startup commands.";
+          wantedBy = ["graphical-session.target"];
+          serviceConfig = {
+            ExecStart = "${xinitrc}/bin/xinitrc";
+            Type = "oneshot";
+          };
         };
       };
 
-      windowManager.session = [{
-        name  = "i3";
-        bgSupport = true;
-        start = ''
-          # environment variables
-          # shellcheck source=/dev/null
-          . ${cfg.shellProfile}
+      services.xserver = {
+        enable = true;
 
-          # create live-editing symlink for i3
-          ${pkgs.rustybox}/bin/configctl init
+        displayManager = {
+          defaultSession = "none+i3";
+          lightdm.enable = true;
 
-          ${pkgs.i3-gaps}/bin/i3 -c $XDG_RUNTIME_DIR/configctl/i3-config &
-          waitPID=$!
-        '';
-      }];
+          autoLogin = mkIf (cfg.autoLoginUser != null) {
+            enable = true;
+            user = cfg.autoLoginUser;
+          };
+        };
 
-      layout = "us";
+        windowManager.session = [
+          {
+            name = "i3";
+            bgSupport = true;
+            start = ''
+              # environment variables
+              # shellcheck source=/dev/null
+              . ${cfg.shellProfile}
+
+              # create live-editing symlink for i3
+              ${pkgs.rustybox}/bin/configctl init
+
+              ${pkgs.i3-gaps}/bin/i3 -c $XDG_RUNTIME_DIR/configctl/i3-config &
+              waitPID=$!
+            '';
+          }
+        ];
+
+        layout = "us";
+      };
     };
-  };
-}
+  }

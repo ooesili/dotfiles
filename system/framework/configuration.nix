@@ -1,18 +1,21 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     ../workstation.nix
     ./hardware-configuration.nix
     ../../modules/mac-changer.nix
   ];
 
-  boot.kernelParams = [ "mem_sleep_default=deep" ];
+  boot.kernelParams = ["mem_sleep_default=deep"];
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   sec.macchanger = {
     enable = true;
-    devices = [ "wlp170s0" ];
+    devices = ["wlp170s0"];
   };
 
   networking.hostName = "framework";
@@ -35,7 +38,7 @@
 
   systemd.user.services.batteryd = {
     description = "A daemon for battery status notifications.";
-    wantedBy = [ "graphical-session.target" ];
+    wantedBy = ["graphical-session.target"];
 
     serviceConfig = {
       ExecStart = "${pkgs.rustybox}/libexec/batteryd";

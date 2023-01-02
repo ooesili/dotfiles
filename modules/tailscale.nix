@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   populator = pkgs.writeShellApplication {
     name = "tailscale-dns-populator";
 
@@ -24,34 +27,34 @@ let
         > /var/lib/tailscale-hosts
     '';
   };
+in
+  lib.mkIf config.services.tailscale.enable {
+    networking.nameservers = ["127.0.0.1"];
 
-in lib.mkIf config.services.tailscale.enable {
-  networking.nameservers = [ "127.0.0.1" ];
+    services.coredns = {
+      enable = true;
+      config = ''
+        .:53 {
+          hosts /var/lib/tailscale-hosts {
+            fallthrough
+          }
 
-  services.coredns = {
-    enable = true;
-    config = ''
-      .:53 {
-        hosts /var/lib/tailscale-hosts {
-          fallthrough
+          forward . tls://1.1.1.1 tls://1.0.0.1 {
+            tls_servername cloudflare-dns.com
+            health_check 5s
+          }
         }
-
-        forward . tls://1.1.1.1 tls://1.0.0.1 {
-          tls_servername cloudflare-dns.com
-          health_check 5s
-        }
-      }
-    '';
-  };
-
-  systemd.services.tailscale-dns-populator = {
-    description = "Tailscale DNS populator.";
-
-    serviceConfig = {
-      ExecStart = "${populator}/bin/tailscale-dns-populator";
-      Type = "oneshot";
+      '';
     };
 
-    startAt = "*:*:0/30";
-  };
-}
+    systemd.services.tailscale-dns-populator = {
+      description = "Tailscale DNS populator.";
+
+      serviceConfig = {
+        ExecStart = "${populator}/bin/tailscale-dns-populator";
+        Type = "oneshot";
+      };
+
+      startAt = "*:*:0/30";
+    };
+  }

@@ -1,6 +1,8 @@
-{ stdenvNoCC, substituteAll, profileExtra ? "" }:
-
-let
+{
+  stdenvNoCC,
+  substituteAll,
+  profileExtra ? "",
+}: let
   ohMyZsh = builtins.fetchGit {
     name = "oh-my-zsh";
     url = https://github.com/robbyrussell/oh-my-zsh.git;
@@ -8,17 +10,17 @@ let
   };
 
   zshCustom = ./custom;
+in
+  stdenvNoCC.mkDerivation {
+    name = "zsh-config-wrapped";
+    src = ./.;
+    inherit ohMyZsh profileExtra zshCustom;
 
-in stdenvNoCC.mkDerivation {
-  name = "zsh-config-wrapped";
-  src = ./.;
-  inherit ohMyZsh profileExtra zshCustom;
+    installPhase = ''
+      mkdir -p $out/etc
+      export zprofile="$out/etc/zprofile"
 
-  installPhase = ''
-    mkdir -p $out/etc
-    export zprofile="$out/etc/zprofile"
-
-    substituteAll zshrc $out/etc/zshrc
-    substituteAll zprofile $out/etc/zprofile
-  '';
-}
+      substituteAll zshrc $out/etc/zshrc
+      substituteAll zprofile $out/etc/zprofile
+    '';
+  }

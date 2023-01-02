@@ -1,5 +1,8 @@
-{ stdenv, fetchFromGitHub, lib }:
-
+{
+  stdenv,
+  fetchFromGitHub,
+  lib,
+}:
 stdenv.mkDerivation {
   pname = "mdloader";
   version = "1.0.7";

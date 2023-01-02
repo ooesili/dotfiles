@@ -1,7 +1,5 @@
-final: prev:
-
-let
-  inherit (prev.vimUtils.override { vim = prev.neovim; }) buildVimPluginFrom2Nix;
+final: prev: let
+  inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPluginFrom2Nix;
 
   initLua = prev.substituteAll {
     src = ../pkgs/neovim-config/nvim/init.lua;
@@ -18,44 +16,46 @@ let
     src = ../pkgs/neovim-config/snippets;
   };
 
-  vimPlugins = prev.vimPlugins // {
-    nvim-treesitter = prev.vimPlugins.nvim-treesitter.withPlugins (plugins: [
-      plugins.tree-sitter-bash
-      plugins.tree-sitter-c
-      plugins.tree-sitter-clojure
-      plugins.tree-sitter-dockerfile
-      plugins.tree-sitter-fennel
-      plugins.tree-sitter-go
-      plugins.tree-sitter-html
-      plugins.tree-sitter-javascript
-      plugins.tree-sitter-json
-      plugins.tree-sitter-lua
-      plugins.tree-sitter-make
-      plugins.tree-sitter-markdown
-      plugins.tree-sitter-nix
-      plugins.tree-sitter-python
-      plugins.tree-sitter-ruby
-      plugins.tree-sitter-rust
-      plugins.tree-sitter-scss
-      plugins.tree-sitter-toml
-      plugins.tree-sitter-typescript
-      plugins.tree-sitter-vue
-      plugins.tree-sitter-yaml
-      plugins.tree-sitter-zig
-    ]);
+  vimPlugins =
+    prev.vimPlugins
+    // {
+      nvim-treesitter = prev.vimPlugins.nvim-treesitter.withPlugins (plugins: [
+        plugins.tree-sitter-bash
+        plugins.tree-sitter-c
+        plugins.tree-sitter-clojure
+        plugins.tree-sitter-dockerfile
+        plugins.tree-sitter-fennel
+        plugins.tree-sitter-go
+        plugins.tree-sitter-html
+        plugins.tree-sitter-javascript
+        plugins.tree-sitter-json
+        plugins.tree-sitter-lua
+        plugins.tree-sitter-make
+        plugins.tree-sitter-markdown
+        plugins.tree-sitter-nix
+        plugins.tree-sitter-python
+        plugins.tree-sitter-ruby
+        plugins.tree-sitter-rust
+        plugins.tree-sitter-scss
+        plugins.tree-sitter-toml
+        plugins.tree-sitter-typescript
+        plugins.tree-sitter-vue
+        plugins.tree-sitter-yaml
+        plugins.tree-sitter-zig
+      ]);
 
-    cmp-nvim-lsp-signature-help = buildVimPluginFrom2Nix {
-      pname = "cmp-nvim-lsp-signature-help";
-      version = "2022-10-26";
-      src = prev.fetchFromGitHub {
-        owner = "hrsh7th";
-        repo = "cmp-nvim-lsp-signature-help";
-        rev = "d2768cb1b83de649d57d967085fe73c5e01f8fd7";
-        sha256 = "sha256-QISg2HRSXG7tlO1EI4J7lvh/gmyVii4+QUBzD3ZjNY4=";
+      cmp-nvim-lsp-signature-help = buildVimPluginFrom2Nix {
+        pname = "cmp-nvim-lsp-signature-help";
+        version = "2022-10-26";
+        src = prev.fetchFromGitHub {
+          owner = "hrsh7th";
+          repo = "cmp-nvim-lsp-signature-help";
+          rev = "d2768cb1b83de649d57d967085fe73c5e01f8fd7";
+          sha256 = "sha256-QISg2HRSXG7tlO1EI4J7lvh/gmyVii4+QUBzD3ZjNY4=";
+        };
+        meta.homepage = "https://github.com/hrsh7th/cmp-nvim-lsp/";
       };
-      meta.homepage = "https://github.com/hrsh7th/cmp-nvim-lsp/";
     };
-  };
 
   language-plugins = [
     vimPlugins.dhall-vim
@@ -123,14 +123,15 @@ let
     vimPlugins.vim-unimpaired
     vimPlugins.which-key-nvim
   ];
-
 in {
   neovim = prev.neovim.override {
     configure = {
       customRC = "luafile ${initLua}";
 
-      packages.myVimPackage.start = [ myConfig mySnippets ]
-        ++ language-plugins ++ general-plugins;
+      packages.myVimPackage.start =
+        [myConfig mySnippets]
+        ++ language-plugins
+        ++ general-plugins;
     };
   };
 }

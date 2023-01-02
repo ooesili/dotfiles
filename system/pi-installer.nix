@@ -1,15 +1,20 @@
-{ config, lib, pkgs, unstable, options, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  unstable,
+  options,
+  ...
+}: {
   imports = [
     ../modules/trusts.nix
   ];
 
   sdImage.compressImage = false;
-  nix.settings.trusted-users = [ "root" "@wheel" ];
+  nix.settings.trusted-users = ["root" "@wheel"];
 
   users.users.ooesili = {
-    extraGroups = [ "wheel" ];
+    extraGroups = ["wheel"];
     isNormalUser = true;
   };
 

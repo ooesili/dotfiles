@@ -1,5 +1,7 @@
-{ buildGo119Module, fetchgit }:
-
+{
+  buildGo119Module,
+  fetchgit,
+}:
 buildGo119Module {
   pname = "godoc";
   version = "2022-07-26";

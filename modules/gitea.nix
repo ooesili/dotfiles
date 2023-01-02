@@ -1,6 +1,8 @@
-{ pkgs, config, ... }:
-
-let
+{
+  pkgs,
+  config,
+  ...
+}: let
   gitea-restore = pkgs.writeShellApplication {
     name = "gitea-restore";
     runtimeInputs = [

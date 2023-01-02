@@ -1,12 +1,10 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   config = {
     systemd.services.newrelic-infra = {
-      after = [ "dbus.service" "syslog.target" "network.target" ];
-      wantedBy = [ "multi-user.target" ];
+      after = ["dbus.service" "syslog.target" "network.target"];
+      wantedBy = ["multi-user.target"];
       description = "New Relic Infrastructure Agent";
-      path = [ pkgs.kmod ];
+      path = [pkgs.kmod];
 
       serviceConfig = {
         RuntimeDirectory = "newrelic-infra";

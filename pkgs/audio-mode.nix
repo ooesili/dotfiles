@@ -1,8 +1,11 @@
-{ writeShellApplication, ponymix, rofi }:
-
+{
+  writeShellApplication,
+  ponymix,
+  rofi,
+}:
 writeShellApplication {
   name = "audio-mode";
-  runtimeInputs = [ ponymix rofi ];
+  runtimeInputs = [ponymix rofi];
 
   text = ''
     devices="$(ponymix list --sink | awk '/^sink/ {print $3}')"

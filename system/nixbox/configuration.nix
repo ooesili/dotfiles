@@ -1,6 +1,10 @@
-{ config, lib, pkgs, unstable, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  unstable,
+  ...
+}: {
   imports = [
     ../workstation.nix
     ./hardware-configuration.nix
@@ -8,12 +12,12 @@
   ];
 
   boot = {
-    blacklistedKernelModules = [ "snd_hda_intel" ];
+    blacklistedKernelModules = ["snd_hda_intel"];
     extraModulePackages = [
       # Currently broken: https://github.com/NixOS/nixpkgs/pull/174109
       # config.boot.kernelPackages.rtl88x2bu
     ];
-    kernelModules = [ "af_key" ];
+    kernelModules = ["af_key"];
   };
 
   dotfiles = {
@@ -68,7 +72,7 @@
 
   services.xserver = {
     dpi = 96;
-    videoDrivers = [ "nvidia" ];
+    videoDrivers = ["nvidia"];
     screenSection = ''
       Option "metamodes" "HDMI-0: nvidia-auto-select +1920+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}, DP-0: nvidia-auto-select +0+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}"
     '';

@@ -1,8 +1,10 @@
-{ config, lib, pkgs, ...}:
-
-with lib;
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.sec.macchanger;
 in {
   options = {
@@ -18,27 +20,27 @@ in {
         type = types.listOf types.str;
         default = [];
         example = literalExample ''
-            [
-              "eth0"
-              "wlan0"
-            ]
-          '';
+          [
+            "eth0"
+            "wlan0"
+          ]
+        '';
         description = ''
-            List of devices to include for MAC address spoofing.
-          '';
+          List of devices to include for MAC address spoofing.
+        '';
       };
     };
   };
   config = mkIf cfg.enable {
-    systemd.services = mkMerge (forEach cfg.devices (x:
-      {
+    systemd.services = mkMerge (forEach cfg.devices (
+      x: {
         "macchanger-${x}" = {
           description = "Randomize MAC address of ${x}";
-          wants = [ "network-pre.target" ];
-          wantedBy = [ "multi-user.target" ];
-          before = [ "network-pre.target" ];
-          bindsTo = [ "sys-subsystem-net-devices-${x}.device" ];
-          after = [ "sys-subsystem-net-devices-${x}.device" ];
+          wants = ["network-pre.target"];
+          wantedBy = ["multi-user.target"];
+          before = ["network-pre.target"];
+          bindsTo = ["sys-subsystem-net-devices-${x}.device"];
+          after = ["sys-subsystem-net-devices-${x}.device"];
           script = ''
             get_current_mac_of_nic() {
               local mac
@@ -60,7 +62,7 @@ in {
                 break
               fi
             done
-            '';
+          '';
           serviceConfig.Type = "oneshot";
         };
       }

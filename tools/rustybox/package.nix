@@ -1,5 +1,9 @@
-{ lib, rustPlatform, playerctl, xsel }:
-
+{
+  lib,
+  rustPlatform,
+  playerctl,
+  xsel,
+}:
 rustPlatform.buildRustPackage {
   pname = "rustybox";
   version = "0.1.0";

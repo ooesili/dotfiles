@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   config.environment.etc."leiningen/profiles.clj".text = ''
     {:system
      {:resource-paths

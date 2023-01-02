@@ -1,16 +1,21 @@
-{ config, pkgs, lib, unstable, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  unstable,
+  ...
+}: let
   cfg = config.dotfiles.mpd;
 
-  ncmpcppWrapped = pkgs.runCommand "ncmpcpp-config-wrapped" {
-    buildInputs = [ pkgs.makeWrapper ];
-    meta.priority = pkgs.ncmpcpp.meta.priority or 0;
-  } ''
-    makeWrapper ${pkgs.ncmpcpp}/bin/ncmpcpp $out/bin/ncmpcpp \
-      --add-flags "--config=${./ncmpcpp-config}" \
-      --add-flags "--bindings=${./ncmpcpp-bindings}"
-  '';
+  ncmpcppWrapped =
+    pkgs.runCommand "ncmpcpp-config-wrapped" {
+      buildInputs = [pkgs.makeWrapper];
+      meta.priority = pkgs.ncmpcpp.meta.priority or 0;
+    } ''
+      makeWrapper ${pkgs.ncmpcpp}/bin/ncmpcpp $out/bin/ncmpcpp \
+        --add-flags "--config=${./ncmpcpp-config}" \
+        --add-flags "--bindings=${./ncmpcpp-bindings}"
+    '';
 
   mpdConf = pkgs.writeText "mpd.conf" ''
     bind_to_address      "127.0.0.1"
@@ -46,7 +51,6 @@ let
       tags            "yes"      # httpd supports sending tags to listening streams.
     }
   '';
-
 in {
   options = {
     dotfiles.mpd = {
@@ -89,8 +93,8 @@ in {
 
     systemd.user.services.mpd = {
       description = "Music Player Daemon";
-      after = [ "network.target" "sound.target" ];
-      wantedBy = [ "graphical-session.target" ];
+      after = ["network.target" "sound.target"];
+      wantedBy = ["graphical-session.target"];
 
       serviceConfig = {
         ExecStart = "${pkgs.mpd}/bin/mpd --no-daemon ${mpdConf}";
@@ -105,8 +109,8 @@ in {
 
     systemd.user.services.mpd-mpris = {
       description = "An implementation of the MPRIS protocol for MPD.";
-      after = [ "mpd.service" ];
-      wantedBy = [ "mpd.service" ];
+      after = ["mpd.service"];
+      wantedBy = ["mpd.service"];
 
       serviceConfig = {
         ExecStart = "${unstable.mpd-mpris}/bin/mpd-mpris";

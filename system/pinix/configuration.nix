@@ -1,13 +1,15 @@
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ../../modules/gitea.nix
-      ../../modules/newrelic-infra.nix
-      ../../modules/trusts.nix
-    ];
+  config,
+  pkgs,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ../../modules/gitea.nix
+    ../../modules/newrelic-infra.nix
+    ../../modules/trusts.nix
+  ];
 
   boot = {
     # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -20,10 +22,22 @@
 
   console = {
     colors = [
-      "181818" "ab4642" "a1b56c" "f7ca88"
-      "7cafc2" "ba8baf" "86c1b9" "d8d8d8"
-      "585858" "181818" "ab4642" "a1b56c"
-      "f7ca88" "7cafc2" "ba8baf" "f8f8f8"
+      "181818"
+      "ab4642"
+      "a1b56c"
+      "f7ca88"
+      "7cafc2"
+      "ba8baf"
+      "86c1b9"
+      "d8d8d8"
+      "585858"
+      "181818"
+      "ab4642"
+      "a1b56c"
+      "f7ca88"
+      "7cafc2"
+      "ba8baf"
+      "f8f8f8"
     ];
 
     font = "Lat2-Terminus16";
@@ -42,7 +56,7 @@
     firewall.allowedUDPPorts = [
       51820 # wireguard
     ];
-    firewall.allowedTCPPorts = [ 80 443 ];
+    firewall.allowedTCPPorts = [80 443];
   };
 
   nixpkgs = {
@@ -51,8 +65,7 @@
         firmwareLinuxNonfree = super.firmwareLinuxNonfree.overrideAttrs (old: {
           version = "2020-12-18";
           src = pkgs.fetchgit {
-            url =
-              "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
+            url = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
             rev = "b79d2396bc630bfd9b4058459d3e82d7c3428599";
             sha256 = "1rb5b3fzxk5bi6kfqp76q1qszivi0v1kdz1cwj2llp5sd9ns03b5";
           };
@@ -64,68 +77,69 @@
     config.allowUnfree = true;
   };
 
-  environment.systemPackages =
-    let
-      sslpsk = pkgs.python3Packages.buildPythonPackage {
-        pname = "sslpsk";
-        version = "2020-01-29";
+  environment.systemPackages = let
+    sslpsk = pkgs.python3Packages.buildPythonPackage {
+      pname = "sslpsk";
+      version = "2020-01-29";
 
-        src = pkgs.fetchFromGitHub {
-          owner = "drbild";
-          repo = "sslpsk";
-          rev = "d88123a75786953f82f5e25d6c43d9d9259acb62";
-          sha256 = "sha256-RqaZLtRMzYJPKXBBsw1alujGyqWAQRSQLPyAR8Zi6t4=";
-        };
-
-        buildInputs = [
-          pkgs.openssl
-          pkgs.pkg-config
-        ];
-
-        meta = {
-          description = " Adds TLS-PSK support to the Python ssl package ";
-          homepage = "https://github.com/drbild/sslpsk";
-          license = pkgs.lib.licenses.asl20;
-        };
+      src = pkgs.fetchFromGitHub {
+        owner = "drbild";
+        repo = "sslpsk";
+        rev = "d88123a75786953f82f5e25d6c43d9d9259acb62";
+        sha256 = "sha256-RqaZLtRMzYJPKXBBsw1alujGyqWAQRSQLPyAR8Zi6t4=";
       };
 
-      python = pkgs.python3.withPackages (ps: [
-        ps.paho-mqtt
-        ps.tornado
-        ps.pycryptodomex
-        sslpsk
-      ]);
-    in [
-      pkgs.htop
-      pkgs.tcpdump
-      pkgs.vim
+      buildInputs = [
+        pkgs.openssl
+        pkgs.pkg-config
+      ];
 
-      ### tuya-convert ###
-      pkgs.dnsmasq
-      pkgs.git
-      pkgs.haveged
-      pkgs.hostapd
-      pkgs.iw
-      pkgs.mosquitto
-      pkgs.nopt
-      pkgs.openssl
-      pkgs.pkg-config
-      pkgs.screen
-      python
-    ];
+      meta = {
+        description = " Adds TLS-PSK support to the Python ssl package ";
+        homepage = "https://github.com/drbild/sslpsk";
+        license = pkgs.lib.licenses.asl20;
+      };
+    };
 
-  nix.settings.trusted-users = [ "root" "@wheel" ];
+    python = pkgs.python3.withPackages (ps: [
+      ps.paho-mqtt
+      ps.tornado
+      ps.pycryptodomex
+      sslpsk
+    ]);
+  in [
+    pkgs.htop
+    pkgs.tcpdump
+    pkgs.vim
+
+    ### tuya-convert ###
+    pkgs.dnsmasq
+    pkgs.git
+    pkgs.haveged
+    pkgs.hostapd
+    pkgs.iw
+    pkgs.mosquitto
+    pkgs.nopt
+    pkgs.openssl
+    pkgs.pkg-config
+    pkgs.screen
+    python
+  ];
+
+  nix.settings.trusted-users = ["root" "@wheel"];
 
   security.sudo.extraRules = [
     {
-      commands = [ {
-        command = "ALL";
-        options = [ "SETENV" "NOPASSWD" ];
-      } ];
-      groups = [ "wheel" ];
+      commands = [
+        {
+          command = "ALL";
+          options = ["SETENV" "NOPASSWD"];
+        }
+      ];
+      groups = ["wheel"];
       host = "ALL";
       runAs = "ALL:ALL";
-      users = [ ];
+      users = [];
     }
   ];
 
@@ -173,6 +187,6 @@
 
   users.users.ooesili = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = ["wheel"]; # Enable ‘sudo’ for the user.
   };
 }

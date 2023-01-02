@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   cfg = config.dotfiles.cloudflareDDNS;
 
   ddnsScript = pkgs.writeShellApplication {
@@ -37,41 +40,41 @@ let
       done
     '';
   };
+in
+  with lib; {
+    options = {
+      dotfiles.cloudflareDDNS = {
+        enable = mkOption {
+          default = false;
+          description = "Enable the CloudFlare DDNS scheduled job.";
+          type = types.bool;
+        };
 
-in with lib; {
-  options = {
-    dotfiles.cloudflareDDNS = {
-      enable = mkOption {
-        default = false;
-        description = "Enable the CloudFlare DDNS scheduled job.";
-        type = types.bool;
-      };
-
-      environmentFile = mkOption {
-        default = "/etc/secrets/cloudflare-ddns";
-        description = ''
-          A file with environment variables to configure access to manage a
-          CloudFlare DNS record. The file must be formatted to work with the
-          EnvironmentFile= option described in systemd.exec(5). The required
-          values are:
-          - CLOUDFLARE_API_TOKEN
-          - ZONE_ID
-          - RECORD_ID
-        '';
-        type = types.str;
-      };
-    };
-  };
-
-  config = {
-    systemd.services.cloudflare-ddns = mkIf cfg.enable {
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-
-      serviceConfig = {
-        ExecStart = "${ddnsScript}/bin/cloudflare-ddns";
-        EnvironmentFile = cfg.environmentFile;
+        environmentFile = mkOption {
+          default = "/etc/secrets/cloudflare-ddns";
+          description = ''
+            A file with environment variables to configure access to manage a
+            CloudFlare DNS record. The file must be formatted to work with the
+            EnvironmentFile= option described in systemd.exec(5). The required
+            values are:
+            - CLOUDFLARE_API_TOKEN
+            - ZONE_ID
+            - RECORD_ID
+          '';
+          type = types.str;
+        };
       };
     };
-  };
-}
+
+    config = {
+      systemd.services.cloudflare-ddns = mkIf cfg.enable {
+        wantedBy = ["multi-user.target"];
+        after = ["network.target"];
+
+        serviceConfig = {
+          ExecStart = "${ddnsScript}/bin/cloudflare-ddns";
+          EnvironmentFile = cfg.environmentFile;
+        };
+      };
+    };
+  }

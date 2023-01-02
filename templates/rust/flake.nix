@@ -12,15 +12,18 @@
     };
   };
 
-
-  outputs = { self, flake-utils, nixpkgs, rust-overlay }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  outputs = {
+    self,
+    flake-utils,
+    nixpkgs,
+    rust-overlay,
+  }:
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ rust-overlay.overlays.default ];
+          overlays = [rust-overlay.overlays.default];
         };
-
       in {
         devShell = pkgs.mkShell {
           nativeBuildInputs = [
