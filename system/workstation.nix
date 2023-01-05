@@ -99,6 +99,7 @@ in
           asciinema
           awscli
           binutils
+          bottom
           caddy
           coreutils
           direnv
@@ -120,7 +121,6 @@ in
           gnumake
           gnupg
           gptfdisk
-          htop
           httpie
           hunspellDicts.en-us
           imagemagick
@@ -145,6 +145,7 @@ in
           pamixer
           paprefs
           pavucontrol
+          pciutils
           pinentry-gtk2
           playerctl
           posix_man_pages
