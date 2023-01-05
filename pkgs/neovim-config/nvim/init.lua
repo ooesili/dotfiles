@@ -76,8 +76,9 @@ noremap('n', '<C-k>', '<C-w><C-k>')
 noremap('n', '<C-l>', '<C-w><C-l>')
 
 -- status line
-vim.g.airline_theme = 'base16'
-vim.g['airline#extensions#tmuxline#enabled'] = 0
+require('lualine').setup({
+  options = { theme = 'base16-default-dark' }
+})
 
 -- terminal
 noremap('t', '<C-l>', '<nop>')

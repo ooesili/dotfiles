@@ -93,6 +93,7 @@ final: prev: let
     vimPlugins.friendly-snippets
     vimPlugins.gitsigns-nvim
     vimPlugins.indent-blankline-nvim
+    vimPlugins.lualine-nvim
     vimPlugins.luasnip
     vimPlugins.neodev-nvim
     vimPlugins.null-ls-nvim
@@ -111,8 +112,6 @@ final: prev: let
     vimPlugins.telescope-ui-select-nvim
     vimPlugins.trouble-nvim
     vimPlugins.vim-abolish
-    vimPlugins.vim-airline
-    vimPlugins.vim-airline-themes
     vimPlugins.vim-better-whitespace
     vimPlugins.vim-commentary
     vimPlugins.vim-endwise
