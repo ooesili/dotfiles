@@ -8,6 +8,16 @@ let
     rustybox = final.callPackage ../tools/rustybox/package.nix {};
     godoc = final.callPackage ../pkgs/godoc.nix {};
 
+    discord = prev.discord.overrideAttrs (_: let
+      version = "0.0.23";
+    in {
+      inherit version;
+      src = prev.fetchurl {
+        url = "https://dl.discordapp.net/apps/linux/${version}/discord-${version}.tar.gz";
+        sha256 = "sha256-KIwAWQHyv1oRSAIeHSL9KXQZ1DxwsPmJggq3KqefqkQ=";
+      };
+    });
+
     # The version of libnss exported by the discord wrapper is incompatible with
     # the one firefox expects.
     firefox = let

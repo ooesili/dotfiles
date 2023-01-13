@@ -7,10 +7,6 @@
   ...
 }: let
   cfg = config.dotfiles;
-  discord-fork = import ../pkgs/discord {
-    branch = "stable";
-    inherit pkgs;
-  };
   leiningenJDK11 = pkgs.leiningen.override {jdk = pkgs.openjdk11;};
   tmuxConfig = pkgs.callPackage ../pkgs/tmux-config {
     copyCommand = "${pkgs.rustybox}/bin/rclip copy --clipboard";
@@ -103,7 +99,7 @@ in
           caddy
           coreutils
           direnv
-          discord-fork
+          discord
           dnsutils
           element-desktop
           exa
