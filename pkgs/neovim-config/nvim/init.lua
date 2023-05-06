@@ -307,7 +307,9 @@ vim.g.better_whitespace_filetypes_blacklist = {
 vim.api.nvim_command('autocmd FileType fugitive DisableWhitespace')
 
 -- change into the directory of the current file
-vim.api.nvim_command('command! CD lua require("mapfuncs").cd()')
+vim.api.nvim_create_user_command('CD', function()
+  vim.api.nvim_command("lcd " .. vim.fn.expand("%:h"))
+end, {})
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
