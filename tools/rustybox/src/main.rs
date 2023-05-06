@@ -16,6 +16,7 @@ fn main() -> Result<()> {
         "mediactl" => rustybox::mediactl::main(args),
         "rclip" => rustybox::rclip::main(args),
         "rclipd" => rustybox::rclipd::main(args),
+        "polybard" => rustybox::polybard::main(args),
         _ => Err(anyhow!("unknown argv[0]: {}", argv0)),
     }
 }

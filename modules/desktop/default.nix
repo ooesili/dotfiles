@@ -102,6 +102,7 @@
       lockScript = "${lockScript}/bin/lock-script";
       pamixer = "${pkgs.pamixer}/bin/pamixer";
       playerctl = "${pkgs.playerctl}/bin/playerctl";
+      polybard = "${pkgs.rustybox}/bin/polybard";
       rofi = "${pkgs.rofi}/bin/rofi";
     } ''
       mkdir -p $out/etc/xdg/configctl
@@ -114,6 +115,13 @@ in
         default = "10.0";
         description = "Font size of Alacritty terminal windows.";
         type = types.str;
+      };
+
+      polybar = {
+        mainOutput = mkOption {
+          description = "Monitor name to place the main bar on.";
+          type = types.str;
+        };
       };
 
       autoLoginUser = mkOption {
@@ -148,7 +156,6 @@ in
         flameshot
         i3-config
         i3-gaps
-        libnotify
         lockScript
         rofi
         xorg.xev
@@ -185,6 +192,27 @@ in
             Type = "oneshot";
           };
         };
+
+        polybard = {
+          description = "Polybar multiplexer for multiple monitors.";
+          wantedBy = ["i3.target"];
+          partOf = ["i3.target"];
+
+          serviceConfig = {
+            ExecStart = "${pkgs.rustybox}/bin/polybard";
+            Restart = "always";
+          };
+
+          environment = {
+            POLYBARD_MAIN_OUTPUT = cfg.polybar.mainOutput;
+            POLYBARD_HOST = config.networking.hostName;
+          };
+        };
+      };
+
+      systemd.user.targets.i3 = {
+        description = "i3-wm session with socket available";
+        partOf = ["graphical-session.target"];
       };
 
       services.xserver = {
@@ -200,9 +228,10 @@ in
           };
         };
 
-        windowManager.session = [
+        displayManager.session = [
           {
             name = "i3";
+            manage = "window";
             bgSupport = true;
             start = ''
               # environment variables
@@ -211,6 +240,9 @@ in
 
               # create live-editing symlink for i3
               ${pkgs.rustybox}/bin/configctl init
+
+              export POLYBARD_HOST=${config.networking.hostName}
+              export POLYBARD_MAIN_OUTPUT=${cfg.polybar.mainOutput}
 
               ${pkgs.i3-gaps}/bin/i3 -c $XDG_RUNTIME_DIR/configctl/i3-config &
               waitPID=$!

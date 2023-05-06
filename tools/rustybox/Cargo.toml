@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.45"
 dirs = "4.0.0"
+i3_ipc = "0.15.0"
+signal-hook = "0.3.14"

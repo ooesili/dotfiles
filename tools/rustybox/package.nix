@@ -3,12 +3,16 @@
   rustPlatform,
   playerctl,
   xsel,
+  polybar,
   makeWrapper,
   i3-gaps,
+  libnotify,
 }: let
   pathDepends = [
     i3-gaps
+    libnotify
     playerctl
+    polybar
     xsel
   ];
 in
@@ -26,6 +30,7 @@ in
       wrapProgram $out/bin/rustybox --prefix PATH : ${lib.makeBinPath pathDepends}
       ln $out/bin/rustybox $out/bin/configctl
       ln $out/bin/rustybox $out/bin/mediactl
+      ln $out/bin/rustybox $out/bin/polybard
       ln $out/bin/rustybox $out/bin/rclip
       ln $out/bin/rustybox $out/libexec/batteryd
       ln $out/bin/rustybox $out/libexec/rclipd

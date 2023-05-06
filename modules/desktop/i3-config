@@ -186,18 +186,6 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-  i3bar_command @i3@/bin/i3bar
-  colors {
-    background #222222
-  }
-  separator_symbol " | "
-  position       top
-  status_command @i3status@
-}
-
 # Application settings
 for_window [class="QjackCtl"] floating enable
 for_window [class="VirtualBox Machine"] floating enable
@@ -210,3 +198,7 @@ gaps inner 15
 
 # Don't automatically move the mouse when switching monitors.
 mouse_warping none
+
+# startup commands
+exec --no-startup-id systemctl --user import-environment XDG_DATA_HOME I3SOCK
+exec --no-startup-id sh -c 'systemctl --user start i3.target'

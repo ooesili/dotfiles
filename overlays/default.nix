@@ -7,6 +7,10 @@ let
     nopt = final.callPackage ../pkgs/nopt.nix {};
     rustybox = final.callPackage ../tools/rustybox/package.nix {};
     godoc = final.callPackage ../pkgs/godoc.nix {};
+    polybar = prev.polybar.override {
+      i3Support = true;
+      pulseSupport = true;
+    };
 
     discord = prev.discord.overrideAttrs (_: let
       version = "0.0.23";
