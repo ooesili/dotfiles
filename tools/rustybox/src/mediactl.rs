@@ -88,21 +88,14 @@ mod playerctl {
         str,
     };
 
-    const fn playerctl_bin() -> &'static str {
-        match option_env!("PLAYERCTL_BIN") {
-            Some(path) => path,
-            None => "playerctl",
-        }
-    }
-
     pub fn list() -> Result<Vec<String>> {
-        let output = Command::new(playerctl_bin()).arg("-l").output()?;
+        let output = Command::new("playerctl").arg("-l").output()?;
         ensure!(output.status.success(), "failed listing players");
         Ok(output.stdout.lines().collect::<io::Result<Vec<_>>>()?)
     }
 
     pub fn status(player: &str) -> Result<Status> {
-        let output = Command::new(playerctl_bin())
+        let output = Command::new("playerctl")
             .arg("status")
             .arg("--player")
             .arg(player)
@@ -128,7 +121,7 @@ mod playerctl {
     }
 
     fn player_command(command: &'static str, player: &str) -> Result<()> {
-        let exit_status = Command::new(playerctl_bin())
+        let exit_status = Command::new("playerctl")
             .arg(command)
             .arg("--player")
             .arg(player)

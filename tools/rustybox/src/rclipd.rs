@@ -19,13 +19,6 @@ pub fn main(_args: env::Args) -> Result<()> {
     Ok(())
 }
 
-const fn xsel_bin() -> &'static str {
-    match option_env!("XSEL_BIN") {
-        Some(path) => path,
-        None => "xsel",
-    }
-}
-
 fn handle_conn(mut conn: TcpStream) -> Result<()> {
     let mut action_byte = [0u8; 1];
     conn.read_exact(&mut action_byte)
@@ -36,7 +29,7 @@ fn handle_conn(mut conn: TcpStream) -> Result<()> {
 
     match header.action {
         Action::Paste => {
-            let mut xsel = Command::new(xsel_bin())
+            let mut xsel = Command::new("xsel")
                 .arg(header.selection.to_xsel_flag())
                 .arg("--output")
                 .stdout(Stdio::piped())
@@ -55,7 +48,7 @@ fn handle_conn(mut conn: TcpStream) -> Result<()> {
             }
         }
         Action::Copy => {
-            let mut xsel = Command::new(xsel_bin())
+            let mut xsel = Command::new("xsel")
                 .arg(header.selection.to_xsel_flag())
                 .arg("--input")
                 .stdin(Stdio::piped())
