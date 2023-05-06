@@ -20,6 +20,7 @@ in
       ../modules/desktop
       ../modules/dunst.nix
       ../modules/mpd
+      ../modules/printing.nix
       ../modules/pro-audio
       ../modules/quil.nix
       ../modules/tailscale.nix
