@@ -94,7 +94,7 @@ in
         in [
           age
           asciinema
-          awscli
+          awscli2
           binutils
           bottom
           caddy
@@ -143,6 +143,7 @@ in
           paprefs
           pavucontrol
           pciutils
+          pgcli
           pinentry-gtk2
           playerctl
           posix_man_pages
@@ -152,6 +153,7 @@ in
           ranger
           restic
           ripgrep
+          rlwrap
           rtorrent
           rustup
           rustybox
@@ -168,7 +170,7 @@ in
           unixtools.xxd
           unstable.alejandra
           unstable.deadnix
-          unstable.go_1_19
+          unstable.go_1_20
           unstable.godoc
           unstable.gopls
           unstable.inkscape
@@ -177,6 +179,7 @@ in
           unstable.rust-analyzer
           unstable.spotify
           unstable.statix
+          unstable.sumneko-lua-language-server
           unstable.tdesktop
           unstable.zig
           usbutils

@@ -296,7 +296,7 @@ lspconfig.util.default_config.capabilities = cmp_capabilities
 lspconfig.bashls.setup({})
 lspconfig.gopls.setup({})
 lspconfig.rust_analyzer.setup({})
-lspconfig.sumneko_lua.setup({})
+lspconfig.lua_ls.setup({})
 lspconfig.tsserver.setup({})
 lspconfig.zls.setup({})
 
