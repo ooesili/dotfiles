@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  unstable,
   ...
 }: {
   imports = [
@@ -41,7 +40,7 @@
     pkgs.audio-mode
     pkgs.easytag
     pkgs.mdloader
-    unstable.blender
+    pkgs.blender
   ];
 
   hardware.opengl.enable = true;

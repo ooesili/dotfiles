@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  unstable,
   options,
   ...
 }: let
@@ -93,12 +92,14 @@ in
           python = python3.withPackages pythonPackages;
         in [
           age
+          alejandra
           asciinema
           awscli2
           binutils
           bottom
           caddy
           coreutils
+          deadnix
           direnv
           discord
           dnsutils
@@ -117,10 +118,14 @@ in
           git
           gnumake
           gnupg
+          go_1_20
+          godoc
+          gopls
           gptfdisk
           httpie
           hunspellDicts.en-us
           imagemagick
+          inkscape
           jq
           leiningenJDK11
           libbpf
@@ -134,8 +139,10 @@ in
           mupdf
           ncdu
           neofetch
+          neovim
           nmap
           nodePackages.bash-language-server
+          nodePackages.typescript-language-server
           nodejs-16_x
           nopt
           p7zip
@@ -149,13 +156,14 @@ in
           posix_man_pages
           procs
           pv
-          python
           pyright
+          python
           ranger
           restic
           ripgrep
           rlwrap
           rtorrent
+          rust-analyzer
           rustup
           rustybox
           scrot
@@ -163,32 +171,23 @@ in
           slack
           socat
           sops
+          spotify
+          statix
+          sumneko-lua-language-server
           tcpdump
+          tdesktop
           tmate
           tmux
           tmuxConfig
           tokei
           unixtools.xxd
-          unstable.alejandra
-          unstable.deadnix
-          unstable.go_1_20
-          unstable.godoc
-          unstable.gopls
-          unstable.inkscape
-          unstable.neovim
-          unstable.nodePackages.typescript-language-server
-          unstable.rust-analyzer
-          unstable.spotify
-          unstable.statix
-          unstable.sumneko-lua-language-server
-          unstable.tdesktop
-          unstable.zig
           usbutils
           viddy
           watchexec
           wine
           wireguard-tools
           zdirs
+          zig
           zls
         ];
       };
@@ -328,7 +327,6 @@ in
       virtualisation.podman = {
         enable = true;
         dockerSocket.enable = true;
-        defaultNetwork.dnsname.enable = true;
       };
     };
   }

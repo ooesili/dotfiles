@@ -2,8 +2,7 @@
   description = "ooesili's NixOS configurations";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
-    unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     rust-overlay = {
@@ -15,20 +14,15 @@
   outputs = {
     self,
     nixpkgs,
-    unstable,
     nixos-hardware,
     rust-overlay,
   }: let
-    overlays = import ./overlays;
-    opts = {
+    overlays = [rust-overlay.overlays.default] ++ import ./overlays;
+    pkgs = import nixpkgs {
       system = "x86_64-linux";
       config.allowUnfree = true;
+      inherit overlays;
     };
-    pkgs = import nixpkgs (opts
-      // {
-        overlays = [rust-overlay.overlays.default] ++ overlays;
-      });
-    unstablePkgs = import unstable (opts // {inherit overlays;});
 
     overlayModule.nixpkgs = {
       inherit overlays;
@@ -49,15 +43,10 @@
     };
 
     lib = {
-      nixosSystem = args @ {
-        modules,
-        specialArgs ? {},
-        ...
-      }:
+      nixosSystem = args @ {modules, ...}:
         nixpkgs.lib.nixosSystem (args
           // {
             modules = args.modules ++ [overlayModule];
-            specialArgs = {unstable = unstablePkgs;} // specialArgs;
           });
 
       extendConfig = name: args @ {
@@ -73,7 +62,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (unstablePkgs) neovim rustybox;
+      inherit (pkgs) neovim rustybox;
     };
 
     # These are turned into NixOS configurations by a private flake with some

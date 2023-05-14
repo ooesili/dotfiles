@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  unstable,
   ...
 }: let
   cfg = config.dotfiles.mpd;
@@ -113,7 +112,7 @@ in {
       wantedBy = ["mpd.service"];
 
       serviceConfig = {
-        ExecStart = "${unstable.mpd-mpris}/bin/mpd-mpris";
+        ExecStart = "${pkgs.mpd-mpris}/bin/mpd-mpris";
         ProtectSystem = "strict";
         Restart = "always";
       };
