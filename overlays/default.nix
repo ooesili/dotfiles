@@ -7,6 +7,7 @@ let
     nopt = final.callPackage ../pkgs/nopt.nix {};
     rustybox = final.callPackage ../tools/rustybox/package.nix {};
     godoc = final.callPackage ../pkgs/godoc.nix {};
+    vital-vst = final.callPackage ../pkgs/vst/vital.nix {};
     polybar = prev.polybar.override {
       i3Support = true;
       pulseSupport = true;
@@ -19,6 +20,16 @@ let
       src = prev.fetchurl {
         url = "https://dl.discordapp.net/apps/linux/${version}/discord-${version}.tar.gz";
         sha256 = "sha256-KIwAWQHyv1oRSAIeHSL9KXQZ1DxwsPmJggq3KqefqkQ=";
+      };
+    });
+
+    bitwig-studio4 = prev.bitwig-studio4.overrideAttrs (oldAttrs: let
+      version = "4.4.10";
+    in {
+      inherit version;
+      src = prev.fetchurl {
+        url = "https://downloads.bitwig.com/stable/${version}/${oldAttrs.pname}-${version}.deb";
+        sha256 = "sha256-gtQ1mhXk0AqGidZk5TCzSR58pD1JJoELMBmELtqyb4U=";
       };
     });
 

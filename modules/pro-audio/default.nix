@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: {
   imports = [
@@ -10,10 +9,15 @@
   ];
 
   config = {
-    environment.systemPackages = with pkgs; [
-      audacity
-      patchage
-      supercollider
+    environment.systemPackages = [
+      pkgs.audacity
+      pkgs.patchage
+      pkgs.supercollider
+      pkgs.bitwig-studio4
+      pkgs.fire
+      pkgs.paulstretch
+      pkgs.surge-XT
+      pkgs.vital-vst
     ];
   };
 }
