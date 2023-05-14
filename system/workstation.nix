@@ -150,6 +150,7 @@ in
           procs
           pv
           python
+          pyright
           ranger
           restic
           ripgrep

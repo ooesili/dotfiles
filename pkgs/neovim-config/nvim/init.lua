@@ -295,6 +295,7 @@ lspconfig.util.default_config.capabilities = cmp_capabilities
 -- language specific settings
 lspconfig.bashls.setup({})
 lspconfig.gopls.setup({})
+lspconfig.pyright.setup({})
 lspconfig.rust_analyzer.setup({})
 lspconfig.lua_ls.setup({})
 lspconfig.tsserver.setup({})
