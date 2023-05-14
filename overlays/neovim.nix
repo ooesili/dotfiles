@@ -26,6 +26,7 @@ _final: prev: let
         plugins.tree-sitter-dockerfile
         plugins.tree-sitter-fennel
         plugins.tree-sitter-go
+        plugins.tree-sitter-hcl
         plugins.tree-sitter-html
         plugins.tree-sitter-javascript
         plugins.tree-sitter-json
@@ -43,18 +44,6 @@ _final: prev: let
         plugins.tree-sitter-yaml
         plugins.tree-sitter-zig
       ]);
-
-      cmp-nvim-lsp-signature-help = buildVimPluginFrom2Nix {
-        pname = "cmp-nvim-lsp-signature-help";
-        version = "2022-10-26";
-        src = prev.fetchFromGitHub {
-          owner = "hrsh7th";
-          repo = "cmp-nvim-lsp-signature-help";
-          rev = "d2768cb1b83de649d57d967085fe73c5e01f8fd7";
-          sha256 = "sha256-QISg2HRSXG7tlO1EI4J7lvh/gmyVii4+QUBzD3ZjNY4=";
-        };
-        meta.homepage = "https://github.com/hrsh7th/cmp-nvim-lsp/";
-      };
     };
 
   language-plugins = [
@@ -90,6 +79,8 @@ _final: prev: let
     vimPlugins.cmp-path
     vimPlugins.conjure
     vimPlugins.cmp_luasnip
+    vimPlugins.diffview-nvim
+    vimPlugins.editorconfig-nvim
     vimPlugins.friendly-snippets
     vimPlugins.gitsigns-nvim
     vimPlugins.indent-blankline-nvim
@@ -101,7 +92,6 @@ _final: prev: let
     vimPlugins.nvim-lspconfig
     vimPlugins.nvim-tree-lua
     vimPlugins.nvim-treesitter
-    vimPlugins.nvim-treesitter-context
     vimPlugins.nvim-treesitter-textobjects
     vimPlugins.nvim-web-devicons
     vimPlugins.plenary-nvim
