@@ -208,6 +208,8 @@ in
           # and some subnet routing setups. Consider setting
           # `networking.firewall.checkReversePath` = 'loose'
           checkReversePath = "loose";
+
+          trustedInterfaces = ["tailscale0"];
         };
 
         dhcpcd.enable = false;
