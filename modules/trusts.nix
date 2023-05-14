@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  options,
-  ...
-}: let
+{pkgs, ...}: let
   trustedUserCAKeys = pkgs.writeText "ssh-ca.pub" ''
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICOtcKUm3wJC4eFXIImiG7ElxuW7zF3DTj2EmZ8i9YuB certificate-authority
   '';

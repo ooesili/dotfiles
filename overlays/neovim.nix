@@ -1,4 +1,4 @@
-final: prev: let
+_final: prev: let
   inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPluginFrom2Nix;
 
   initLua = prev.substituteAll {

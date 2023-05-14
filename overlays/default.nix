@@ -48,7 +48,7 @@ let
         paths = [firefox-wrapped prev.firefox];
       };
 
-    direnv = prev.direnv.overrideAttrs (oldAttrs: {
+    direnv = prev.direnv.overrideAttrs (_oldAttrs: {
       patches = [./direnv-use-nix-no-trace.patch];
     });
 
@@ -56,7 +56,7 @@ let
       buildGoModule = prev.buildGo119Module;
     };
 
-    sops = prev.sops.overrideAttrs (oldAttrs: {
+    sops = prev.sops.overrideAttrs (_oldAttrs: {
       patches = [./sops-yaml-indent.patch];
     });
 
@@ -76,7 +76,7 @@ let
     rofi = let
       rofiThemeBase16 = builtins.fetchGit {
         name = "base46-rofi-theme";
-        url = https://github.com/0xdec/base16-rofi.git;
+        url = "https://github.com/0xdec/base16-rofi.git";
         rev = "a7e7be0cb5812243f23cd4607eab11ce4cca7774";
       };
     in
@@ -89,7 +89,7 @@ let
 
     z = builtins.fetchGit {
       name = "zrupa";
-      url = https://github.com/rupa/z.git;
+      url = "https://github.com/rupa/z.git";
       rev = "125f4dc47e15891739dd8262d5b23077fe8fb9ab";
     };
   };

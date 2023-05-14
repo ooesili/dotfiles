@@ -1,5 +1,4 @@
 {
-  stdenv,
   buildGo118Module,
   fetchFromGitHub,
   lib,

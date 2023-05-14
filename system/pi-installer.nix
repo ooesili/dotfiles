@@ -1,11 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
-  unstable,
-  options,
-  ...
-}: {
   imports = [
     ../modules/trusts.nix
   ];

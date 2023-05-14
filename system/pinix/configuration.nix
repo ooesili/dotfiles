@@ -61,8 +61,8 @@
 
   nixpkgs = {
     overlays = [
-      (self: super: {
-        firmwareLinuxNonfree = super.firmwareLinuxNonfree.overrideAttrs (old: {
+      (_final: _prev: {
+        firmwareLinuxNonfree = super.firmwareLinuxNonfree.overrideAttrs (_oldAttrs: {
           version = "2020-12-18";
           src = pkgs.fetchgit {
             url = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
