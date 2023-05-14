@@ -66,7 +66,7 @@ fn checkout(mut args: env::Args) -> Result<()> {
     }
 
     // Manually copy to use current umask instead of nix store's 0444 permissions.
-    let mut source = fs::File::open(&source_file).context("opening source file for reading")?;
+    let mut source = fs::File::open(source_file).context("opening source file for reading")?;
     let mut dest = fs::File::create(&checkout_file).context("opening dest file for writing")?;
     io::copy(&mut source, &mut dest).context("copying bytes to dest file")?;
 
