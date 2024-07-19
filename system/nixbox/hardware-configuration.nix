@@ -11,9 +11,21 @@
   ];
 
   boot.extraModulePackages = [];
-  boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "uas" "sd_mod"];
-  boot.initrd.kernelModules = [];
-  boot.initrd.luks.devices."root-crypt".device = "/dev/disk/by-uuid/0063beb1-5c4a-498f-894f-3602e3e3301a";
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "uas"
+    "sd_mod"
+    "aesni_intel"
+    "cryptd"
+  ];
+  boot.initrd.kernelModules = ["dm-snapshot"];
+  boot.initrd.luks.devices."root-crypt" = {
+    device = "/dev/disk/by-uuid/fc02466e-e37e-4965-a2f3-80302b2b9a21";
+    preLVM = false;
+  };
   boot.kernelModules = ["kvm-intel"];
 
   environment.etc."crypttab".text = ''
@@ -23,12 +35,12 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/1ecb90b3-e9e9-4325-9f06-179e92d9788e";
+      device = "/dev/disk/by-uuid/4f7b47fa-cc1d-48bf-99de-deae23189c52";
       fsType = "ext4";
     };
 
     "/boot" = {
-      device = "/dev/disk/by-uuid/E769-426B";
+      device = "/dev/disk/by-uuid/AF32-3F06";
       fsType = "vfat";
     };
 

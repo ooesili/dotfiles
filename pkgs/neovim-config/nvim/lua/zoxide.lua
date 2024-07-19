@@ -4,13 +4,13 @@ local finders = require('telescope.finders')
 local pickers = require('telescope.pickers')
 local conf = require('telescope.config').values
 
-local z = {}
+local zoxide = {}
 
-function z.telescope(opts)
+function zoxide.telescope(opts)
   opts = opts or {}
   pickers.new(opts, {
     prompt_title = "Recent Directories",
-    finder = finders.new_oneshot_job({ 'zdirs' }, opts),
+    finder = finders.new_oneshot_job({ 'zoxide', 'query', '--list' }, opts),
     sorter = conf.file_sorter(opts),
     attach_mappings = function(prompt_bufnr)
       actions.select_default:replace(function()
@@ -23,4 +23,4 @@ function z.telescope(opts)
   }):find()
 end
 
-return z
+return zoxide

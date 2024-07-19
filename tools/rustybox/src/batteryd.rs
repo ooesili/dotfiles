@@ -34,7 +34,7 @@ impl Alerter {
             .arg("--urgency=low")
             .arg(format!("--expire-time={}", 5 * 60 * 1000))
             .arg("Low Battery")
-            .arg(format!("Battery is at {}%", threshold))
+            .arg(format!("Battery is at {:.1}%", threshold))
             .status()
             .context("sending notification with notify-send")?;
         ensure!(
@@ -139,7 +139,7 @@ where
             if battery.discharging {
                 for threshold in self.thresholds.iter().copied() {
                     if battery.percent <= threshold && threshold < self.high_water_mark {
-                        event = Some(BatteryEvent::LowBattery(threshold));
+                        event = Some(BatteryEvent::LowBattery(battery.percent));
                         break;
                     }
                 }
@@ -275,7 +275,7 @@ mod tests {
                     percent: 13.0,
                 },
             ],
-            vec![BatteryEvent::LowBattery(15.0)],
+            vec![BatteryEvent::LowBattery(13.0)],
         );
     }
 
@@ -292,7 +292,7 @@ mod tests {
                     percent: 4.0,
                 },
             ],
-            vec![BatteryEvent::LowBattery(5.0)],
+            vec![BatteryEvent::LowBattery(4.0)],
         );
     }
 
@@ -318,8 +318,8 @@ mod tests {
                 },
             ],
             vec![
-                BatteryEvent::LowBattery(15.0),
-                BatteryEvent::LowBattery(5.0),
+                BatteryEvent::LowBattery(13.0),
+                BatteryEvent::LowBattery(4.0),
             ],
         );
     }

@@ -6,6 +6,8 @@ use std::{
     process::{Command, Stdio},
 };
 
+use crate::rclip::clipboard::is_wayland;
+
 pub fn main(_args: env::Args) -> Result<()> {
     let addr = "127.0.0.1:8022";
     let listener = TcpListener::bind(addr).with_context(|| format!("binding to {}", addr))?;
@@ -29,16 +31,25 @@ fn handle_conn(mut conn: TcpStream) -> Result<()> {
 
     match header.action {
         Action::Paste => {
-            let mut xsel = Command::new("xsel")
-                .arg(header.selection.to_xsel_flag())
-                .arg("--output")
-                .stdout(Stdio::piped())
-                .spawn()
-                .context("running xsel")?;
-            let mut stdout = xsel.stdout.take().unwrap();
+            let mut cmd = if is_wayland() {
+                Command::new("xsel")
+                    .args(header.selection.to_xsel_flag())
+                    .arg("--output")
+                    .stdout(Stdio::piped())
+                    .spawn()
+                    .context("running xsel")?
+            } else {
+                Command::new("wl-paste")
+                    .arg("--no-newline")
+                    .args(header.selection.to_wl_flag())
+                    .stdout(Stdio::piped())
+                    .spawn()
+                    .context("running wl-paste")?
+            };
+            let mut stdout = cmd.stdout.take().unwrap();
             let copy_err = io::copy(&mut stdout, &mut conn).context("");
 
-            let status = xsel.wait().context("waiting for xsel to close")?;
+            let status = cmd.wait().context("waiting for xsel to close")?;
             match status.code() {
                 Some(0) => {
                     copy_err?;
@@ -48,17 +59,25 @@ fn handle_conn(mut conn: TcpStream) -> Result<()> {
             }
         }
         Action::Copy => {
-            let mut xsel = Command::new("xsel")
-                .arg(header.selection.to_xsel_flag())
-                .arg("--input")
-                .stdin(Stdio::piped())
-                .spawn()
-                .context("running xsel")?;
-            let mut stdin = xsel.stdin.take().unwrap();
+            let mut cmd = if is_wayland() {
+                Command::new("xsel")
+                    .args(header.selection.to_xsel_flag())
+                    .arg("--input")
+                    .stdin(Stdio::piped())
+                    .spawn()
+                    .context("running xsel")?
+            } else {
+                Command::new("wl-copy")
+                    .args(header.selection.to_wl_flag())
+                    .stdin(Stdio::piped())
+                    .spawn()
+                    .context("running wl-copy")?
+            };
+            let mut stdin = cmd.stdin.take().unwrap();
             let copy_err = io::copy(&mut conn, &mut stdin).context("");
             drop(stdin);
 
-            let status = xsel.wait().context("waiting for xsel to close")?;
+            let status = cmd.wait().context("waiting for xsel to close")?;
             match status.code() {
                 Some(0) => {
                     copy_err?;
@@ -85,10 +104,17 @@ pub enum Selection {
 }
 
 impl Selection {
-    pub fn to_xsel_flag(self) -> &'static str {
+    pub fn to_xsel_flag(self) -> Vec<&'static str> {
         match self {
-            Selection::Primary => "--primary",
-            Selection::Clipboard => "--clipboard",
+            Selection::Primary => vec!["--primary"],
+            Selection::Clipboard => vec!["--clipboard"],
+        }
+    }
+
+    pub fn to_wl_flag(self) -> Vec<&'static str> {
+        match self {
+            Selection::Primary => vec!["--primary"],
+            Selection::Clipboard => vec![],
         }
     }
 }

@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anyhow = "1.0.45"
-dirs = "4.0.0"
-i3_ipc = "0.15.0"
-signal-hook = "0.3.14"
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+dirs = "4"

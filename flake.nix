@@ -61,6 +61,11 @@
           });
     };
 
+    apps.x86_64-linux.nvim = {
+      type = "app";
+      program = "${pkgs.neovim}/bin/nvim";
+    };
+
     packages.x86_64-linux = {
       inherit (pkgs) neovim rustybox;
     };
@@ -73,7 +78,7 @@
       ];
 
       base.framework.imports = [
-        nixos-hardware.nixosModules.framework
+        nixos-hardware.nixosModules.framework-11th-gen-intel
         ./system/framework/configuration.nix
       ];
     };

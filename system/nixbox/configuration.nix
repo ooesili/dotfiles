@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   imports = [
@@ -11,20 +12,13 @@
 
   boot = {
     blacklistedKernelModules = ["snd_hda_intel"];
-    extraModulePackages = [
-      # Currently broken: https://github.com/NixOS/nixpkgs/pull/174109
-      # config.boot.kernelPackages.rtl88x2bu
-    ];
     kernelModules = ["af_key"];
   };
 
   dotfiles = {
-    cloudflareDDNS.enable = true;
-
     desktop = {
       alacritty.font.size = "9.0";
       autoLoginUser = config.dotfiles.primaryUser;
-      xmodmap.enable = false;
     };
 
     mpd = {
@@ -43,16 +37,11 @@
     pkgs.blender
   ];
 
-  hardware.opengl.enable = true;
+  hardware.cpu.intel.updateMicrocode = true;
+  hardware.graphics.enable = true;
   networking.hostName = "nixbox";
   programs.adb.enable = true;
   programs.steam.enable = true;
-
-  services.dockerRegistry = {
-    enable = true;
-    enableGarbageCollect = true;
-    listenAddress = "0.0.0.0";
-  };
 
   services.mpd.extraConfig = ''
     audio_output {
@@ -67,14 +56,6 @@
       tags            "yes"      # httpd supports sending tags to listening streams.
     }
   '';
-
-  services.xserver = {
-    dpi = 96;
-    videoDrivers = ["nvidia"];
-    screenSection = ''
-      Option "metamodes" "HDMI-0: nvidia-auto-select +1920+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}, DP-0: nvidia-auto-select +0+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}"
-    '';
-  };
 
   virtualisation.virtualbox.host.enable = true;
 

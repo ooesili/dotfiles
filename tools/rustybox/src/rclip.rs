@@ -1,19 +1,24 @@
+pub mod clipboard;
+
+use self::clipboard::{get_current_clipboard, Clipboard};
+
 use super::rclipd::{Action, Header, Selection};
 use anyhow::{bail, Context, Result};
 use std::{
     env,
     io::{self, Write},
     net::TcpStream,
-    process::Command,
 };
 
 pub fn main(mut args: env::Args) -> Result<()> {
+    let clipboard = get_current_clipboard();
+
     match args.next() {
         Some(command) => {
             let selection = parse_selection_flag(args.next())?;
             match command.as_str() {
-                "copy" => cmd_copy(selection),
-                "paste" => cmd_paste(selection),
+                "copy" => cmd_copy(clipboard, selection),
+                "paste" => cmd_paste(clipboard, selection),
                 _ => bail!("usage: command must be one of 'copy' or 'paste'"),
             }
         }
@@ -32,7 +37,7 @@ fn parse_selection_flag(flag: Option<String>) -> Result<Selection> {
     })
 }
 
-fn cmd_paste(selection: Selection) -> Result<()> {
+fn cmd_paste(clipboard: Box<dyn Clipboard>, selection: Selection) -> Result<()> {
     match TcpStream::connect("127.0.0.1:9022") {
         Ok(mut conn) => {
             let header = Header {
@@ -45,26 +50,13 @@ fn cmd_paste(selection: Selection) -> Result<()> {
             let stdout = io::stdout();
             io::copy(&mut conn, &mut stdout.lock()).context("copying clipboard over network")?;
         }
-        Err(_) => {
-            let status = Command::new("xsel")
-                .arg("--output")
-                .arg(selection.to_xsel_flag())
-                .spawn()
-                .context("running xsel")?
-                .wait()
-                .context("waiting for xsel to stop")?;
-            match status.code() {
-                Some(0) => {}
-                Some(code) => bail!("xsel exited with code: {}", code),
-                None => bail!("xsel failed for an unknown reason"),
-            }
-        }
+        Err(_) => clipboard.paste(selection)?,
     }
 
     Ok(())
 }
 
-fn cmd_copy(selection: Selection) -> Result<()> {
+fn cmd_copy(clipboard: Box<dyn Clipboard>, selection: Selection) -> Result<()> {
     match TcpStream::connect("127.0.0.1:9022") {
         Ok(mut conn) => {
             let header = Header {
@@ -77,18 +69,7 @@ fn cmd_copy(selection: Selection) -> Result<()> {
             let stdin = io::stdin();
             io::copy(&mut stdin.lock(), &mut conn).context("copying clipboard over network")?;
         }
-        Err(_) => {
-            let status = Command::new("xsel")
-                .arg("--input")
-                .arg(selection.to_xsel_flag())
-                .spawn()
-                .context("running xsel")?
-                .wait()
-                .context("waiting for xsel to stop")?;
-            if !status.success() {
-                bail!("xsel failed with status {}", status.code().unwrap_or(-1));
-            }
-        }
+        Err(_) => clipboard.copy(selection)?,
     }
 
     Ok(())

@@ -1,11 +1,11 @@
 {
-  buildGo118Module,
+  buildGo122Module,
   fetchFromGitHub,
   lib,
 }: let
-  version = "1.20.7";
+  version = "1.43.1";
 in
-  buildGo118Module {
+  buildGo122Module {
     inherit version;
     pname = "newrelic-infra-agent";
 
@@ -13,10 +13,11 @@ in
       owner = "newrelic";
       repo = "infrastructure-agent";
       rev = version;
-      sha256 = "sha256-bC0GOybk5r6jwV44i5Wc+7M468AYSJpysma0yv8OdPo=";
+      sha256 = "sha256-DC0RIMkpX80o6shDyhZcZ5novPSPNqgi4FFIbRmh/Yk=";
     };
 
     patches = [./path-fix.patch];
+    doCheck = false;
 
     subPackages = [
       "cmd/newrelic-infra"
@@ -24,7 +25,7 @@ in
       "cmd/newrelic-infra-service"
     ];
 
-    vendorSha256 = "sha256-3bXIb58etrnyFah3WK4hBuyVk6lxI8I5Oblv8X0ANfg=";
+    vendorHash = "sha256-izjfwwKHR0tSuO+bjU5NT8r+uu8EhWl20GIfMjytNHk=";
 
     meta = {
       homepage = "https://github.com/newrelic/infrastructure-agent";

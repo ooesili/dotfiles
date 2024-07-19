@@ -1,17 +1,17 @@
 _final: prev: let
-  inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPluginFrom2Nix;
+  inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPlugin;
 
   initLua = prev.substituteAll {
     src = ../pkgs/neovim-config/nvim/init.lua;
     goTemplateFile = ../pkgs/neovim-config/go-templates/main.go;
   };
 
-  myConfig = buildVimPluginFrom2Nix {
+  myConfig = buildVimPlugin {
     name = "my-nvim-config";
     src = ../pkgs/neovim-config/nvim;
   };
 
-  mySnippets = buildVimPluginFrom2Nix {
+  mySnippets = buildVimPlugin {
     name = "my-nvim-snippets";
     src = ../pkgs/neovim-config/snippets;
   };
@@ -19,35 +19,10 @@ _final: prev: let
   vimPlugins =
     prev.vimPlugins
     // {
-      nvim-treesitter = prev.vimPlugins.nvim-treesitter.withPlugins (plugins: [
-        plugins.tree-sitter-bash
-        plugins.tree-sitter-c
-        plugins.tree-sitter-clojure
-        plugins.tree-sitter-dockerfile
-        plugins.tree-sitter-fennel
-        plugins.tree-sitter-go
-        plugins.tree-sitter-hcl
-        plugins.tree-sitter-html
-        plugins.tree-sitter-javascript
-        plugins.tree-sitter-json
-        plugins.tree-sitter-lua
-        plugins.tree-sitter-make
-        plugins.tree-sitter-markdown
-        plugins.tree-sitter-nix
-        plugins.tree-sitter-python
-        plugins.tree-sitter-ruby
-        plugins.tree-sitter-rust
-        plugins.tree-sitter-scss
-        plugins.tree-sitter-toml
-        plugins.tree-sitter-typescript
-        plugins.tree-sitter-vue
-        plugins.tree-sitter-yaml
-        plugins.tree-sitter-zig
-      ]);
+      nvim-treesitter = prev.vimPlugins.nvim-treesitter.withAllGrammars;
     };
 
   language-plugins = [
-    vimPlugins.dhall-vim
     vimPlugins.elm-vim
     vimPlugins.fennel-vim
     vimPlugins.haskell-vim
@@ -63,13 +38,11 @@ _final: prev: let
     vimPlugins.vim-solidity
     vimPlugins.vim-terraform
     vimPlugins.vim-toml
-    vimPlugins.vim-vue
     vimPlugins.zig-vim
   ];
 
   general-plugins = [
     vimPlugins.ale
-    vimPlugins.aniseed
     vimPlugins.auto-pairs
     vimPlugins.base16-vim
     vimPlugins.cmp-buffer
@@ -77,7 +50,6 @@ _final: prev: let
     vimPlugins.cmp-nvim-lsp
     vimPlugins.cmp-nvim-lsp-signature-help
     vimPlugins.cmp-path
-    vimPlugins.conjure
     vimPlugins.cmp_luasnip
     vimPlugins.diffview-nvim
     vimPlugins.editorconfig-nvim
@@ -90,13 +62,12 @@ _final: prev: let
     vimPlugins.null-ls-nvim
     vimPlugins.nvim-cmp
     vimPlugins.nvim-lspconfig
-    vimPlugins.nvim-tree-lua
     vimPlugins.nvim-treesitter
     vimPlugins.nvim-treesitter-textobjects
     vimPlugins.nvim-web-devicons
+    vimPlugins.oil-nvim
     vimPlugins.plenary-nvim
     vimPlugins.surround
-    vimPlugins.symbols-outline-nvim
     vimPlugins.telescope-fzf-native-nvim
     vimPlugins.telescope-nvim
     vimPlugins.telescope-ui-select-nvim
@@ -106,6 +77,7 @@ _final: prev: let
     vimPlugins.vim-commentary
     vimPlugins.vim-endwise
     vimPlugins.vim-eunuch
+    vimPlugins.vim-fireplace
     vimPlugins.vim-fugitive
     vimPlugins.vim-illuminate
     vimPlugins.vim-repeat

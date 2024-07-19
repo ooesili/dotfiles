@@ -2,27 +2,19 @@
   config,
   lib,
   pkgs,
-  options,
   ...
 }: let
   cfg = config.dotfiles;
   leiningenJDK11 = pkgs.leiningen.override {jdk = pkgs.openjdk11;};
-  tmuxConfig = pkgs.callPackage ../pkgs/tmux-config {
-    copyCommand = "${pkgs.rustybox}/bin/rclip copy --clipboard";
-    pasteCommand = "${pkgs.rustybox}/bin/rclip paste --clipboard";
-  };
-  zshConfig = pkgs.callPackage ../pkgs/zsh-config {};
 in
   with lib; {
     imports = [
       ../modules/cloudflare-ddns
-      ../modules/desktop
       ../modules/dunst.nix
+      ../modules/wayland
       ../modules/mpd
       ../modules/printing.nix
       ../modules/pro-audio
-      ../modules/quil.nix
-      ../modules/tailscale.nix
       ../modules/trusts.nix
       ../modules/yubikey.nix
     ];
@@ -45,7 +37,7 @@ in
 
     config = {
       boot = {
-        # Use QEMU to build packages for the Raspberry PI
+        # Use QEMU to build ackages for the Raspberry PI
         binfmt.emulatedSystems = ["aarch64-linux"];
 
         loader.efi.canTouchEfiVariables = true;
@@ -54,6 +46,8 @@ in
         # Disables this warning:
         # warning: Enabling both boot.enableContainers & virtualisation.containers on system.stateVersion < 22.05 is unsupported.
         enableContainers = false;
+
+        tmp.useTmpfs = true;
       };
 
       console = {
@@ -81,12 +75,9 @@ in
         keyMap = pkgs.keymap-us-capsctrl;
       };
 
-      dotfiles.desktop.shellProfile = "${zshConfig}/etc/zprofile";
+      documentation.man.generateCaches = false;
 
       environment = {
-        etc."zprofile.local".text = ". ${zshConfig}/etc/zprofile";
-        etc."zshrc.local".text = ". ${zshConfig}/etc/zshrc";
-
         systemPackages = with pkgs; let
           pythonPackages = py-pkgs: with py-pkgs; [virtualenv];
           python = python3.withPackages pythonPackages;
@@ -95,6 +86,7 @@ in
           alejandra
           asciinema
           awscli2
+          bat
           binutils
           bottom
           caddy
@@ -104,13 +96,14 @@ in
           discord
           dnsutils
           element-desktop
-          exa
+          eza
           fd
           feh
           fennel
           ffmpeg
           file
           firefox
+          fishPlugins.fzf-fish
           fzf
           gcc
           gdb
@@ -118,36 +111,38 @@ in
           git
           gnumake
           gnupg
-          go_1_20
-          godoc
+          go_1_22
           gopls
+          gotools
           gptfdisk
           httpie
           hunspellDicts.en-us
           imagemagick
           inkscape
+          ipcalc
           jq
           leiningenJDK11
-          libbpf
           libreoffice
-          lorri
+          lls
           lsof
           luajit_2_1
           luajit_2_1.pkgs.luacheck
           man-pages
+          mprocs
           mpv
           mupdf
           ncdu
           neofetch
           neovim
+          nickel
+          nil
           nmap
-          nodePackages.bash-language-server
-          nodePackages.typescript-language-server
-          nodejs-16_x
-          nopt
+          nodePackages_latest.bash-language-server
+          nodePackages_latest.typescript-language-server
+          nodejs_latest
+          obsidian
           p7zip
           pamixer
-          paprefs
           pavucontrol
           pciutils
           pgcli
@@ -158,27 +153,23 @@ in
           pv
           pyright
           python
-          ranger
           restic
           ripgrep
           rlwrap
-          rtorrent
           rust-analyzer
-          rustup
+          rust-bin.stable.latest.default
           rustybox
-          scrot
           shellcheck
           slack
           socat
           sops
           spotify
+          starship
           statix
           sumneko-lua-language-server
           tcpdump
           tdesktop
-          tmate
           tmux
-          tmuxConfig
           tokei
           unixtools.xxd
           usbutils
@@ -186,13 +177,14 @@ in
           watchexec
           wine
           wireguard-tools
-          zdirs
-          zig
+          xplr
+          zellij
           zls
+          zoxide
         ];
       };
 
-      fonts.fonts = [
+      fonts.packages = [
         pkgs.hack-font
         pkgs.nerdfonts
         pkgs.siji
@@ -216,7 +208,6 @@ in
       };
 
       nix = {
-        package = unstable.nix;
         extraOptions = ''
           experimental-features = nix-command flakes
         '';
@@ -229,7 +220,30 @@ in
       };
 
       programs.dunst.enable = true;
-      programs.zsh.enable = true;
+      programs.command-not-found.enable = false;
+
+      # use bash as interactive shell so that systemd emergency mode still
+      # works, but immediately execute fish under most conditions
+      programs.bash = {
+        interactiveShellInit = ''
+          if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+          then
+            shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+            exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+          fi
+        '';
+      };
+
+      programs.fish = {
+        enable = true;
+        shellInit = builtins.readFile ../pkgs/fish/config.fish;
+      };
+
+      programs.nix-index = {
+        enable = true;
+        enableZshIntegration = false;
+        enableBashIntegration = false;
+      };
 
       security.sudo.extraRules = [
         {
@@ -247,7 +261,7 @@ in
       ];
 
       services.fstrim.enable = true;
-      services.lorri.enable = true;
+      services.thermald.enable = true;
 
       services.pipewire = {
         enable = true;
@@ -262,6 +276,9 @@ in
       };
 
       services.tailscale.enable = true;
+
+      services.timesyncd.enable = false;
+      services.chrony.enable = true;
 
       sound = {
         enable = true;
@@ -313,20 +330,17 @@ in
         extraGroups = [
           "adbusers"
           "audio"
+          "docker"
           "networkmanager"
-          "podman"
           "vboxusers"
           "video"
           "wheel"
         ];
         isNormalUser = true;
-        shell = pkgs.zsh;
+        shell = pkgs.bash;
         uid = 1000;
       };
 
-      virtualisation.podman = {
-        enable = true;
-        dockerSocket.enable = true;
-      };
+      virtualisation.docker.enable = true;
     };
   }

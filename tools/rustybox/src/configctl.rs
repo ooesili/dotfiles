@@ -1,28 +1,43 @@
-use anyhow::{anyhow, bail, Context, Result};
+use anyhow::{anyhow, bail, ensure, Context, Result};
+use clap::{Parser, Subcommand};
 use std::ffi::OsStr;
 use std::os::unix;
 use std::process::Command;
 use std::{
     collections::HashMap,
-    env, fs, io,
+    env, fs,
     path::{Path, PathBuf},
 };
 
-pub fn main(mut args: env::Args) -> Result<()> {
-    match args.next() {
-        Some(arg) => match arg.as_str() {
-            "checkout" => checkout(args),
-            "diff" => diff(args),
-            "init" => init(args),
-            "reset" => reset(args),
-            "status" => status(args),
-            _ => bail!("unrecognized command: {}", arg),
-        },
-        _ => bail!("no command given"),
+#[derive(Debug, Parser)]
+#[command(name = "configctl")]
+struct Cli {
+    #[command(subcommand)]
+    command: CliCommand,
+}
+
+#[derive(Debug, Subcommand)]
+enum CliCommand {
+    Activate { name: String, path: PathBuf },
+    Diff,
+    Init,
+    Reset { name: Option<String> },
+    Status,
+}
+
+pub fn main(_args: env::Args) -> Result<()> {
+    let cli = Cli::parse();
+
+    match cli.command {
+        CliCommand::Activate { name, path } => activate(name, path),
+        CliCommand::Diff => diff(),
+        CliCommand::Init => init(),
+        CliCommand::Reset { name } => reset(name),
+        CliCommand::Status => status(),
     }
 }
 
-fn init(_args: env::Args) -> Result<()> {
+fn init() -> Result<()> {
     let runtime_dir = env::var("XDG_RUNTIME_DIR").context("XDG_RUNTIME_DIR not set")?;
     let link_dir = Path::new(&runtime_dir).join("configctl");
 
@@ -42,35 +57,25 @@ fn init(_args: env::Args) -> Result<()> {
     Ok(())
 }
 
-fn checkout(mut args: env::Args) -> Result<()> {
-    let name = match args.next() {
-        Some(name) => name,
-        None => bail!("no config file name given"),
-    };
-    // let dest = args.next().unwrap_or_else(|| ".".to_string());
-
+fn activate(name: String, path: PathBuf) -> Result<()> {
     let config_set = ConfigSet::gather()?;
-
-    let source_file = match config_set.spec.files.get(&name) {
-        Some(source_file) => source_file,
-        None => bail!("no config file named '{}'", name),
-    };
+    ensure!(
+        config_set.spec.files.contains_key(&name),
+        "no config file named '{}'",
+        name
+    );
 
     let runtime_dir = env::var("XDG_RUNTIME_DIR").context("XDG_RUNTIME_DIR not set")?;
-    let link_dir = Path::new(&runtime_dir).join("configctl");
-    let checkout_file = env::current_dir().context("getting pwd")?.join(&name);
-    let link_file = link_dir.join(&name);
+    let runtime_link = Path::new(&runtime_dir).join("configctl").join(name);
 
-    if fs::metadata(&checkout_file).is_err() {
-        replace_symlink(&checkout_file, &link_file)?;
-    }
+    ensure!(
+        path.exists(),
+        "file does not exist: {}",
+        path.to_string_lossy()
+    );
 
-    // Manually copy to use current umask instead of nix store's 0444 permissions.
-    let mut source = fs::File::open(source_file).context("opening source file for reading")?;
-    let mut dest = fs::File::create(&checkout_file).context("opening dest file for writing")?;
-    io::copy(&mut source, &mut dest).context("copying bytes to dest file")?;
-
-    Ok(())
+    let path = path.canonicalize().context("canonicalizing path")?;
+    replace_symlink(&path, &runtime_link)
 }
 
 fn replace_symlink(original: &Path, link: &Path) -> Result<()> {
@@ -88,13 +93,13 @@ fn replace_symlink(original: &Path, link: &Path) -> Result<()> {
     fs::rename(temp_link, link).context("moving temp link into place")
 }
 
-fn reset(mut args: env::Args) -> Result<()> {
+fn reset(name: Option<String>) -> Result<()> {
     let runtime_dir = env::var("XDG_RUNTIME_DIR").context("XDG_RUNTIME_DIR not set")?;
     let link_dir = Path::new(&runtime_dir).join("configctl");
 
     let config_set = ConfigSet::gather()?;
 
-    if let Some(name) = args.next() {
+    if let Some(name) = name {
         let file = match config_set.spec.files.get(&name) {
             Some(file) => file,
             None => bail!("no config named {}", name),
@@ -126,10 +131,13 @@ fn reset(mut args: env::Args) -> Result<()> {
     Ok(())
 }
 
-fn status(_args: env::Args) -> Result<()> {
+fn status() -> Result<()> {
     let config_set = ConfigSet::gather()?;
 
-    for (name, file) in config_set.spec.files.iter() {
+    let mut files = config_set.spec.files.iter().collect::<Vec<_>>();
+    files.sort_by_key(|(name, _)| *name);
+    let mut some_missing = false;
+    for (name, file) in files {
         match config_set.status.files.get(name) {
             Some(actual_file) if actual_file == file => {
                 println!("[ok     ] {name}");
@@ -139,14 +147,19 @@ fn status(_args: env::Args) -> Result<()> {
             }
             None => {
                 println!("[missing] {name}");
+                some_missing = true;
             }
         }
+    }
+
+    if some_missing {
+        println!("WARNING: some runtime links are misisng. Did you run `configctl init`?")
     }
 
     Ok(())
 }
 
-fn diff(_args: env::Args) -> Result<()> {
+fn diff() -> Result<()> {
     let config_set = ConfigSet::gather()?;
 
     for (name, source_file) in config_set.spec.files.iter() {
@@ -162,6 +175,7 @@ fn diff(_args: env::Args) -> Result<()> {
 fn print_diff(file1: &Path, file2: &Path) -> Result<()> {
     Command::new("diff")
         .arg("-u")
+        .arg("--color")
         .arg("--")
         .arg(file1)
         .arg(file2)

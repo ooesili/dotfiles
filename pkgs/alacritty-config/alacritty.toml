@@ -1,0 +1,54 @@
+[colors.bright]
+black = "0x585858"
+blue = "0xb8b8b8"
+cyan = "0xa16946"
+green = "0x282828"
+magenta = "0xe8e8e8"
+red = "0xdc9656"
+white = "0xf8f8f8"
+yellow = "0x383838"
+
+[colors.cursor]
+cursor = "0xd8d8d8"
+text = "0x181818"
+
+[colors.normal]
+black = "0x181818"
+blue = "0x7cafc2"
+cyan = "0x86c1b9"
+green = "0xa1b56c"
+magenta = "0xba8baf"
+red = "0xab4642"
+white = "0xd8d8d8"
+yellow = "0xf7ca88"
+
+[colors.primary]
+background = "0x181818"
+foreground = "0xd8d8d8"
+
+[font]
+size = 9.0
+
+[font.bold]
+family = "Hack"
+
+[font.italic]
+family = "Hack"
+
+[font.normal]
+family = "Hack"
+
+[font.offset]
+y = -1
+
+[[keyboard.bindings]]
+chars = ""
+key = "I"
+mods = "Super|Shift"
+
+[scrolling]
+history = 10000
+
+[window.padding]
+x = 2
+y = 2

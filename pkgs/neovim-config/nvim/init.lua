@@ -13,10 +13,6 @@ local function augroup(name, commands)
   vim.api.nvim_command('augroup END')
 end
 
--- disable netrw as recommended by nvim-tree.lua
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 -- colors
 vim.o.termguicolors = true
 vim.api.nvim_command('colorscheme base16-default-dark')
@@ -62,13 +58,14 @@ noremap('n', '<Leader>tF', ':NvimTreeFindFile!<CR>')
 noremap('n', '<Leader>x', ':TroubleToggle workspace_diagnostics<CR>')
 noremap('n', '<Leader>gs', ':Git<CR>', { desc = 'Git: open status window' })
 noremap('n', '<Leader>gS', ':Git!<CR>', { desc = 'Git: open small status window' })
+noremap('n', '-', function() require('oil').open() end)
 -- telescope
 noremap('n', '<Leader>f', ':Telescope find_files<CR>', { desc = 'Find files' })
 noremap('n', '<Leader>b', ':Telescope buffers<CR>', { desc = 'Browse open buffers' })
 noremap('n', '<Leader>o', ':Telescope oldfiles<CR>', { desc = 'Recently opened files' })
 noremap('n', '<Leader>s', ':Telescope live_grep<CR>', { desc = 'Live grep search' })
 noremap('n', '<Leader>/', ':Telescope current_buffer_fuzzy_find<CR>', { desc = 'Search in current file' })
-noremap('n', '<Leader>z', require('z').telescope, { desc = 'Quick change directory' })
+noremap('n', '<Leader>z', require('zoxide').telescope, { desc = 'Quick change directory' })
 noremap('n', 'z=', ':Telescope spell_suggest<CR>', { desc = 'Spelling suggestions' })
 -- window navigation
 noremap('n', '<C-h>', '<C-w><C-h>')
@@ -156,25 +153,9 @@ telescope.setup({
 telescope.load_extension('fzf')
 telescope.load_extension('ui-select')
 
--- nvim-tree.lua
-require('nvim-tree').setup({
-  on_attach = function(bufnr)
-    local api = require('nvim-tree.api')
-
-    api.config.mappings.default_on_attach(bufnr)
-
-    local function opts(desc)
-      return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-    end
-
-    vim.keymap.del('n', 'q', { buffer = bufnr })
-    vim.keymap.set('n', '<C-e>', '5<C-e>', { buffer = bufnr })
-    vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { buffer = bufnr })
-    vim.keymap.set('n', 'i', api.node.show_info_popup, opts('toggle file info'))
-  end,
-  renderer = { indent_markers = { enable = true } }
+require('oil').setup({
+  skip_confirm_for_simple_edits = true
 })
-vim.api.nvim_command(string.format('hi NvimTreeIndentMarker guifg=#%s', vim.g.base16_gui02))
 
 -- luasnip
 local luasnip = require('luasnip')
@@ -190,7 +171,7 @@ cmp.setup({
     end
 
     -- disable completion when using telescope
-    if vim.api.nvim_buf_get_option(0, 'filetype') == 'TelescopePrompt' then
+    if vim.api.nvim_get_option_value('filetype', {}) == 'TelescopePrompt' then
       return false
     end
 
@@ -266,42 +247,59 @@ require('neodev').setup({
 })
 
 -- lsp
-local lsp_on_attach = function(_, buffer)
-  local opts = { noremap = true, silent = true, buffer = buffer }
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local opts = { noremap = true, silent = true, buffer = ev.buf }
 
-  -- Format on save
-  vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-    buffer = buffer,
-    callback = function() vim.lsp.buf.format() end,
-  })
+    -- Format on save
+    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+      buffer = ev.buf,
+      callback = function() vim.lsp.buf.format() end,
+    })
 
-  -- Enable completion triggered by <c-x><c-o>
-  vim.bo[buffer].omnifunc = 'v:lua.vim.lsp.omnifunc'
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-  vim.keymap.set('n', 'gd', ':Telescope lsp_definitions theme=cursor<CR>', opts)
-  vim.keymap.set('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
-  vim.keymap.set('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
-  vim.keymap.set('n', 'K', ':lua vim.lsp.buf.hover()<CR>', opts)
-  vim.keymap.set('n', '<Leader>ln', ':lua vim.lsp.buf.rename()<CR>', opts)
-  vim.keymap.set('n', '<Leader>la', ':lua vim.lsp.buf.code_action()<CR>', opts)
-  vim.keymap.set('v', '<Leader>la', ':lua vim.lsp.buf.range_code_action()<CR>', opts)
-  vim.keymap.set('n', '<Leader>lr', ':Telescope lsp_references theme=cursor<CR>', opts)
-  vim.keymap.set('n', '<Leader>ls', ':SymbolsOutline<CR>', opts)
-  vim.keymap.set('n', '<Leader>ld', ':Telescope diagnostics<CR>', opts)
-  vim.keymap.set('n', '<Leader>lt', ':Telescope lsp_type_definitions<CR>', opts)
-end
+    vim.keymap.set('n', 'gd', ':Telescope lsp_definitions theme=cursor<CR>', opts)
+    vim.keymap.set('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
+    vim.keymap.set('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
+    vim.keymap.set('n', 'K', ':lua vim.lsp.buf.hover()<CR>', opts)
+    vim.keymap.set('n', '<Leader>ln', ':lua vim.lsp.buf.rename()<CR>', opts)
+    vim.keymap.set('n', '<Leader>la', ':lua vim.lsp.buf.code_action()<CR>', opts)
+    vim.keymap.set('v', '<Leader>la', ':lua vim.lsp.buf.range_code_action()<CR>', opts)
+    vim.keymap.set('n', '<Leader>lr', ':Telescope lsp_references theme=cursor<CR>', opts)
+    vim.keymap.set('n', '<Leader>ls', ':SymbolsOutline<CR>', opts)
+    vim.keymap.set('n', '<Leader>ld', ':Telescope diagnostics<CR>', opts)
+    vim.keymap.set('n', '<Leader>lt', ':Telescope lsp_type_definitions<CR>', opts)
+  end
+})
 
 local lspconfig = require('lspconfig')
 local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
--- defaults
-lspconfig.util.default_config.on_attach = lsp_on_attach
-lspconfig.util.default_config.capabilities = cmp_capabilities
+
+local lsp_servers = {
+  bashls = {},
+  gopls = {},
+  lua_ls = {},
+  nil_ls = {},
+  pyright = {},
+  rust_analyzer = {},
+  tsserver = {},
+  zls = {},
+}
+for name, config in pairs(lsp_servers) do
+  config.capabilities = cmp_capabilities
+  lspconfig[name].setup(config)
+end
+
+
 -- language specific settings
 lspconfig.bashls.setup({})
 lspconfig.gopls.setup({})
+lspconfig.lua_ls.setup({})
+lspconfig.nil_ls.setup({})
 lspconfig.pyright.setup({})
 lspconfig.rust_analyzer.setup({})
-lspconfig.lua_ls.setup({})
 lspconfig.tsserver.setup({})
 lspconfig.zls.setup({})
 
@@ -321,6 +319,9 @@ require('nvim-treesitter.configs').setup {
   highlight = { enable = true },
   incremental_selection = { enable = true },
   textobjects = { enable = true },
+
+  -- dont' run regex parsing at the same time
+  additional_vim_regex_highlighting = false,
 }
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -358,8 +359,8 @@ vim.o.timeoutlen = 500
 require('which-key').setup({})
 
 -- indent-blankline
-require("indent_blankline").setup()
-vim.api.nvim_command(string.format('hi IndentBlanklineChar guifg=#%s gui=nocombine', vim.g.base16_gui02))
+require("ibl").setup()
+vim.api.nvim_command(string.format('hi NonText guifg=#%s gui=nocombine', vim.g.base16_gui02))
 
 -- gitsigns
 require('gitsigns').setup({
@@ -405,55 +406,31 @@ noremap('n', '<Leader>dc', ':DiffviewClose<CR>', { desc = 'Close git diff view' 
 noremap('n', '<Leader>dl', ':DiffviewFileHistory<CR>', { desc = 'Show git log for current file' })
 noremap('n', '<Leader>df', ':DiffviewToggleFiles<CR>', { desc = 'Toggle file panel in diff view' })
 
--- symbols-outline.nvim
-require('symbols-outline').setup({
-  keymaps = {
-    focus_location = '<Tab>',
-    unfold = 'zo',
-    fold = 'zc',
-    unfold_all = 'zr',
-    fold_all = 'zm',
-    fold_reset = 'zi'
-  }
-})
-
 -- null-ls
-local h = require("null-ls.helpers")
-local null_ls_formatting_nomad = h.make_builtin({
-  name = "nomadfmt",
-  meta = {
-    url = "https://developer.hashicorp.com/nomad/docs/commands/fmt",
-    description =
-    "The nomad fmt Nomad command is used to format HCL2 configuration files to a canonical format and style.",
-  },
-  method = require("null-ls.methods").internal.FORMATTING,
-  filetypes = { "hcl" },
-  generator_opts = {
-    command = "nomad",
-    args = {
-      "fmt",
-      "-",
-    },
-    to_stdin = true,
-  },
-  factory = h.formatter_factory,
-})
 local null_ls = require('null-ls')
 null_ls.setup({
-  on_attach = lsp_on_attach,
   sources = {
     -- TODO add eslint
-    -- null_ls.builtins.code_actions.eslint,
-    -- null_ls.builtins.diagnostics.eslint,
-    -- null_ls.builtins.formatting.eslint,
-    -- null_ls.builtins.diagnostics.terraform_validate,
     null_ls.builtins.code_actions.statix,
     null_ls.builtins.diagnostics.deadnix,
     null_ls.builtins.diagnostics.statix,
     null_ls.builtins.formatting.alejandra,
     null_ls.builtins.formatting.jq,
-    null_ls.builtins.formatting.prettier,
-    null_ls.builtins.formatting.terraform_fmt,
-    null_ls_formatting_nomad
+  }
+})
+
+vim.filetype.add({
+  extension = {
+    -- zellij scrollback editor
+    dump = function(path)
+      local re = vim.regex('/[0-9a-f]\\{8}-[0-9a-f]\\{4}-[0-9a-f]\\{4}-[0-9a-f]\\{4}-[0-9a-f]\\{12}\\.dump$')
+      if not re:match_str(path) then
+        return
+      end
+      return 'zellij-dump', function()
+        vim.wo[0].number = false
+        vim.api.nvim_command('DisableWhitespace')
+      end
+    end
   }
 })

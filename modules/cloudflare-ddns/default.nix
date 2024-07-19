@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  cfg = config.dotfiles.cloudflareDDNS;
+  cfg = config.services.cloudflareDDNS;
 
   ddnsScript = pkgs.writeShellApplication {
     name = "cloudflare-ddns";
@@ -43,7 +43,7 @@
 in
   with lib; {
     options = {
-      dotfiles.cloudflareDDNS = {
+      services.cloudflareDDNS = {
         enable = mkOption {
           default = false;
           description = "Enable the CloudFlare DDNS scheduled job.";
@@ -51,7 +51,7 @@ in
         };
 
         environmentFile = mkOption {
-          default = "/etc/secrets/cloudflare-ddns";
+          default = "/run/keys/cloudflare-ddns.env";
           description = ''
             A file with environment variables to configure access to manage a
             CloudFlare DNS record. The file must be formatted to work with the
@@ -69,7 +69,7 @@ in
     config = {
       systemd.services.cloudflare-ddns = mkIf cfg.enable {
         wantedBy = ["multi-user.target"];
-        after = ["network.target"];
+        after = ["network.target" "init-keys.service"];
 
         serviceConfig = {
           ExecStart = "${ddnsScript}/bin/cloudflare-ddns";

@@ -1,18 +1,10 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-with lib; {
+{pkgs, ...}: {
   config = {
     boot.kernelParams = ["threadirq"];
 
-    environment.systemPackages = with pkgs;
-      mkIf config.services.xserver.enable [
-        jack2Full
-        qjackctl
-      ];
+    environment.systemPackages = [
+      pkgs.qjackctl
+    ];
 
     # powerManagement.cpuFreqGovernor = "performance";
 

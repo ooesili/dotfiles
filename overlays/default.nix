@@ -4,32 +4,26 @@ let
     keymap-us-capsctrl = final.callPackage ../pkgs/keymap-us-capsctrl {};
     mdloader = final.callPackage ../pkgs/mdloader.nix {};
     newrelic-infra = final.callPackage ../pkgs/newrelic-infra {};
-    nopt = final.callPackage ../pkgs/nopt.nix {};
     rustybox = final.callPackage ../tools/rustybox/package.nix {};
-    godoc = final.callPackage ../pkgs/godoc.nix {};
     vital-vst = final.callPackage ../pkgs/vst/vital.nix {};
-    polybar = prev.polybar.override {
-      i3Support = true;
-      pulseSupport = true;
-    };
 
     discord = prev.discord.overrideAttrs (_: let
-      version = "0.0.23";
+      version = "0.0.60";
     in {
       inherit version;
       src = prev.fetchurl {
         url = "https://dl.discordapp.net/apps/linux/${version}/discord-${version}.tar.gz";
-        sha256 = "sha256-KIwAWQHyv1oRSAIeHSL9KXQZ1DxwsPmJggq3KqefqkQ=";
+        sha256 = "sha256-hu1+/z/ZtHoobjHF+pgNm040r4LQJUTnpZ06RNERFr8=";
       };
     });
 
-    bitwig-studio4 = prev.bitwig-studio4.overrideAttrs (oldAttrs: let
-      version = "4.4.10";
+    bitwig-studio5 = prev.bitwig-studio5.overrideAttrs (oldAttrs: let
+      version = "5.1.9";
     in {
       inherit version;
       src = prev.fetchurl {
-        url = "https://downloads.bitwig.com/stable/${version}/${oldAttrs.pname}-${version}.deb";
-        sha256 = "sha256-gtQ1mhXk0AqGidZk5TCzSR58pD1JJoELMBmELtqyb4U=";
+        url = "https://www.bitwig.com/dl/Bitwig%20Studio/${version}/installer_linux/";
+        hash = "sha256-J5kLqXCMnGb0ZMhES6PQIPjN51ptlBGj4Fy8qSzJ6Qg=";
       };
     });
 
@@ -52,45 +46,22 @@ let
       patches = [./direnv-use-nix-no-trace.patch];
     });
 
-    gopls = prev.gopls.override {
-      buildGoModule = prev.buildGo119Module;
-    };
-
     sops = prev.sops.overrideAttrs (_oldAttrs: {
       patches = [./sops-yaml-indent.patch];
     });
 
-    zdirs = final.writeTextFile {
-      name = "zdirs";
-      executable = true;
-      destination = "/bin/zdirs";
-      text = ''
-        #!${final.runtimeShell}
-        source ${final.z}/z.sh
-        _z 2>&1 | sed 's/^[0-9.]*[[:blank:]]*//' | tac
+    slack = final.symlinkJoin {
+      name = "slack-no-wayland";
+      paths = [prev.slack];
+      buildInputs = [final.makeWrapper];
+      postBuild = ''
+        wrapProgram $out/bin/slack --unset NIXOS_OZONE_WL
+        rm $out/share/applications/slack.desktop
+        substitute \
+          ${prev.slack}/share/applications/slack.desktop \
+          $out/share/applications/slack.desktop \
+          --replace ${prev.slack}/bin $out/bin
       '';
-
-      meta.mainProgram = "zdirs";
-    };
-
-    rofi = let
-      rofiThemeBase16 = builtins.fetchGit {
-        name = "base46-rofi-theme";
-        url = "https://github.com/0xdec/base16-rofi.git";
-        rev = "a7e7be0cb5812243f23cd4607eab11ce4cca7774";
-      };
-    in
-      prev.runCommand "rofi-config-wrapped" {
-        buildInputs = [prev.makeWrapper];
-      } ''
-        makeWrapper ${prev.rofi}/bin/rofi $out/bin/rofi \
-          --add-flags "-theme ${rofiThemeBase16}/themes/base16-default-dark.rasi"
-      '';
-
-    z = builtins.fetchGit {
-      name = "zrupa";
-      url = "https://github.com/rupa/z.git";
-      rev = "125f4dc47e15891739dd8262d5b23077fe8fb9ab";
     };
   };
 in [

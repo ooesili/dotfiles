@@ -2,13 +2,75 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  init-keys = pkgs.writeShellApplication {
+    name = "init-keys";
+    runtimeInputs = [
+      pkgs.bash
+      pkgs.jq
+    ];
+
+    text = ''
+      main() {
+        write_secrets
+        remove_extra_files
+      }
+
+      write_secrets() {
+        jq -r \
+          '.secrets|to_entries|map("echo \(.value|@sh) > /run/keys/\(.key).env")|.[]' \
+          /etc/secrets.json |
+          bash
+      }
+
+      remove_extra_files() {
+        comm -13 <(desired_files) <(actual_files) | xargs rm -f
+      }
+
+      desired_files() {
+        jq -r \
+          '.secrets|keys|sort|map("/run/keys/\(.).env")|.[]' \
+          /etc/secrets.json
+      }
+
+      actual_files() {
+        ls /run/keys/*
+      }
+
+      main "$@"
+    '';
+  };
+
+  update-keys = pkgs.writeShellApplication {
+    name = "update-keys";
+
+    text = ''
+      main() {
+        touch /etc/secrets.json
+        chmod 0400 /etc/secrets.json
+        cat > /etc/secrets.json
+
+        if does_unit_exist init-keys.service; then
+          sudo systemctl start init-keys.service
+        fi
+      }
+
+      does_unit_exist() {
+        local unit=$1
+        systemctl list-unit-files "$unit" | grep -qF '1 unit files listed.'
+      }
+
+      main "$@"
+    '';
+  };
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../modules/gitea.nix
     ../../modules/newrelic-infra.nix
     ../../modules/trusts.nix
+    ../../modules/cloudflare-ddns
   ];
 
   boot = {
@@ -61,8 +123,8 @@
 
   nixpkgs = {
     overlays = [
-      (_final: _prev: {
-        firmwareLinuxNonfree = super.firmwareLinuxNonfree.overrideAttrs (_oldAttrs: {
+      (final: _prev: {
+        firmwareLinuxNonfree = final.firmwareLinuxNonfree.overrideAttrs (_oldAttrs: {
           version = "2020-12-18";
           src = pkgs.fetchgit {
             url = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git";
@@ -108,6 +170,8 @@
       sslpsk
     ]);
   in [
+    update-keys
+
     pkgs.htop
     pkgs.tcpdump
     pkgs.vim
@@ -119,7 +183,6 @@
     pkgs.hostapd
     pkgs.iw
     pkgs.mosquitto
-    pkgs.nopt
     pkgs.openssl
     pkgs.pkg-config
     pkgs.screen
@@ -152,9 +215,13 @@
 
       nixbox.ooesili.me {
         handle_path /static/* {
-          reverse_proxy 192.168.101.2:9080
+          reverse_proxy 100.121.171.91:9080
         }
-        reverse_proxy 192.168.101.2:8080
+        reverse_proxy 100.121.171.91:8080
+      }
+
+      trefoil.ooesili.me {
+        reverse_proxy 100.121.171.91:8000
       }
 
       nitter.ooesili.me {
@@ -162,10 +229,12 @@
       }
 
       registry.ooesili.me {
-        reverse_proxy 192.168.101.2:5000
+        reverse_proxy 100.121.171.91:5000
       }
     '';
   };
+
+  services.cloudflareDDNS.enable = true;
 
   services.nitter = {
     enable = true;
@@ -174,6 +243,16 @@
   };
 
   services.tailscale.enable = true;
+
+  systemd.services.init-keys = {
+    wantedBy = ["multi-user.target"];
+    description = "Unpack secrets into /run/keys";
+
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${init-keys}/bin/init-keys";
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

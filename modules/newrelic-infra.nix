@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   config = {
     systemd.services.newrelic-infra = {
-      after = ["dbus.service" "syslog.target" "network.target"];
+      after = ["dbus.service" "syslog.target" "network.target" "init-keys.service"];
       wantedBy = ["multi-user.target"];
       description = "New Relic Infrastructure Agent";
       path = [pkgs.kmod];
@@ -13,7 +13,7 @@
         MemoryLimit = "500M";
         Restart = "always";
         RestartSec = 20;
-        EnvironmentFile = "/etc/newrelic-infra-env";
+        EnvironmentFile = "/run/keys/newrelic-infra.env";
 
         Environment = ''
           NRIA_ENABLE_PROCESS_METRICS=true

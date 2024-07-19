@@ -13,7 +13,7 @@
       pkgs.audacity
       pkgs.patchage
       pkgs.supercollider
-      pkgs.bitwig-studio4
+      pkgs.bitwig-studio5
       pkgs.fire
       pkgs.paulstretch
       pkgs.surge-XT
