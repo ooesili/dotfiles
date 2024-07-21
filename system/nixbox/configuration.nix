@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: {
   imports = [
@@ -12,7 +11,14 @@
 
   boot = {
     blacklistedKernelModules = ["snd_hda_intel"];
-    kernelModules = ["af_key"];
+    kernelParams = ["nvidia-drm.modeset=1"];
+    kernelModules = [
+      "af_key"
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_uvm"
+      "nvidia_drm"
+    ];
   };
 
   dotfiles = {
@@ -38,9 +44,15 @@
   ];
 
   hardware.cpu.intel.updateMicrocode = true;
-  hardware.graphics.enable = true;
   networking.hostName = "nixbox";
   programs.adb.enable = true;
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = [
+      pkgs.nvidia-vaapi-driver
+    ];
+  };
 
   services.mpd.extraConfig = ''
     audio_output {
@@ -55,6 +67,14 @@
       tags            "yes"      # httpd supports sending tags to listening streams.
     }
   '';
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    forceFullCompositionPipeline = true;
+  };
+
+  # A confusing namee, but this defines drivers for wayland as well
+  services.xserver.videoDrivers = ["nvidia"];
 
   virtualisation.virtualbox.host.enable = true;
 
