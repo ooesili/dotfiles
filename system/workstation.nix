@@ -280,11 +280,6 @@ in
       services.timesyncd.enable = false;
       services.chrony.enable = true;
 
-      sound = {
-        enable = true;
-        extraConfig = "defaults.pcm.!card ${cfg.soundCard}";
-      };
-
       systemd.user.services.syncthing = {
         description = "Syncthing - Open Source Continuous File Synchronization";
         documentation = ["man:syncthing(1)"];
