@@ -122,6 +122,10 @@ function sns
   sysnix shell nixpkgs#$argv[1] $argv[2..]
 end
 
+function sne
+  sysnix edit nixpkgs#$argv[1] $argv[2..]
+end
+
 function zjs
   if test (count $argv) -ne 1
     echo 'usage: zjs <session-name>'
