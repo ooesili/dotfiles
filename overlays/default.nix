@@ -46,10 +46,6 @@ let
       patches = [./direnv-use-nix-no-trace.patch];
     });
 
-    sops = prev.sops.overrideAttrs (_oldAttrs: {
-      patches = [./sops-yaml-indent.patch];
-    });
-
     slack = final.symlinkJoin {
       name = "slack-no-wayland";
       paths = [prev.slack];
