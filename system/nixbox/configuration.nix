@@ -41,7 +41,6 @@
   hardware.graphics.enable = true;
   networking.hostName = "nixbox";
   programs.adb.enable = true;
-  programs.steam.enable = true;
 
   services.mpd.extraConfig = ''
     audio_output {
