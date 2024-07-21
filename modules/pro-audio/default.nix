@@ -11,7 +11,6 @@
   config = {
     environment.systemPackages = [
       pkgs.audacity
-      pkgs.patchage
       pkgs.supercollider
       pkgs.bitwig-studio5
       pkgs.fire
