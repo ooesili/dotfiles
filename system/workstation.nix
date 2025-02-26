@@ -78,6 +78,11 @@ in
       documentation.man.generateCaches = false;
 
       environment = {
+        sessionVariables = {
+          STARSHIP_CONFIG = ../pkgs/fish/starship.toml;
+          SHELL = "fish";
+        };
+
         systemPackages = with pkgs; let
           pythonPackages = py-pkgs: with py-pkgs; [virtualenv];
           python = python3.withPackages pythonPackages;
@@ -90,15 +95,15 @@ in
           binutils
           bottom
           caddy
+          clang-tools
           coreutils
           deadnix
           direnv
           discord
           dnsutils
-          element-desktop
+          # element-desktop
           eza
           fd
-          feh
           fennel
           ffmpeg
           file
@@ -111,13 +116,14 @@ in
           git
           gnumake
           gnupg
-          go_1_22
+          go_1_23
           gopls
           gotools
           gptfdisk
           httpie
           hunspellDicts.en-us
           imagemagick
+          imv
           inkscape
           ipcalc
           jq
@@ -128,6 +134,7 @@ in
           luajit_2_1
           luajit_2_1.pkgs.luacheck
           man-pages
+          man-pages-posix
           mprocs
           mpv
           mupdf
@@ -139,7 +146,7 @@ in
           nmap
           nodePackages_latest.bash-language-server
           nodePackages_latest.typescript-language-server
-          nodejs_latest
+          nodejs_22 # TODO replace with latest
           obsidian
           p7zip
           pamixer
@@ -148,7 +155,6 @@ in
           pgcli
           pinentry-gtk2
           playerctl
-          posix_man_pages
           procs
           pv
           pyright
@@ -169,7 +175,7 @@ in
           sumneko-lua-language-server
           tcpdump
           tdesktop
-          tmux
+          tmux-config
           tokei
           unixtools.xxd
           usbutils
@@ -178,20 +184,29 @@ in
           wine
           wireguard-tools
           xplr
-          zellij
           zls
+          zoom-us
           zoxide
         ];
       };
 
       fonts.packages = [
-        pkgs.hack-font
-        pkgs.nerdfonts
+        pkgs.nerd-fonts.hack
+        pkgs.nerd-fonts.noto
         pkgs.siji
         pkgs.unifont
       ];
 
       i18n.defaultLocale = "en_US.UTF-8";
+
+      location = {
+        provider = "manual";
+        # https://location.services.mozilla.com/v1/geolocate?key=geoclue
+
+        # Denver
+        latitude = 39.6888;
+        longitude = -105.156;
+      };
 
       networking = {
         firewall = {
@@ -201,6 +216,14 @@ in
           checkReversePath = "loose";
 
           trustedInterfaces = ["tailscale0"];
+
+          allowedTCPPorts = [
+            31337 # netcat
+          ];
+          allowedUDPPorts = [
+            21027 # syncthing local discovery
+            31337 # netcat
+          ];
         };
 
         dhcpcd.enable = false;
@@ -260,6 +283,7 @@ in
         }
       ];
 
+      services.auto-cpufreq.enable = true;
       services.fstrim.enable = true;
       services.thermald.enable = true;
 

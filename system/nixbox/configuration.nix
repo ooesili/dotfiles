@@ -25,11 +25,14 @@
     desktop = {
       alacritty.font.size = "9.0";
       autoLoginUser = config.dotfiles.primaryUser;
+      enableNvidia = true;
     };
 
     mpd = {
       enable = true;
       user = config.dotfiles.primaryUser;
+      dataDir = "/home/${config.dotfiles.primaryUser}/.local/share/mpd";
+      musicDir = "/media/exthd-a/files/music/sorted";
     };
 
     primaryUser = "ooesili";
@@ -44,14 +47,32 @@
   ];
 
   hardware.cpu.intel.updateMicrocode = true;
-  networking.hostName = "nixbox";
+
+  networking = {
+    hostName = "nixbox";
+    firewall = {
+      allowedTCPPorts = [
+        22000 # syncthing
+        55000 # nix-serve
+      ];
+    };
+  };
+
   programs.adb.enable = true;
 
-  hardware.graphics = {
-    enable = true;
-    extraPackages = [
-      pkgs.nvidia-vaapi-driver
-    ];
+  hardware = {
+    graphics = {
+      enable = true;
+      extraPackages = [
+        pkgs.nvidia-vaapi-driver
+      ];
+    };
+
+    nvidia = {
+      open = false;
+      modesetting.enable = true;
+      forceFullCompositionPipeline = true;
+    };
   };
 
   services.mpd.extraConfig = ''
@@ -68,14 +89,65 @@
     }
   '';
 
-  hardware.nvidia = {
-    modesetting.enable = true;
-    forceFullCompositionPipeline = true;
+  services.nix-serve = {
+    enable = true;
+    port = 55000;
+    secretKeyFile = "/etc/secrets/nix-serve-key";
+  };
+
+  services.restic.backups.main = {
+    # check out dynamicBackupsFrom
+    passwordFile = "/etc/secrets/restic-backup-key";
+    paths = [
+      "/etc/secrets"
+      "/home/ooesili/.aws"
+      "/home/ooesili/.config/Element"
+      "/home/ooesili/.config/SuperCollider"
+      "/home/ooesili/.config/clojure"
+      "/home/ooesili/.config/direnv/direnvrc"
+      "/home/ooesili/.config/htop/htoprc"
+      "/home/ooesili/.config/patchagerc"
+      "/home/ooesili/.config/rncbc.org/QjackCtl.conf"
+      "/home/ooesili/.config/syncthing"
+      "/home/ooesili/.gitconfig"
+      "/home/ooesili/.gitignore_global"
+      "/home/ooesili/.gnupg"
+      "/home/ooesili/.hydrogen"
+      "/home/ooesili/.jackdrc"
+      "/home/ooesili/.lein"
+      "/home/ooesili/.local/share/TelegramDesktop"
+      "/home/ooesili/.local/share/mpd"
+      "/home/ooesili/.local/share/nvim"
+      "/home/ooesili/.mozilla"
+      "/home/ooesili/.nixpkgs/config.nix"
+      "/home/ooesili/.ssh"
+      "/home/ooesili/.wallpaper"
+      "/home/ooesili/.z"
+      "/home/ooesili/.zsh_history"
+      "/home/ooesili/archive"
+      "/home/ooesili/bin"
+      "/home/ooesili/books"
+      "/home/ooesili/docs"
+      "/home/ooesili/images"
+      "/home/ooesili/obsidian-notes"
+      "/home/ooesili/src"
+      "/home/ooesili/studio"
+      "/home/ooesili/sync"
+      "/home/ooesili/videos"
+    ];
+    pruneOpts = [
+      "--keep-daily 30"
+      "--keep-monthly 12"
+    ];
+    repository = "/media/exthd-a/files/restic-backup";
+    timerConfig = {OnCalendar = "daily";};
+    user = "root";
   };
 
   # A confusing namee, but this defines drivers for wayland as well
   services.xserver.videoDrivers = ["nvidia"];
 
+  time.timeZone = "America/Denver";
   virtualisation.virtualbox.host.enable = true;
 
   # settings for stateful data, like file locations and database versions

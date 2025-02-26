@@ -114,7 +114,7 @@ in {
     interfaces.eth0.useDHCP = true;
     useDHCP = false;
 
-    firewall.enable = false;
+    firewall.enable = true;
     firewall.allowedUDPPorts = [
       51820 # wireguard
     ];

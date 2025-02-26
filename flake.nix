@@ -35,6 +35,8 @@
       ];
     };
 
+    overlays.default = pkgs.lib.composeManyExtensions overlays;
+
     templates = {
       rust = {
         description = "Rust template using the oxalica Rust overlay.";
@@ -73,10 +75,6 @@
     # These are turned into NixOS configurations by a private flake with some
     # additional bits I don't want to share with the world.
     nixosModules = {
-      base.nixbox.imports = [
-        ./system/nixbox/configuration.nix
-      ];
-
       base.framework.imports = [
         nixos-hardware.nixosModules.framework-11th-gen-intel
         ./system/framework/configuration.nix
@@ -84,6 +82,16 @@
     };
 
     nixosConfigurations = {
+      nixbox = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [overlayModule ./system/nixbox/configuration.nix];
+      };
+
+      framework = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [overlayModule ./system/framework/configuration.nix];
+      };
+
       pinix = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
         modules = [overlayModule ./system/pinix/configuration.nix];

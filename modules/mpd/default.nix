@@ -84,7 +84,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
-      pkgs.alsaUtils
+      pkgs.alsa-utils
       pkgs.mpc_cli
       pkgs.ncmpcpp
       ncmpcppWrapped

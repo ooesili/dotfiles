@@ -2,13 +2,17 @@ _final: prev: let
   inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPlugin;
 
   initLua = prev.substituteAll {
-    src = ../pkgs/neovim-config/nvim/init.lua;
+    src = ../pkgs/neovim-config/init.lua;
     goTemplateFile = ../pkgs/neovim-config/go-templates/main.go;
   };
 
   myConfig = buildVimPlugin {
     name = "my-nvim-config";
-    src = ../pkgs/neovim-config/nvim;
+    src = ../pkgs/neovim-config/config;
+    dependencies = [
+      vimPlugins.plenary-nvim
+      vimPlugins.telescope-nvim
+    ];
   };
 
   mySnippets = buildVimPlugin {
@@ -30,6 +34,7 @@ _final: prev: let
     vimPlugins.rust-vim
     vimPlugins.typescript-vim
     vimPlugins.vim-glsl
+    vimPlugins.vim-helm
     vimPlugins.vim-javascript
     vimPlugins.vim-jsx-pretty
     vimPlugins.vim-nix
@@ -56,12 +61,16 @@ _final: prev: let
     vimPlugins.friendly-snippets
     vimPlugins.gitsigns-nvim
     vimPlugins.indent-blankline-nvim
+    vimPlugins.lazydev-nvim
     vimPlugins.lualine-nvim
     vimPlugins.luasnip
-    vimPlugins.neodev-nvim
     vimPlugins.null-ls-nvim
     vimPlugins.nvim-cmp
+    vimPlugins.nvim-dap
+    vimPlugins.nvim-dap-ui
+    vimPlugins.nvim-dap-go
     vimPlugins.nvim-lspconfig
+    vimPlugins.nvim-nio # required by dap-ui
     vimPlugins.nvim-treesitter
     vimPlugins.nvim-treesitter-textobjects
     vimPlugins.nvim-web-devicons

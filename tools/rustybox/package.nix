@@ -15,10 +15,11 @@ in
   rustPlatform.buildRustPackage {
     pname = "rustybox";
     version = "0.1.0";
-    cargoSha256 = "sha256-VQ56nSinUP2wf+JIHAmack60gT8bvN8p80Hw7iVkZzE=";
+    cargoHash = "sha256-mILinoy4KEx0FD0RGOVLFEIaswoXD4YdcflWTXh8dso=";
 
     src = lib.cleanSource ./.;
     buildInputs = [makeWrapper];
+    useFetchCargoVendor = true;
 
     postInstall = ''
       mkdir -p $out/libexec

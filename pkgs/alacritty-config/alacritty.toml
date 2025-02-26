@@ -27,16 +27,16 @@ background = "0x181818"
 foreground = "0xd8d8d8"
 
 [font]
-size = 9.0
+size = @fontSize@
 
 [font.bold]
-family = "Hack"
+family = "Hack Nerd Font"
 
 [font.italic]
-family = "Hack"
+family = "Hack Nerd Font"
 
 [font.normal]
-family = "Hack"
+family = "Hack Nerd Font"
 
 [font.offset]
 y = -1

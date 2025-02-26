@@ -18,9 +18,12 @@
     install -Dm644 ${./wofi.conf} $out/etc/xdg/configctl/wofi.conf
   '';
 
-  start-hyprland = pkgs.writeShellScript "start-hyprland" ''
+  swayPkg = config.programs.sway.package;
+  start-session = pkgs.writeShellScript "start-start-session" ''
     ${pkgs.rustybox}/bin/configctl init
-    exec ${pkgs.hyprland}/bin/Hyprland --config $XDG_RUNTIME_DIR/configctl/hyprland.conf
+
+    # exec ${config.programs.hyprland.package}/bin/Hyprland --config $XDG_RUNTIME_DIR/configctl/hyprland.conf
+    ${swayPkg}/bin/${swayPkg.meta.mainProgram}
   '';
 
   lock-now = pkgs.writeShellApplication {
@@ -104,8 +107,8 @@ in {
 
     environment.sessionVariables =
       {
-        # XCURSOR_THEME = "";
-        # XCURSOR_SIZE = "40";
+        # XCURSOR_THEME = "Adwaita";
+        XCURSOR_SIZE = "40";
         MOZ_ENABLE_WAYLAND = "1";
         NIXOS_OZONE_WL = "1";
         QT_AUTO_SCREEN_SCALE_FACTOR = "1";
@@ -129,8 +132,6 @@ in {
         XDG_STATE_HOME = "$HOME/.local/state";
         XDG_TEMPLATES_DIR = "$HOME/.templates";
         XDG_VIDEOS_DIR = "$HOME/media/videos";
-
-        STARSHIP_CONFIG = ../../pkgs/fish/starship.toml;
       }
       // lib.attrsets.optionalAttrs cfg.enableNvidia {
         LIBVA_DRIVER_NAME = "nvidia";
@@ -141,21 +142,29 @@ in {
         ELECTRON_OZONE_PLATFORM_HINT = "auto";
       };
 
-    programs.hyprland = {
-      enable = true;
-      xwayland.enable = true;
+    programs = {
+      hyprland = {
+        enable = true;
+        xwayland.enable = true;
+      };
+
+      sway = {
+        enable = true;
+        package = pkgs.swayfx;
+        wrapperFeatures.gtk = true;
+      };
     };
 
     systemd.user.services = {
       gammastep = {
         inherit (pkgs.waybar.meta) description;
-        wantedBy = ["graphical-session.target"];
+        wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = "${pkgs.gammastep}/bin/gammastep";
       };
 
       waybar = {
         inherit (pkgs.waybar.meta) description;
-        wantedBy = ["graphical-session.target"];
+        wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = pkgs.writeShellScript "start-waybar" ''
           exec ${pkgs.waybar}/bin/waybar \
             --config $XDG_RUNTIME_DIR/configctl/waybar-config \
@@ -165,17 +174,20 @@ in {
 
       hyprpaper = {
         inherit (pkgs.hyprpaper.meta) description;
-        wantedBy = ["graphical-session.target"];
+        wantedBy = ["hyprland.target"];
         serviceConfig.ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
       };
 
       swayidle = {
         inherit (pkgs.swayidle.meta) description;
-        wantedBy = ["graphical-session.target"];
+        # TODO: replace me with hyperland.target
+        wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = "${pkgs.swayidle}/bin/swayidle -w -C ${./swayidle.conf}";
         path = [lock-now config.programs.hyprland.package];
       };
     };
+
+    # https://github.com/danth/stylix
 
     systemd.user.targets.hyprland = {
       unitConfig = {
@@ -190,7 +202,7 @@ in {
         vt = 1;
         default_session = {
           command = ''
-            ${start-hyprland}
+            ${start-session}
             /run/current-system/systemd/bin/systemctl --user stop graphical-session.target
           '';
           user = cfg.autoLoginUser;
@@ -225,6 +237,7 @@ in {
       extraPortals =
         [
           pkgs.xdg-desktop-portal
+          pkgs.xdg-desktop-portal-wlr
           pkgs.xdg-desktop-portal-gtk
         ]
         # the nvidia patches automatically enable the hyprland desktop portal

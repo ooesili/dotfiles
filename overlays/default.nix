@@ -7,6 +7,10 @@ let
     rustybox = final.callPackage ../tools/rustybox/package.nix {};
     vital-vst = final.callPackage ../pkgs/vst/vital.nix {};
 
+    gopls = prev.gopls.override {
+      buildGoModule = final.buildGo124Module;
+    };
+
     discord = prev.discord.overrideAttrs (_: let
       version = "0.0.60";
     in {
@@ -17,15 +21,18 @@ let
       };
     });
 
-    bitwig-studio5 = prev.bitwig-studio5.overrideAttrs (oldAttrs: let
+    bitwig-studio5-unwrapped = prev.bitwig-studio5-unwrapped.overrideAttrs (_oldAttrs: let
       version = "5.1.9";
     in {
       inherit version;
       src = prev.fetchurl {
+        name = "bitwig-studio-${version}.deb";
         url = "https://www.bitwig.com/dl/Bitwig%20Studio/${version}/installer_linux/";
         hash = "sha256-J5kLqXCMnGb0ZMhES6PQIPjN51ptlBGj4Fy8qSzJ6Qg=";
       };
     });
+
+    tmux-config = prev.callPackage ../pkgs/tmux-config {};
 
     # The version of libnss exported by the discord wrapper is incompatible with
     # the one firefox expects.

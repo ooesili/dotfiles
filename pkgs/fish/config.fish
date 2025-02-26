@@ -126,29 +126,14 @@ function sne
   sysnix edit nixpkgs#$argv[1] $argv[2..]
 end
 
-function zjs
-  if test (count $argv) -ne 1
-    echo 'usage: zjs <session-name>'
-    return 1
-  end
-
-  set -l name $argv[1]
-  set -l current_sessions (zellij list-sessions --short 2> /dev/null)
-
-  if contains $name $current_sessions
-    zellij attach $name
-  else
-    zellij --session $name
-  end
-end
-
 # abbreviations
 alias ls=eza
 alias rg="rg --type-add 'tf:*.tf' --type-add 'tfvars:*.tfvars'"
 alias screenshot='grim -g (slurp)'
-alias home='zellij --session home --layout home'
-alias zja='zellij attach'
-alias zj='zellij'
+alias ta='tmux attach'
+alias ts='tmux new -s'
+alias tx='tmux resize-pane -x'
+alias ty='tmux resize-pane -y'
 abbr -a de direnv edit
 abbr -a dr direnv reload
 abbr -a l ls -l
@@ -194,3 +179,15 @@ alias grb='git rebase'
 alias grgm='git rebase (git_main_branch)'
 alias gru='git add --patch'
 alias gst='git status'
+function git-review
+  if test -n "$(git status --porcelain)"
+    echo 'warning: skipping due to uncomitted changes' >&2
+    return 1
+  end
+
+  set main (git_main_branch)
+  set rev (git rev-list -n 1 $main)
+  git reset --soft $rev
+  git restore --staged .
+  git add -N .
+end

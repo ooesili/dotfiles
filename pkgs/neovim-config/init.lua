@@ -154,7 +154,13 @@ telescope.load_extension('fzf')
 telescope.load_extension('ui-select')
 
 require('oil').setup({
-  skip_confirm_for_simple_edits = true
+  skip_confirm_for_simple_edits = true,
+  keymaps = {
+    ["<C-l>"] = false,
+    ["<C-h>"] = false,
+    ["g<C-l>"] = "actions.refresh",
+    ["g<C-h>"] = { "actions.select", opts = { horizontal = true }, desc = "Open the entry in a horizontal split" },
+  }
 })
 
 -- luasnip
@@ -237,14 +243,16 @@ cmp.setup.cmdline(':', {
   })
 })
 
-require('neodev').setup({
-  override = function(root_dir, library)
-    if require("neodev.util").has_file(root_dir, "/nvim/") then
-      library.enabled = true
-      library.plugins = true
-    end
-  end,
-})
+-- require('neodev').setup({
+--   library = { plugins = { "nvim-dap-ui" }, types = true },
+
+--   override = function(root_dir, library)
+--     if require("neodev.util").has_file(root_dir, "/nvim/") then
+--       library.enabled = true
+--       library.plugins = true
+--     end
+--   end,
+-- })
 
 -- lsp
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -268,39 +276,24 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<Leader>la', ':lua vim.lsp.buf.code_action()<CR>', opts)
     vim.keymap.set('v', '<Leader>la', ':lua vim.lsp.buf.range_code_action()<CR>', opts)
     vim.keymap.set('n', '<Leader>lr', ':Telescope lsp_references theme=cursor<CR>', opts)
-    vim.keymap.set('n', '<Leader>ls', ':SymbolsOutline<CR>', opts)
     vim.keymap.set('n', '<Leader>ld', ':Telescope diagnostics<CR>', opts)
     vim.keymap.set('n', '<Leader>lt', ':Telescope lsp_type_definitions<CR>', opts)
+    vim.keymap.set('n', '<Leader>ls', ':Telescope lsp_document_symbols<CR>', opts)
   end
 })
 
 local lspconfig = require('lspconfig')
 local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-local lsp_servers = {
-  bashls = {},
-  gopls = {},
-  lua_ls = {},
-  nil_ls = {},
-  pyright = {},
-  rust_analyzer = {},
-  tsserver = {},
-  zls = {},
-}
-for name, config in pairs(lsp_servers) do
-  config.capabilities = cmp_capabilities
-  lspconfig[name].setup(config)
-end
-
-
 -- language specific settings
 lspconfig.bashls.setup({})
+lspconfig.clangd.setup({})
 lspconfig.gopls.setup({})
 lspconfig.lua_ls.setup({})
 lspconfig.nil_ls.setup({})
 lspconfig.pyright.setup({})
 lspconfig.rust_analyzer.setup({})
-lspconfig.tsserver.setup({})
+lspconfig.ts_ls.setup({})
 lspconfig.zls.setup({})
 
 -- better whitespace
@@ -334,17 +327,19 @@ vim.api.nvim_command('autocmd BufRead,BufNewFile flake.lock setfiletype json')
 vim.g.fugitive_pty = 0
 
 -- rclip
-vim.g.clipboard = {
-  name = 'rclip',
-  copy = {
-    ['*'] = { 'rclip', 'copy', '--primary' },
-    ['+'] = { 'rclip', 'copy', '--clipboard' }
-  },
-  paste = {
-    ['*'] = { 'rclip', 'paste', '--primary' },
-    ['+'] = { 'rclip', 'paste', '--clipboard' }
+if vim.fn.executable('rclip') == 1 then
+  vim.g.clipboard = {
+    name = 'rclip',
+    copy = {
+      ['*'] = { 'rclip', 'copy', '--primary' },
+      ['+'] = { 'rclip', 'copy', '--clipboard' }
+    },
+    paste = {
+      ['*'] = { 'rclip', 'paste', '--primary' },
+      ['+'] = { 'rclip', 'paste', '--clipboard' }
+    }
   }
-}
+end
 
 -- illuminate
 require('illuminate').configure({
@@ -400,11 +395,11 @@ require('gitsigns').setup({
 })
 
 -- diffview
-noremap('n', '<Leader>do', ':DiffviewOpen<CR>', { desc = 'Open git diff view' })
-noremap('n', '<Leader>dO', ':DiffviewOpen ', { desc = 'Start diff view command' })
-noremap('n', '<Leader>dc', ':DiffviewClose<CR>', { desc = 'Close git diff view' })
-noremap('n', '<Leader>dl', ':DiffviewFileHistory<CR>', { desc = 'Show git log for current file' })
-noremap('n', '<Leader>df', ':DiffviewToggleFiles<CR>', { desc = 'Toggle file panel in diff view' })
+noremap('n', '<Leader>gdo', ':DiffviewOpen<CR>', { desc = 'Open git diff view' })
+noremap('n', '<Leader>gdO', ':DiffviewOpen ', { desc = 'Start diff view command' })
+noremap('n', '<Leader>gdc', ':DiffviewClose<CR>', { desc = 'Close git diff view' })
+noremap('n', '<Leader>gdl', ':DiffviewFileHistory<CR>', { desc = 'Show git log for current file' })
+noremap('n', '<Leader>gdf', ':DiffviewToggleFiles<CR>', { desc = 'Toggle file panel in diff view' })
 
 -- null-ls
 local null_ls = require('null-ls')
@@ -419,18 +414,29 @@ null_ls.setup({
   }
 })
 
-vim.filetype.add({
-  extension = {
-    -- zellij scrollback editor
-    dump = function(path)
-      local re = vim.regex('/[0-9a-f]\\{8}-[0-9a-f]\\{4}-[0-9a-f]\\{4}-[0-9a-f]\\{4}-[0-9a-f]\\{12}\\.dump$')
-      if not re:match_str(path) then
-        return
-      end
-      return 'zellij-dump', function()
-        vim.wo[0].number = false
-        vim.api.nvim_command('DisableWhitespace')
-      end
-    end
-  }
-})
+-- dap-go
+require('dap-go').setup()
+noremap('n', '<Leader>dc', function() require('dap').continue() end, { desc = "Start or continue debugging session" })
+noremap('n', '<Leader>do', function() require('dap').step_over() end, { desc = 'Step over' })
+noremap('n', '<Leader>di', function() require('dap').step_into() end, { desc = 'Step into' })
+noremap('n', '<Leader>du', function() require('dap').step_out() end, { desc = 'Step out' })
+noremap('n', '<Leader>db', function() require('dap').toggle_breakpoint() end, { desc = 'Toggle breakpoint' })
+noremap('n', '<Leader>dp', function()
+  require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
+end, { desc = 'Log point message' })
+noremap('n', '<Leader>do', function() require('dap').repl.open() end, { desc = 'Open REPL' })
+noremap('n', '<Leader>dr', function() require('dap').run_last() end, { desc = 'Run last' })
+noremap('n', '<Leader>dk', function() require('dap.ui.widgets').hover() end, { desc = 'dap-ui: Hover' })
+noremap('n', '<Leader>dwp', function() require('dap.ui.widgets').preview() end, { desc = 'dap-ui: Preview' })
+noremap('n', '<Leader>dwf', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.frames)
+end, { desc = 'dap-ui: Frames' })
+noremap('n', '<Leader>dws', function()
+  local widgets = require('dap.ui.widgets')
+  widgets.centered_float(widgets.scopes)
+end, { desc = 'dap-ui: Scopes' })
+
+-- nvim-dap-ui
+require('dapui').setup()
+noremap('n', '<Leader>dd', function() require("dapui").toggle() end, { desc = 'dap-ui: Toggle' })

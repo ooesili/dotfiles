@@ -5,6 +5,18 @@
     ../../modules/mac-changer.nix
   ];
 
+  dotfiles = let
+    primaryUser = "ooesili";
+  in {
+    desktop = {
+      alacritty.font.size = "9.5";
+      autoLoginUser = primaryUser;
+    };
+
+    inherit primaryUser;
+    soundCard = "PCH";
+  };
+
   boot.kernelParams = ["mem_sleep_default=deep"];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   hardware.cpu.intel.updateMicrocode = true;
@@ -14,6 +26,20 @@
     pkgs.vaapiIntel #
     pkgs.vpl-gpu-rt
   ];
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = false;
+  };
+
+  # disable bt_coex to help with bluetooth interference
+  boot.extraModprobeConfig = ''
+    options iwlwifi bt_coex_active=N
+
+    # HDMI audio output doesn't work without this
+    # https://community.frame.work/t/resolved-no-audio-via-hdmi/39823/11
+    options snd-intel-dspcfg dsp_driver=1
+  '';
 
   environment.systemPackages = [
     pkgs.brightnessctl

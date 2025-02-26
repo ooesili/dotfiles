@@ -1,14 +1,18 @@
+HOST := $(shell cat /etc/hostname)
+
 .PHONY: *
 
-default:
+build:
+	nixos-rebuild build --flake .#${HOST} --print-build-logs
 
-user:
-	mkdir -p ~/.nixpkgs
-	cp user/nixpkgs-config.nix ~/.nixpkgs/config.nix
-	nix-env --install --remove-all --file user/$(shell cat ./active-role).nix
+switch:
+	sudo nixos-rebuild switch --flake .#${HOST}
 
-system:
-	nixos-rebuild switch --flake ".#$(cat /etc/hostname)"
+boot:
+	sudo nixos-rebuild boot --flake .#${HOST}
+
+test:
+	sudo nixos-rebuild test --flake .#${HOST}
 
 clean:
 	rm result*
