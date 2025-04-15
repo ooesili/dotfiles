@@ -51,10 +51,10 @@ noremap('n', 'g<C-l>', '<C-l>')
 noremap('n', '<Leader>w', ':update<CR>')
 noremap('n', '<Leader>c', ':botright copen<CR>')
 noremap('n', '<Leader>a', ':ALEResetBuffer<CR>')
-noremap('n', '<Leader>to', ':NvimTreeOpen<CR>')
-noremap('n', '<Leader>tc', ':NvimTreeClose<CR>')
-noremap('n', '<Leader>tf', ':NvimTreeFindFile<CR>')
-noremap('n', '<Leader>tF', ':NvimTreeFindFile!<CR>')
+-- noremap('n', '<Leader>to', ':NvimTreeOpen<CR>')
+-- noremap('n', '<Leader>tc', ':NvimTreeClose<CR>')
+-- noremap('n', '<Leader>tf', ':NvimTreeFindFile<CR>')
+-- noremap('n', '<Leader>tF', ':NvimTreeFindFile!<CR>')
 noremap('n', '<Leader>x', ':TroubleToggle workspace_diagnostics<CR>')
 noremap('n', '<Leader>gs', ':Git<CR>', { desc = 'Git: open status window' })
 noremap('n', '<Leader>gS', ':Git!<CR>', { desc = 'Git: open small status window' })
@@ -131,6 +131,7 @@ local telescope_actions = require('telescope.actions')
 local telescope = require('telescope')
 telescope.setup({
   defaults = {
+    focus = true,
     layout_strategy = 'flex',
     mappings = {
       i = {
@@ -139,7 +140,8 @@ telescope.setup({
         ["<Esc>"] = telescope_actions.close,
         ["<C-c>"] = function()
           vim.cmd('stopinsert')
-        end
+        end,
+        ["<C-q>"] = require("trouble.sources.telescope").open
       },
     },
   },

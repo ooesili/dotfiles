@@ -180,10 +180,9 @@ in {
 
       swayidle = {
         inherit (pkgs.swayidle.meta) description;
-        # TODO: replace me with hyperland.target
         wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = "${pkgs.swayidle}/bin/swayidle -w -C ${./swayidle.conf}";
-        path = [lock-now config.programs.hyprland.package];
+        path = [lock-now config.programs.sway.package];
       };
     };
 

@@ -2,7 +2,7 @@ use std::{env, process::Command};
 
 use anyhow::{bail, Context, Result};
 
-use crate::rclipd::Selection;
+use crate::cmd::rclipd::Selection;
 
 pub trait Clipboard {
     fn copy(&self, selection: Selection) -> Result<()>;

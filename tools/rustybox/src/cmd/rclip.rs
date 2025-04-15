@@ -1,6 +1,4 @@
-pub mod clipboard;
-
-use self::clipboard::{get_current_clipboard, Clipboard};
+use crate::clipboard::{get_current_clipboard, Clipboard};
 
 use super::rclipd::{Action, Header, Selection};
 use anyhow::{bail, Context, Result};

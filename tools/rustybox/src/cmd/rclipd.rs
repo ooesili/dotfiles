@@ -6,7 +6,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use crate::rclip::clipboard::is_wayland;
+use crate::clipboard::is_wayland;
 
 pub fn main(_args: env::Args) -> Result<()> {
     let addr = "127.0.0.1:8022";

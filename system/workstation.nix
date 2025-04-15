@@ -96,11 +96,14 @@ in
           bottom
           caddy
           clang-tools
+          coppwr
           coreutils
+          davinci-resolve
           deadnix
           direnv
           discord
           dnsutils
+          dyff
           # element-desktop
           eza
           fd
@@ -126,6 +129,7 @@ in
           imv
           inkscape
           ipcalc
+          jless
           jq
           leiningenJDK11
           libreoffice
@@ -293,6 +297,10 @@ in
         pulse.enable = true;
         jack.enable = true;
       };
+
+      # systemd.user.services.pipewire.environment = {
+      #   PIPEWIRE_DEBUG = "D";
+      # };
 
       services.postgresql = {
         enable = true;
