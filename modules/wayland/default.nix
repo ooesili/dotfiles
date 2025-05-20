@@ -48,7 +48,7 @@
     name = "wofi-windows";
     runtimeInputs = [pkgs.hyprland pkgs.jq wofi-themed];
     text = ''
-      hyprctl dispatch focuswindow title:"$(hyprctl clients -j | jq -r '.[] | select(.mapped).title' | wofi --show dmenu --prompt window --insensitive)"
+      hyprctl dispatch focuswindow title:"$(swaymsg -t get_tree -r | jq  '.. | (.nodes? // empty)[] | select(.pid and .visible) | {name} + .rect | "\(.name)"' | wofi --show dmenu --prompt window --insensitive)"
     '';
   };
 in {
@@ -86,7 +86,7 @@ in {
       pkgs.hyprland-protocols
       pkgs.hyprpaper
       pkgs.lxappearance
-      pkgs.polkit-kde-agent
+      pkgs.libsForQt5.polkit-kde-agent
       pkgs.slurp
       pkgs.swayidle
       pkgs.swaylock-effects
