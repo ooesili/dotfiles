@@ -2,10 +2,13 @@
   config,
   stdenvNoCC,
   makeWrapper,
+  replaceVars,
   alacritty,
   ...
 }: let
   # baseConfig = builtins.fromTOML (import ./alacritty.toml)
+
+  configToml = replaceVars ./alacritty.toml config;
 in
   stdenvNoCC.mkDerivation {
     name = "alacritty-config-wrapped";
@@ -18,7 +21,7 @@ in
 
     installPhase = ''
       mkdir -p $out/etc/xdg/configctl
-      substituteAll alacritty.toml $out/etc/xdg/configctl/alacritty.toml
+      install -m 644 ${configToml} $out/etc/xdg/configctl/alacritty.toml
       echo "$extraConfig" >> $out/etc/xdg/configctl/alacritty.toml
       makeWrapper ${alacritty}/bin/alacritty $out/bin/alacritty \
         --add-flags '--config-file $XDG_RUNTIME_DIR/configctl/alacritty.toml'

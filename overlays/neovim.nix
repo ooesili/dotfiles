@@ -1,9 +1,10 @@
 _final: prev: let
   inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPlugin;
 
-  initLua = prev.substituteAll {
-    src = ../pkgs/neovim-config/init.lua;
-    goTemplateFile = ../pkgs/neovim-config/go-templates/main.go;
+  initLua = prev.replaceVars ../pkgs/neovim-config/init.lua {
+    ## TODO: reintroduce this template file (it is not currently referenced by
+    ## any nix configs).
+    # goTemplateFile = ../pkgs/neovim-config/go-templates/main.go;
   };
 
   myConfig = buildVimPlugin {

@@ -7,10 +7,6 @@ let
     rustybox = final.callPackage ../tools/rustybox/package.nix {};
     vital-vst = final.callPackage ../pkgs/vst/vital.nix {};
 
-    gopls = prev.gopls.override {
-      buildGoModule = final.buildGo124Module;
-    };
-
     discord = prev.discord.overrideAttrs (_: let
       version = "0.0.60";
     in {

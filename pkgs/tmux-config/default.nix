@@ -4,7 +4,7 @@
   tmux,
   rustybox,
   stdenv,
-  substituteAll,
+  replaceVars,
   ...
 }: let
   clipboard =
@@ -18,9 +18,7 @@
       pasteCommand = "${rustybox}/bin/rclip paste --clipboard";
     };
 
-  configFile = substituteAll {
-    name = "tmux.conf";
-    src = ./tmux.conf;
+  configFile = replaceVars ./tmux.conf {
     inherit (clipboard) copyCommand pasteCommand;
   };
 in
