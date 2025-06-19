@@ -57,6 +57,7 @@ _final: prev: let
     vimPlugins.cmp-nvim-lsp-signature-help
     vimPlugins.cmp-path
     vimPlugins.cmp_luasnip
+    vimPlugins.conform-nvim
     vimPlugins.diffview-nvim
     vimPlugins.editorconfig-nvim
     vimPlugins.friendly-snippets
@@ -65,11 +66,11 @@ _final: prev: let
     vimPlugins.lazydev-nvim
     vimPlugins.lualine-nvim
     vimPlugins.luasnip
-    vimPlugins.null-ls-nvim
     vimPlugins.nvim-cmp
     vimPlugins.nvim-dap
-    vimPlugins.nvim-dap-ui
     vimPlugins.nvim-dap-go
+    vimPlugins.nvim-dap-ui
+    vimPlugins.nvim-lint
     vimPlugins.nvim-lspconfig
     vimPlugins.nvim-nio # required by dap-ui
     vimPlugins.nvim-treesitter

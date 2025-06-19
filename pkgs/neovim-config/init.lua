@@ -403,19 +403,6 @@ noremap('n', '<Leader>gdc', ':DiffviewClose<CR>', { desc = 'Close git diff view'
 noremap('n', '<Leader>gdl', ':DiffviewFileHistory<CR>', { desc = 'Show git log for current file' })
 noremap('n', '<Leader>gdf', ':DiffviewToggleFiles<CR>', { desc = 'Toggle file panel in diff view' })
 
--- null-ls
-local null_ls = require('null-ls')
-null_ls.setup({
-  sources = {
-    -- TODO add eslint
-    null_ls.builtins.code_actions.statix,
-    null_ls.builtins.diagnostics.deadnix,
-    null_ls.builtins.diagnostics.statix,
-    null_ls.builtins.formatting.alejandra,
-    null_ls.builtins.formatting.jq,
-  }
-})
-
 -- dap-go
 require('dap-go').setup()
 noremap('n', '<Leader>dc', function() require('dap').continue() end, { desc = "Start or continue debugging session" })
@@ -442,3 +429,23 @@ end, { desc = 'dap-ui: Scopes' })
 -- nvim-dap-ui
 require('dapui').setup()
 noremap('n', '<Leader>dd', function() require("dapui").toggle() end, { desc = 'dap-ui: Toggle' })
+
+-- conform.nvim
+require('conform').setup({
+  notify_on_error = false,
+  formatters_by_ft = {
+    nix = { "alejandra" },
+    terraform = { "tofu_fmt" },
+  },
+  format_on_save = {
+    lsp_format = "fallback",
+  },
+})
+
+-- nvim-lint
+require('lint').linters_by_ft = {
+  nix = {
+    'deadnix',
+    'statix',
+  }
+}
