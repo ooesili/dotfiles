@@ -318,6 +318,7 @@ in
         startLimitIntervalSec = 60;
         startLimitBurst = 4;
         wantedBy = ["default.target"];
+        enable = false;
 
         serviceConfig = {
           ExecStart = "${pkgs.syncthing}/bin/syncthing serve --no-browser --no-restart --logflags=0";
