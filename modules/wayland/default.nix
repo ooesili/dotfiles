@@ -145,7 +145,8 @@ in {
     programs = {
       hyprland = {
         enable = true;
-        xwayland.enable = true;
+        # disable so that we can use xwayland-satellite
+        xwayland.enable = false;
       };
 
       sway = {
@@ -183,6 +184,12 @@ in {
         wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = "${pkgs.swayidle}/bin/swayidle -w -C ${./swayidle.conf}";
         path = [lock-now config.programs.sway.package];
+      };
+
+      xwayland-satellite = {
+        inherit (pkgs.xwayland-satellite.meta) description;
+        wantedBy = ["sway-session.target"];
+        serviceConfig.ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
       };
     };
 
