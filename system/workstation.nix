@@ -75,11 +75,19 @@ in
         keyMap = pkgs.keymap-us-capsctrl;
       };
 
-      documentation.man.generateCaches = false;
+      documentation.man.cache = {
+        enable = true;
+        generateAtRuntime = true;
+      };
 
       environment = {
+        etc = {
+          "starship.toml".source = ../pkgs/fish/starship.toml;
+        };
+
         sessionVariables = {
-          STARSHIP_CONFIG = ../pkgs/fish/starship.toml;
+          BROWSER = "firefox";
+          STARSHIP_CONFIG = "/etc/starship.toml";
           SHELL = "fish";
         };
 
@@ -91,23 +99,26 @@ in
           alejandra
           asciinema
           awscli2
+          bacon
+          bash-language-server
           bat
           binutils
           bottom
           caddy
+          cargo-nextest
+          chromium
           clang-tools
+          claude-code
+          colima
           coppwr
           coreutils
-          davinci-resolve
           deadnix
           direnv
           discord
           dnsutils
           dyff
-          # element-desktop
           eza
           fd
-          fennel
           ffmpeg
           file
           firefox
@@ -119,7 +130,7 @@ in
           git
           gnumake
           gnupg
-          go_1_23
+          go_1_27
           gopls
           gotools
           gptfdisk
@@ -131,6 +142,10 @@ in
           ipcalc
           jless
           jq
+          kubectl
+          lazygit
+          lua-language-server
+          luaPackages.fennel
           leiningenJDK11
           libreoffice
           lls
@@ -143,21 +158,18 @@ in
           mpv
           mupdf
           ncdu
-          neofetch
           neovim
-          nickel
           nil
           nmap
-          nodePackages_latest.bash-language-server
-          nodePackages_latest.typescript-language-server
-          nodejs_22 # TODO replace with latest
+          nodejs_26
           obsidian
+          opencode
           p7zip
           pamixer
           pavucontrol
           pciutils
           pgcli
-          pinentry-gtk2
+          pinentry-gnome3
           playerctl
           procs
           pv
@@ -170,24 +182,22 @@ in
           rust-bin.stable.latest.default
           rustybox
           shellcheck
-          slack
           socat
           sops
           spotify
           starship
           statix
-          sumneko-lua-language-server
           tcpdump
-          tdesktop
           tmux-config
           tokei
+          typescript-language-server
           unixtools.xxd
           usbutils
           viddy
           watchexec
           wine
           wireguard-tools
-          xplr
+          yazi
           zls
           zoom-us
           zoxide
@@ -270,6 +280,7 @@ in
         enable = true;
         enableZshIntegration = false;
         enableBashIntegration = false;
+        enableFishIntegration = true;
       };
 
       security.sudo.extraRules = [
@@ -277,7 +288,10 @@ in
           commands = [
             {
               command = "ALL";
-              options = ["SETENV" "NOPASSWD"];
+              options = [
+                "SETENV"
+                "NOPASSWD"
+              ];
             }
           ];
           groups = ["wheel"];
@@ -324,8 +338,14 @@ in
           ExecStart = "${pkgs.syncthing}/bin/syncthing serve --no-browser --no-restart --logflags=0";
           Restart = "on-failure";
           RestartSec = 1;
-          SuccessExitStatus = [3 4];
-          RestartForceExitStatus = [3 4];
+          SuccessExitStatus = [
+            3
+            4
+          ];
+          RestartForceExitStatus = [
+            3
+            4
+          ];
 
           # Hardening
           SystemCallArchitectures = ["native"];

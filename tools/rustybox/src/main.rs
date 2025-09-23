@@ -24,6 +24,7 @@ fn lookup_command(subcmd: &str) -> Option<Command> {
         "mediactl" => rustybox::cmd::mediactl::main,
         "rclip" => rustybox::cmd::rclip::main,
         "rclipd" => rustybox::cmd::rclipd::main,
+        "sway-windows" => rustybox::cmd::sway_windows::main,
         _ => return None,
     })
 }
@@ -40,7 +41,12 @@ mod tests {
             let entry = entry.unwrap();
             if entry.path().extension().unwrap().to_str() == Some("rs") {
                 let file_name = entry.file_name();
-                let name = file_name.to_str().unwrap().strip_suffix(".rs").unwrap();
+                let name = &file_name
+                    .to_str()
+                    .unwrap()
+                    .strip_suffix(".rs")
+                    .unwrap()
+                    .replace("_", "-");
                 assert!(
                     lookup_command(name).is_some(),
                     "command '{}' is not registered",

@@ -1,0 +1,281 @@
+{
+  "dragon": {
+    "diag": {
+      "info": "#658594",
+      "hint": "#6A9589",
+      "ok": "#98BB6C",
+      "warning": "#FF9E3B",
+      "error": "#E82424"
+    },
+    "ui": {
+      "pmenu": {
+        "bg_thumb": "#2D4F67",
+        "bg": "#223249",
+        "bg_sel": "#2D4F67",
+        "fg": "#DCD7BA",
+        "fg_sel": "none",
+        "bg_sbar": "#223249"
+      },
+      "whitespace": "#625e5a",
+      "bg_search": "#2D4F67",
+      "bg_gutter": "#282727",
+      "fg_reverse": "#223249",
+      "bg": "#181616",
+      "float": {
+        "bg": "#0d0c0c",
+        "fg": "#C8C093",
+        "bg_border": "#0d0c0c",
+        "fg_border": "#54546D"
+      },
+      "nontext": "#625e5a",
+      "bg_p1": "#282727",
+      "bg_p2": "#393836",
+      "bg_visual": "#223249",
+      "bg_dim": "#12120f",
+      "fg": "#c5c9c5",
+      "bg_m1": "#1D1C19",
+      "bg_m2": "#12120f",
+      "bg_m3": "#0d0c0c",
+      "fg_dim": "#C8C093",
+      "special": "#7a8382"
+    },
+    "syn": {
+      "parameter": "#a6a69c",
+      "comment": "#737c73",
+      "statement": "#8992a7",
+      "type": "#8ea4a2",
+      "fun": "#8ba4b0",
+      "special1": "#949fb5",
+      "string": "#8a9a7b",
+      "preproc": "#c4746e",
+      "number": "#a292a3",
+      "regex": "#c4746e",
+      "keyword": "#8992a7",
+      "identifier": "#c4b28a",
+      "variable": "none",
+      "constant": "#b6927b",
+      "special2": "#c4746e",
+      "special3": "#c4746e",
+      "punct": "#9e9b93",
+      "deprecated": "#717C7C",
+      "operator": "#c4746e"
+    },
+    "vcs": {
+      "added": "#76946A",
+      "changed": "#DCA561",
+      "removed": "#C34043"
+    },
+    "diff": {
+      "add": "#2B3328",
+      "change": "#252535",
+      "delete": "#43242B",
+      "text": "#49443C"
+    },
+    "term": [
+      "#0d0c0c",
+      "#c4746e",
+      "#8a9a7b",
+      "#c4b28a",
+      "#8ba4b0",
+      "#a292a3",
+      "#8ea4a2",
+      "#C8C093",
+      "#a6a69c",
+      "#E46876",
+      "#87a987",
+      "#E6C384",
+      "#7FB4CA",
+      "#938AA9",
+      "#7AA89F",
+      "#c5c9c5",
+      "#b6927b",
+      "#b98d7b"
+    ]
+  },
+  "wave": {
+    "diag": {
+      "info": "#658594",
+      "hint": "#6A9589",
+      "ok": "#98BB6C",
+      "warning": "#FF9E3B",
+      "error": "#E82424"
+    },
+    "ui": {
+      "pmenu": {
+        "bg_thumb": "#2D4F67",
+        "bg": "#223249",
+        "bg_sel": "#2D4F67",
+        "fg": "#DCD7BA",
+        "fg_sel": "none",
+        "bg_sbar": "#223249"
+      },
+      "whitespace": "#54546D",
+      "bg_search": "#2D4F67",
+      "bg_gutter": "#2A2A37",
+      "fg_reverse": "#223249",
+      "bg": "#1F1F28",
+      "float": {
+        "bg": "#16161D",
+        "fg": "#C8C093",
+        "bg_border": "#16161D",
+        "fg_border": "#54546D"
+      },
+      "nontext": "#54546D",
+      "bg_p1": "#2A2A37",
+      "bg_p2": "#363646",
+      "bg_visual": "#223249",
+      "bg_dim": "#181820",
+      "fg": "#DCD7BA",
+      "bg_m1": "#1a1a22",
+      "bg_m2": "#181820",
+      "bg_m3": "#16161D",
+      "fg_dim": "#C8C093",
+      "special": "#938AA9"
+    },
+    "syn": {
+      "parameter": "#b8b4d0",
+      "comment": "#727169",
+      "statement": "#957FB8",
+      "type": "#7AA89F",
+      "fun": "#7E9CD8",
+      "special1": "#7FB4CA",
+      "string": "#98BB6C",
+      "preproc": "#E46876",
+      "number": "#D27E99",
+      "regex": "#C0A36E",
+      "keyword": "#957FB8",
+      "identifier": "#E6C384",
+      "variable": "none",
+      "constant": "#FFA066",
+      "special2": "#E46876",
+      "special3": "#FF5D62",
+      "punct": "#9CABCA",
+      "deprecated": "#717C7C",
+      "operator": "#C0A36E"
+    },
+    "vcs": {
+      "added": "#76946A",
+      "changed": "#DCA561",
+      "removed": "#C34043"
+    },
+    "diff": {
+      "add": "#2B3328",
+      "change": "#252535",
+      "delete": "#43242B",
+      "text": "#49443C"
+    },
+    "term": [
+      "#16161D",
+      "#C34043",
+      "#76946A",
+      "#C0A36E",
+      "#7E9CD8",
+      "#957FB8",
+      "#6A9589",
+      "#C8C093",
+      "#727169",
+      "#E82424",
+      "#98BB6C",
+      "#E6C384",
+      "#7FB4CA",
+      "#938AA9",
+      "#7AA89F",
+      "#DCD7BA",
+      "#FFA066",
+      "#FF5D62"
+    ]
+  },
+  "lotus": {
+    "diag": {
+      "info": "#5a7785",
+      "hint": "#5e857a",
+      "ok": "#6f894e",
+      "warning": "#e98a00",
+      "error": "#e82424"
+    },
+    "ui": {
+      "pmenu": {
+        "bg_thumb": "#b5cbd2",
+        "bg": "#c7d7e0",
+        "bg_sel": "#9fb5c9",
+        "fg": "#43436c",
+        "fg_sel": "none",
+        "bg_sbar": "#c7d7e0"
+      },
+      "whitespace": "#a09cac",
+      "bg_search": "#b5cbd2",
+      "bg_gutter": "#e7dba0",
+      "fg_reverse": "#dcd7ba",
+      "bg": "#f2ecbc",
+      "float": {
+        "bg": "#d5cea3",
+        "fg": "#43436c",
+        "bg_border": "#d5cea3",
+        "fg_border": "#716e61"
+      },
+      "nontext": "#a09cac",
+      "bg_p1": "#e7dba0",
+      "bg_p2": "#e4d794",
+      "bg_visual": "#c9cbd1",
+      "bg_dim": "#dcd5ac",
+      "fg": "#545464",
+      "bg_m1": "#e5ddb0",
+      "bg_m2": "#dcd5ac",
+      "bg_m3": "#d5cea3",
+      "fg_dim": "#43436c",
+      "special": "#766b90"
+    },
+    "syn": {
+      "parameter": "#5d57a3",
+      "comment": "#8a8980",
+      "statement": "#624c83",
+      "type": "#597b75",
+      "fun": "#4d699b",
+      "special1": "#6693bf",
+      "string": "#6f894e",
+      "preproc": "#c84053",
+      "number": "#b35b79",
+      "regex": "#836f4a",
+      "keyword": "#624c83",
+      "identifier": "#77713f",
+      "variable": "none",
+      "constant": "#cc6d00",
+      "special2": "#c84053",
+      "special3": "#c84053",
+      "punct": "#4e8ca2",
+      "deprecated": "#8a8980",
+      "operator": "#836f4a"
+    },
+    "vcs": {
+      "added": "#6e915f",
+      "changed": "#de9800",
+      "removed": "#d7474b"
+    },
+    "diff": {
+      "add": "#b7d0ae",
+      "change": "#d7e3d8",
+      "delete": "#d9a594",
+      "text": "#f9d791"
+    },
+    "term": [
+      "#1F1F28",
+      "#c84053",
+      "#6f894e",
+      "#77713f",
+      "#4d699b",
+      "#b35b79",
+      "#597b75",
+      "#545464",
+      "#8a8980",
+      "#d7474b",
+      "#6e915f",
+      "#836f4a",
+      "#6693bf",
+      "#624c83",
+      "#5e857a",
+      "#43436c",
+      "#e98a00",
+      "#e82424"
+    ]
+  }
+}

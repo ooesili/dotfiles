@@ -24,7 +24,6 @@
   boot.initrd.kernelModules = ["dm-snapshot"];
   boot.initrd.luks.devices."root-crypt" = {
     device = "/dev/disk/by-uuid/fc02466e-e37e-4965-a2f3-80302b2b9a21";
-    preLVM = false;
   };
   boot.kernelModules = ["kvm-intel"];
 

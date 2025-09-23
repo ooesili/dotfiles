@@ -5,6 +5,8 @@
   rustybox,
   stdenv,
   replaceVars,
+  kanagawa,
+  writeText,
   ...
 }: let
   clipboard =
@@ -18,9 +20,14 @@
       pasteCommand = "${rustybox}/bin/rclip paste --clipboard";
     };
 
-  configFile = replaceVars ./tmux.conf {
+  myConfig = replaceVars ./tmux.conf {
     inherit (clipboard) copyCommand pasteCommand;
   };
+
+  configFile = writeText "tmux.conf" ''
+    source-file ${kanagawa}/kanagawa-tmux-wave.conf
+    source-file ${myConfig}
+  '';
 in
   runCommand "tmux-config-wrap" {
     buildInputs = [makeWrapper];

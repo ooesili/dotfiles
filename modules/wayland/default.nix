@@ -11,45 +11,25 @@
   };
 
   wayland-configs = pkgs.runCommand "wayland-configs" {} ''
-    install -Dm644 ${./hyprland.conf} $out/etc/xdg/configctl/hyprland.conf
     install -Dm644 ${./waybar-config} $out/etc/xdg/configctl/waybar-config
     install -Dm644 ${./waybar-style.css} $out/etc/xdg/configctl/waybar-style.css
-    install -Dm644 ${./wofi.css} $out/etc/xdg/configctl/wofi.css
-    install -Dm644 ${./wofi.conf} $out/etc/xdg/configctl/wofi.conf
+    install -Dm644 ${./fuzzel.ini} $out/etc/xdg/fuzzel/fuzzel.ini
   '';
 
   swayPkg = config.programs.sway.package;
   start-session = pkgs.writeShellScript "start-start-session" ''
-    ${pkgs.rustybox}/bin/configctl init
+    mkdir -p ~/.log
+    ${pkgs.rustybox}/bin/configctl init 2>&1 | tee /home/ooesili/.log/configctl.log
 
-    # exec ${config.programs.hyprland.package}/bin/Hyprland --config $XDG_RUNTIME_DIR/configctl/hyprland.conf
-    ${swayPkg}/bin/${swayPkg.meta.mainProgram}
+    ${swayPkg}/bin/${swayPkg.meta.mainProgram} --unsupported-gpu 2>&1 | tee /home/ooesili/.log/sway.log
+
+    /run/current-system/systemd/bin/systemctl --user stop graphical-session.target
   '';
 
   lock-now = pkgs.writeShellApplication {
     name = "lock-now";
     runtimeInputs = [pkgs.swaylock-effects];
     text = "exec swaylock -f -C ${./swaylock.conf}";
-  };
-
-  wofi-themed = pkgs.symlinkJoin {
-    name = "wofi-themed";
-    paths = [pkgs.wofi];
-    buildInputs = [pkgs.makeWrapper];
-    postBuild = ''
-      wrapProgram $out/bin/wofi \
-        --add-flags '--style=$XDG_RUNTIME_DIR/configctl/wofi.css' \
-        --add-flags '--conf=$XDG_RUNTIME_DIR/configctl/wofi.conf' \
-        --add-flags '--gtk-dark'
-    '';
-  };
-
-  wofi-windows = pkgs.writeShellApplication {
-    name = "wofi-windows";
-    runtimeInputs = [pkgs.hyprland pkgs.jq wofi-themed];
-    text = ''
-      hyprctl dispatch focuswindow title:"$(swaymsg -t get_tree -r | jq  '.. | (.nodes? // empty)[] | select(.pid and .visible) | {name} + .rect | "\(.name)"' | wofi --show dmenu --prompt window --insensitive)"
-    '';
   };
 in {
   options.dotfiles.desktop = {
@@ -77,16 +57,14 @@ in {
       alacrittyWrapped
       lock-now
       wayland-configs
-      wofi-themed
-      wofi-windows
+      pkgs.adwaita-icon-theme
       pkgs.alacritty
       pkgs.dunst
+      pkgs.fuzzel
+      pkgs.glib # for gsettings
       pkgs.grim
-      pkgs.hyprland
-      pkgs.hyprland-protocols
-      pkgs.hyprpaper
+      pkgs.kdePackages.polkit-kde-agent-1
       pkgs.lxappearance
-      pkgs.libsForQt5.polkit-kde-agent
       pkgs.slurp
       pkgs.swayidle
       pkgs.swaylock-effects
@@ -98,6 +76,9 @@ in {
       pkgs.wlopm
       pkgs.wlr-randr
     ];
+
+    environment.etc."sway/config".source = ./sway.conf;
+    environment.etc."sway/config.d/theme.conf".source = ./sway-theme-base16-default-dark.conf;
 
     boot.extraModprobeConfig = lib.mkIf cfg.enableNvidia ''
       options nvidia_drm modeset=1 fbdev=1
@@ -143,12 +124,6 @@ in {
       };
 
     programs = {
-      hyprland = {
-        enable = true;
-        # disable so that we can use xwayland-satellite
-        xwayland.enable = false;
-      };
-
       sway = {
         enable = true;
         package = pkgs.swayfx;
@@ -173,44 +148,31 @@ in {
         '';
       };
 
-      hyprpaper = {
-        inherit (pkgs.hyprpaper.meta) description;
-        wantedBy = ["hyprland.target"];
-        serviceConfig.ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
-      };
-
       swayidle = {
         inherit (pkgs.swayidle.meta) description;
         wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = "${pkgs.swayidle}/bin/swayidle -w -C ${./swayidle.conf}";
-        path = [lock-now config.programs.sway.package];
+        path = [
+          lock-now
+          config.programs.sway.package
+        ];
       };
 
       xwayland-satellite = {
         inherit (pkgs.xwayland-satellite.meta) description;
         wantedBy = ["sway-session.target"];
-        serviceConfig.ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
+        serviceConfig.ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite :1";
       };
     };
 
     # https://github.com/danth/stylix
-
-    systemd.user.targets.hyprland = {
-      unitConfig = {
-        Description = "Hyprland target.";
-        BindsTo = "graphical-session.target";
-      };
-    };
 
     services.greetd = {
       enable = true;
       settings = {
         vt = 1;
         default_session = {
-          command = ''
-            ${start-session}
-            /run/current-system/systemd/bin/systemctl --user stop graphical-session.target
-          '';
+          command = start-session;
           user = cfg.autoLoginUser;
         };
       };
@@ -249,6 +211,12 @@ in {
         # the nvidia patches automatically enable the hyprland desktop portal
         # ++ lib.optional (!cfg.enableNvidia) pkgs.xdg-desktop-portal-hyprland
         ;
+    };
+
+    xdg.mime.defaultApplications = {
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
     };
   };
 }

@@ -1,5 +1,5 @@
 diff --git a/stdlib.sh b/stdlib.sh
-index 5ac0ea3..1cdd84b 100755
+index 64bacc2..f6c8d1b 100755
 --- a/stdlib.sh
 +++ b/stdlib.sh
 @@ -1298,7 +1298,7 @@ use_nix() {
@@ -8,6 +8,6 @@ index 5ac0ea3..1cdd84b 100755
    )
 -  direnv_load nix-shell --show-trace "$@" --run "$(join_args "$direnv" dump)"
 +  direnv_load nix-shell "$@" --run "$(join_args "$direnv" dump)"
-   if [[ $# == 0 ]]; then
-     for key in "${!values_to_restore[@]}"; do
-       local value=${values_to_restore[$key]}
+   for key in "${!values_to_restore[@]}"; do
+     local value=${values_to_restore[$key]}
+     if [[ $value == __UNSET__ ]]; then

@@ -15,7 +15,7 @@ end
 
 -- colors
 vim.o.termguicolors = true
-vim.api.nvim_command('colorscheme base16-default-dark')
+vim.cmd.colorscheme('kanagawa')
 
 -- basics
 vim.o.breakindent = true
@@ -31,6 +31,7 @@ vim.o.softtabstop = 2
 vim.o.tabstop = 2
 vim.o.undofile = true
 vim.o.wildmode = 'longest:full,full'
+vim.o.winborder = 'rounded'
 
 -- ripgrep
 if vim.fn.executable('rg') == 1 then
@@ -50,11 +51,6 @@ noremap('n', 'g<C-y>', '<C-y>')
 noremap('n', 'g<C-l>', '<C-l>')
 noremap('n', '<Leader>w', ':update<CR>')
 noremap('n', '<Leader>c', ':botright copen<CR>')
-noremap('n', '<Leader>a', ':ALEResetBuffer<CR>')
--- noremap('n', '<Leader>to', ':NvimTreeOpen<CR>')
--- noremap('n', '<Leader>tc', ':NvimTreeClose<CR>')
--- noremap('n', '<Leader>tf', ':NvimTreeFindFile<CR>')
--- noremap('n', '<Leader>tF', ':NvimTreeFindFile!<CR>')
 noremap('n', '<Leader>x', ':TroubleToggle workspace_diagnostics<CR>')
 noremap('n', '<Leader>gs', ':Git<CR>', { desc = 'Git: open status window' })
 noremap('n', '<Leader>gS', ':Git!<CR>', { desc = 'Git: open small status window' })
@@ -75,7 +71,7 @@ noremap('n', '<C-l>', '<C-w><C-l>')
 
 -- status line
 require('lualine').setup({
-  options = { theme = 'base16-default-dark' }
+  options = { theme = 'kanagawa' }
 })
 
 -- terminal
@@ -100,21 +96,6 @@ augroup('InitVimComentary', {
   { 'FileType', 'sql', 'setlocal', 'commentstring=--\\ %s' }
 })
 
--- ale
-vim.g.ale_lint_on_text_changed = 'never'
-vim.g.ale_linters = {
-  c = {},
-  go = {},
-  ruby = { 'ruby' },
-  javascript = {},
-  lua = {},
-  nix = {},
-  typescript = {},
-  rust = {},
-  vue = {},
-  zig = {}
-}
-
 -- direnv
 augroup('InitVimDirenv', {
   { 'BufWritePost', '.envrc', 'silent', '!direnv allow %' }
@@ -124,7 +105,7 @@ augroup('InitVimDirenv', {
 vim.g.terraform_fmt_on_save = 1
 
 -- trouble.nvim
-require('trouble').setup({})
+require('trouble').setup()
 
 -- telescope
 local telescope_actions = require('telescope.actions')
@@ -165,96 +146,24 @@ require('oil').setup({
   }
 })
 
--- luasnip
-local luasnip = require('luasnip')
-require('luasnip.loaders.from_vscode').lazy_load()
+-- -- TODO: see if I can delete this
+-- -- luasnip
+-- local luasnip = require('luasnip')
+-- require('luasnip.loaders.from_vscode').lazy_load()
 
--- nvim-cmp
-local cmp = require('cmp')
-cmp.setup({
-  enabled = function()
-    -- keep command mode completion enabled when cursor is in a comment
-    if vim.api.nvim_get_mode().mode == 'c' then
-      return true
-    end
+-- blink.nvim
+require('blink.cmp').setup({
+  keymap = { preset = 'default' },
 
-    -- disable completion when using telescope
-    if vim.api.nvim_get_option_value('filetype', {}) == 'TelescopePrompt' then
-      return false
-    end
-
-    -- disable completion in comments
-    local context = require('cmp.config.context')
-    return not context.in_treesitter_capture("comment")
-        and not context.in_syntax_group("Comment")
-  end,
-  preselect = cmp.PreselectMode.None,
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
-    end,
+  appearance = {
+    nerd_font_variant = 'mono'
   },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-y>'] = cmp.mapping.scroll_docs(-3),
-    ['<C-e>'] = cmp.mapping.scroll_docs(3),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.get_selected_entry() then
-        cmp.confirm()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }), -- {'i','s','c'}
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<C-f>'] = cmp.mapping.complete({
-      config = {
-        sources = { { name = "path" } },
-      },
-    }),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'nvim_lsp_signature_help' },
-    { name = 'luasnip' },
-  }, {
-    { name = 'buffer' },
-  })
-})
-cmp.setup.cmdline('/', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
-})
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  })
-})
 
--- require('neodev').setup({
---   library = { plugins = { "nvim-dap-ui" }, types = true },
+  -- (Default) Only show the documentation popup when manually triggered
+  -- completion = { documentation = { auto_show = false } },
 
---   override = function(root_dir, library)
---     if require("neodev.util").has_file(root_dir, "/nvim/") then
---       library.enabled = true
---       library.plugins = true
---     end
---   end,
--- })
+  signature = { enabled = true }
+})
 
 -- lsp
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -271,8 +180,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
     vim.keymap.set('n', 'gd', ':Telescope lsp_definitions theme=cursor<CR>', opts)
-    vim.keymap.set('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
-    vim.keymap.set('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
+    -- vim.keymap.set('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
+    -- vim.keymap.set('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
+    vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+    vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
     vim.keymap.set('n', 'K', ':lua vim.lsp.buf.hover()<CR>', opts)
     vim.keymap.set('n', '<Leader>ln', ':lua vim.lsp.buf.rename()<CR>', opts)
     vim.keymap.set('n', '<Leader>la', ':lua vim.lsp.buf.code_action()<CR>', opts)
@@ -281,22 +192,23 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<Leader>ld', ':Telescope diagnostics<CR>', opts)
     vim.keymap.set('n', '<Leader>lt', ':Telescope lsp_type_definitions<CR>', opts)
     vim.keymap.set('n', '<Leader>ls', ':Telescope lsp_document_symbols<CR>', opts)
+    vim.keymap.set('n', '<Leader>lS', ':Telescope lsp_workspace_symbols<CR>', opts)
   end
 })
 
-local lspconfig = require('lspconfig')
-local cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- language specific settings
-lspconfig.bashls.setup({})
-lspconfig.clangd.setup({})
-lspconfig.gopls.setup({})
-lspconfig.lua_ls.setup({})
-lspconfig.nil_ls.setup({})
-lspconfig.pyright.setup({})
-lspconfig.rust_analyzer.setup({})
-lspconfig.ts_ls.setup({})
-lspconfig.zls.setup({})
+-- language server settings
+vim.lsp.enable({
+  'bashls',
+  'clangd',
+  'expert',
+  'gopls',
+  'lua_ls',
+  'nil_ls',
+  'pyright',
+  'rust_analyzer',
+  'ts_ls',
+  'zls'
+})
 
 -- better whitespace
 vim.g.better_whitespace_filetypes_blacklist = {
@@ -310,14 +222,33 @@ vim.api.nvim_create_user_command('CD', function()
 end, {})
 
 -- treesitter
-require('nvim-treesitter.configs').setup {
+require('nvim-treesitter').setup {
   highlight = { enable = true },
   incremental_selection = { enable = true },
   textobjects = { enable = true },
 
-  -- dont' run regex parsing at the same time
+  -- -- dont' run regex parsing at the same time
   additional_vim_regex_highlighting = false,
 }
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(args)
+    -- Detection isn't automatic (or supported???) anymore, so I found a workaround:
+    -- https://github.com/nvim-treesitter/nvim-treesitter/pull/8434/files
+    local lang = vim.treesitter.language.get_lang(args.match)
+    if not lang or not vim.treesitter.query.get(lang, 'highlights') then
+      return
+    end
+
+    -- syntax highlighting, provided by Neovim
+    vim.treesitter.start()
+    -- folds, provided by Neovim
+    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.wo.foldmethod = 'expr'
+    -- indentation, provided by nvim-treesitter
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
+
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldenable = false
@@ -434,7 +365,6 @@ noremap('n', '<Leader>dd', function() require("dapui").toggle() end, { desc = 'd
 require('conform').setup({
   notify_on_error = false,
   formatters_by_ft = {
-    nix = { "alejandra" },
     terraform = { "tofu_fmt" },
   },
   format_on_save = {

@@ -58,8 +58,6 @@
     };
   };
 
-  programs.adb.enable = true;
-
   hardware = {
     graphics = {
       enable = true;
@@ -72,22 +70,25 @@
       open = false;
       modesetting.enable = true;
       forceFullCompositionPipeline = true;
+      package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
     };
   };
 
-  services.mpd.extraConfig = ''
-    audio_output {
-      type            "httpd"
-      name            "HTTP Stream"
-      encoder         "lame"
-      bind_to_address "[::]"
-      port            "6680"
-      bitrate         "320"      # do not define if quality is defined
-      format          "44100:16:1"
-      always_on       "yes"      # prevent MPD from disconnecting all listeners when playback is stopped.
-      tags            "yes"      # httpd supports sending tags to listening streams.
-    }
-  '';
+  services.mpd.settings = {
+    audio_output = [
+      {
+        type = "httpd";
+        name = "HTTP Stream";
+        encoder = "lame";
+        bind_to_address = "[::]";
+        port = "6680";
+        bitrate = "320"; # do not define if quality is defined
+        format = "44100:16:1";
+        always_on = "yes"; # prevent MPD from disconnecting all listeners when playback is stopped.
+        tags = "yes"; # httpd supports sending tags to listening streams.
+      }
+    ];
+  };
 
   services.nix-serve = {
     enable = true;

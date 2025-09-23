@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    mnw.url = "github:Gerg-L/mnw";
 
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
@@ -16,8 +17,12 @@
     nixpkgs,
     nixos-hardware,
     rust-overlay,
+    mnw,
   }: let
-    overlays = [rust-overlay.overlays.default] ++ import ./overlays;
+    overlays = [
+      rust-overlay.overlays.default
+      (import ./overlays {inherit mnw;})
+    ];
     pkgs = import nixpkgs {
       system = "x86_64-linux";
       config.allowUnfree = true;
@@ -46,30 +51,34 @@
 
     lib = {
       nixosSystem = args @ {modules, ...}:
-        nixpkgs.lib.nixosSystem (args
+        nixpkgs.lib.nixosSystem (
+          args
           // {
             modules = args.modules ++ [overlayModule];
-          });
+          }
+        );
 
       extendConfig = name: args @ {
         modules,
         system ? "x86_64-linux",
         ...
       }:
-        self.lib.nixosSystem (args
+        self.lib.nixosSystem (
+          args
           // {
             inherit system;
             modules = modules ++ [(builtins.getAttr name self.nixosModules.base)];
-          });
-    };
-
-    apps.x86_64-linux.nvim = {
-      type = "app";
-      program = "${pkgs.neovim}/bin/nvim";
+          }
+        );
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) neovim rustybox;
+      inherit (pkgs) neovim rustybox direnv;
+
+      kanagawa = pkgs.callPackage ./pkgs/kanagawa {};
+      alacritty = pkgs.callPackage ./pkgs/alacritty-config {
+        config.fontSize = "9.5";
+      };
     };
 
     # These are turned into NixOS configurations by a private flake with some
@@ -84,17 +93,26 @@
     nixosConfigurations = {
       nixbox = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [overlayModule ./system/nixbox/configuration.nix];
+        modules = [
+          overlayModule
+          ./system/nixbox/configuration.nix
+        ];
       };
 
       framework = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [overlayModule ./system/framework/configuration.nix];
+        modules = [
+          overlayModule
+          ./system/framework/configuration.nix
+        ];
       };
 
       pinix = nixpkgs.lib.nixosSystem {
         system = "aarch64-linux";
-        modules = [overlayModule ./system/pinix/configuration.nix];
+        modules = [
+          overlayModule
+          ./system/pinix/configuration.nix
+        ];
       };
 
       pi-installer = nixpkgs.lib.nixosSystem {

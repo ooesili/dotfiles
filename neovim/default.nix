@@ -1,31 +1,9 @@
-_final: prev: let
-  inherit (prev.vimUtils.override {vim = prev.neovim;}) buildVimPlugin;
-
-  initLua = prev.replaceVars ../pkgs/neovim-config/init.lua {
-    ## TODO: reintroduce this template file (it is not currently referenced by
-    ## any nix configs).
-    # goTemplateFile = ../pkgs/neovim-config/go-templates/main.go;
+{pkgs, ...}: let
+  inherit (pkgs) vimPlugins;
+  mySnippets = {
+    pname = "my-nvim-snippets";
+    src = ./snippets;
   };
-
-  myConfig = buildVimPlugin {
-    name = "my-nvim-config";
-    src = ../pkgs/neovim-config/config;
-    dependencies = [
-      vimPlugins.plenary-nvim
-      vimPlugins.telescope-nvim
-    ];
-  };
-
-  mySnippets = buildVimPlugin {
-    name = "my-nvim-snippets";
-    src = ../pkgs/neovim-config/snippets;
-  };
-
-  vimPlugins =
-    prev.vimPlugins
-    // {
-      nvim-treesitter = prev.vimPlugins.nvim-treesitter.withAllGrammars;
-    };
 
   language-plugins = [
     vimPlugins.elm-vim
@@ -48,40 +26,34 @@ _final: prev: let
   ];
 
   general-plugins = [
-    vimPlugins.ale
     vimPlugins.auto-pairs
     vimPlugins.base16-vim
-    vimPlugins.cmp-buffer
-    vimPlugins.cmp-cmdline
-    vimPlugins.cmp-nvim-lsp
-    vimPlugins.cmp-nvim-lsp-signature-help
-    vimPlugins.cmp-path
-    vimPlugins.cmp_luasnip
+    vimPlugins.blink-cmp
     vimPlugins.conform-nvim
     vimPlugins.diffview-nvim
     vimPlugins.editorconfig-nvim
     vimPlugins.friendly-snippets
     vimPlugins.gitsigns-nvim
     vimPlugins.indent-blankline-nvim
+    vimPlugins.kanagawa-nvim
     vimPlugins.lazydev-nvim
     vimPlugins.lualine-nvim
-    vimPlugins.luasnip
-    vimPlugins.nvim-cmp
+    # vimPlugins.luasnip
     vimPlugins.nvim-dap
     vimPlugins.nvim-dap-go
     vimPlugins.nvim-dap-ui
     vimPlugins.nvim-lint
     vimPlugins.nvim-lspconfig
     vimPlugins.nvim-nio # required by dap-ui
-    vimPlugins.nvim-treesitter
-    vimPlugins.nvim-treesitter-textobjects
+    vimPlugins.nvim-treesitter.withAllGrammars
     vimPlugins.nvim-web-devicons
     vimPlugins.oil-nvim
     vimPlugins.plenary-nvim
-    vimPlugins.surround
+    vimPlugins.vim-surround
     vimPlugins.telescope-fzf-native-nvim
     vimPlugins.telescope-nvim
     vimPlugins.telescope-ui-select-nvim
+    vimPlugins.tmuxline-vim
     vimPlugins.trouble-nvim
     vimPlugins.vim-abolish
     vimPlugins.vim-better-whitespace
@@ -94,16 +66,17 @@ _final: prev: let
     vimPlugins.vim-repeat
     vimPlugins.vim-unimpaired
     vimPlugins.which-key-nvim
+
+    mySnippets
   ];
 in {
-  neovim = prev.neovim.override {
-    configure = {
-      customRC = "luafile ${initLua}";
+  initLua = "require('myconfig')";
 
-      packages.myVimPackage.start =
-        [myConfig mySnippets]
-        ++ language-plugins
-        ++ general-plugins;
+  plugins = {
+    start = language-plugins ++ general-plugins;
+    dev.myconfig = {
+      pure = ./nvim;
+      impure = "/home/ooesili/sync/dotfiles/nix-config/neovim/nvim";
     };
   };
 }

@@ -1,11 +1,11 @@
 {
-  buildGo123Module,
+  buildGo126Module,
   fetchFromGitHub,
   lib,
 }: let
   version = "1.43.1";
 in
-  buildGo123Module {
+  buildGo126Module {
     inherit version;
     pname = "newrelic-infra-agent";
 

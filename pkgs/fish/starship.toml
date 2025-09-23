@@ -1,6 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
+${env_var.TEMPSHELL}\
 $username\
 [](bg:color_bg1 fg:color_green)\
 $directory\
@@ -24,19 +25,32 @@ $time\
 [ ](fg:color_bg1)\
 $line_break$hostname$character"""
 
-palette = 'base16-default-dark'
+palette = 'kanagawa'
 
-[palettes.base16-default-dark]
-color_fg0 = '#d8d8d8'
-color_bg1 = '#383838'
-color_bg3 = '#585858'
-color_blue = '#7cafc2'
-color_aqua = '#86c1b9'
-color_green = '#a1b56c'
-color_orange = '#dc9656'
-color_purple = '#ba8baf'
-color_red = '#ab4642'
-color_yellow = '#f7ca88'
+# [palettes.base16-default-dark]
+# color_fg0 = '#d8d8d8'
+# color_bg1 = '#383838'
+# color_bg3 = '#585858'
+# color_blue = '#7cafc2'
+# color_aqua = '#86c1b9'
+# color_green = '#a1b56c'
+# color_orange = '#dc9656'
+# color_purple = '#ba8baf'
+# color_red = '#ab4642'
+# color_yellow = '#f7ca88'
+
+# check for SLOP
+[palettes.kanagawa]
+color_fg0    = '#DCD7BA'
+color_bg1    = '#2A2A37'
+color_bg3    = '#363646'
+color_blue   = '#7E9CD8'
+color_aqua   = '#7FB4CA'
+color_green  = '#98BB6C'
+color_orange = '#FFA066'
+color_purple = '#957FB8'
+color_red    = '#C34043'
+color_yellow = '#DCA561'
 
 [os]
 disabled = false
@@ -164,3 +178,7 @@ vimcmd_symbol = '[󱄅 ❯](bold fg:color_green)'
 vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
 vimcmd_replace_symbol = '[](bold fg:color_purple)'
 vimcmd_visual_symbol = '[](bold fg:color_bg1)'
+
+[env_var.TEMPSHELL]
+format = '[ private ](bg:color_red fg:color_fg0)[](bg:color_green fg:color_red)'
+variable = "TEMPSHELL"

@@ -23,7 +23,7 @@
 
   hardware.graphics.extraPackages = [
     pkgs.libvdpau-va-gl # vdpau bridge for vaapi drivers
-    pkgs.vaapiIntel #
+    pkgs.intel-vaapi-driver
     pkgs.vpl-gpu-rt
   ];
 
@@ -32,17 +32,17 @@
     powerOnBoot = false;
   };
 
-  # disable bt_coex to help with bluetooth interference
   boot.extraModprobeConfig = ''
-    options iwlwifi bt_coex_active=N
-
     # HDMI audio output doesn't work without this
     # https://community.frame.work/t/resolved-no-audio-via-hdmi/39823/11
     options snd-intel-dspcfg dsp_driver=1
   '';
 
   environment.systemPackages = [
+    pkgs.pkg-config
+    pkgs.openssl
     pkgs.brightnessctl
+    pkgs.yt-dlp
   ];
 
   environment.variables = {
@@ -51,11 +51,13 @@
   };
 
   sec.macchanger = {
-    enable = true;
+    enable = false;
     devices = ["wlp170s0"];
   };
-
-  networking.hostName = "framework";
+  networking = {
+    hostName = "framework";
+    networkmanager.wifi.powersave = false;
+  };
 
   powerManagement = {
     enable = true;
@@ -69,6 +71,8 @@
     enable = true;
     settings = {
       # cpu scaling
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
       CPU_SCALING_GOVERNOR_ON_AC = "performance";
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
       # battery charging
@@ -80,10 +84,7 @@
     };
   };
 
-  services.libinput = {
-    enable = true;
-    touchpad.disableWhileTyping = true;
-  };
+  # TODO: disable touchpad while typing
 
   systemd.user.services.batteryd = {
     description = "A daemon for battery status notifications.";

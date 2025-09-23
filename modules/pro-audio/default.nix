@@ -15,7 +15,7 @@
       pkgs.bitwig-studio5
       pkgs.fire
       pkgs.paulstretch
-      pkgs.surge-XT
+      # pkgs.surge-XT
       pkgs.vital-vst
     ];
   };

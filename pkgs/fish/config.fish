@@ -1,6 +1,5 @@
 # environment variables
 set -gx EDITOR nvim
-set -gx BROWSER firefox
 set -gx MANWIDTH 78
 set -gx FZF_DEFAULT_COMMAND 'rg --files --hidden --follow --glob "!.git/*" 2> /dev/null'
 set -gx FZF_DEFAULT_OPTS '--exact'
@@ -27,6 +26,7 @@ set -U fish_greeting
 starship init fish | source
 zoxide init fish | source
 direnv hook fish | source
+fzf --fish | source
 
 # zoxide customization
 function z --wraps=__zoxide_z --description 'alias z=__zoxide_z'
@@ -63,7 +63,7 @@ function gclone
     return
   end
 
-  echo 'cloning from GitHub: $url'
+  echo "cloning from GitHub: $url"
   if git clone $url $full_path
     cd $full_path
   else
@@ -190,4 +190,8 @@ function git-review
   git reset --soft $rev
   git restore --staged .
   git add -N .
+end
+
+function tempshell
+  TEMPSHELL=1 _ZO_EXCLUDE_DIRS="*" fish -P
 end
