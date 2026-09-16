@@ -145,7 +145,6 @@ in
           kubectl
           lazygit
           lua-language-server
-          luaPackages.fennel
           leiningenJDK11
           libreoffice
           lls
