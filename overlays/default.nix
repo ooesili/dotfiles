@@ -2,7 +2,6 @@
   audio-mode = final.callPackage ../pkgs/audio-mode.nix {};
   keymap-us-capsctrl = final.callPackage ../pkgs/keymap-us-capsctrl {};
   mdloader = final.callPackage ../pkgs/mdloader.nix {};
-  newrelic-infra = final.callPackage ../pkgs/newrelic-infra {};
   rustybox = final.callPackage ../tools/rustybox/package.nix {};
   vital-vst = final.callPackage ../pkgs/vst/vital.nix {};
 
