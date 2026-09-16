@@ -1,11 +1,11 @@
 [package]
 name = "rustybox"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-dirs = "4"
+dirs = "7"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"
