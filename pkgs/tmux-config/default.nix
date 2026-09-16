@@ -2,7 +2,7 @@
   runCommand,
   makeWrapper,
   tmux,
-  rustybox,
+  rustybox ? null,
   stdenv,
   replaceVars,
   kanagawa,
@@ -15,10 +15,12 @@
       copyCommand = "pbcopy";
       pasteCommand = "pbpaste";
     }
-    else {
+    else if rustybox != null
+    then {
       copyCommand = "${rustybox}/bin/rclip copy --clipboard";
       pasteCommand = "${rustybox}/bin/rclip paste --clipboard";
-    };
+    }
+    else throw "tmux-config: `rustybox` must be provided on non-Darwin platforms";
 
   myConfig = replaceVars ./tmux.conf {
     inherit (clipboard) copyCommand pasteCommand;
