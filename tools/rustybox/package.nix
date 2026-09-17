@@ -15,7 +15,7 @@ in
   rustPlatform.buildRustPackage {
     pname = "rustybox";
     version = "0.1.0";
-    cargoHash = "sha256-Lwjm5qUpWFRiy9lUf97VzIHtWPIqT4EmmP2Qh4CdSVk=";
+    cargoHash = "sha256-AGKdYD9FoU+ZBkiB2bZbyoNYAYk18KfmDhpgwmESxE8=";
 
     src = lib.cleanSource ./.;
     buildInputs = [makeWrapper];
