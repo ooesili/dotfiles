@@ -88,6 +88,8 @@
         nixos-hardware.nixosModules.framework-11th-gen-intel
         ./system/framework/configuration.nix
       ];
+
+      shell = ./modules/shell.nix;
     };
 
     nixosConfigurations = {

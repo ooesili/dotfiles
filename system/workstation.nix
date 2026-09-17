@@ -15,6 +15,7 @@ in
       ../modules/mpd
       ../modules/printing.nix
       ../modules/pro-audio
+      ../modules/shell.nix
       ../modules/trusts.nix
       ../modules/yubikey.nix
     ];
@@ -81,14 +82,8 @@ in
       };
 
       environment = {
-        etc = {
-          "starship.toml".source = ../pkgs/fish/starship.toml;
-        };
-
         sessionVariables = {
           BROWSER = "firefox";
-          STARSHIP_CONFIG = "/etc/starship.toml";
-          SHELL = "fish";
         };
 
         systemPackages = with pkgs; let
@@ -113,7 +108,6 @@ in
           coppwr
           coreutils
           deadnix
-          direnv
           discord
           dnsutils
           dyff
@@ -122,8 +116,6 @@ in
           ffmpeg
           file
           firefox
-          fishPlugins.fzf-fish
-          fzf
           gcc
           gdb
           gimp
@@ -184,10 +176,8 @@ in
           socat
           sops
           spotify
-          starship
           statix
           tcpdump
-          tmux-config
           tokei
           typescript-language-server
           unixtools.xxd
@@ -199,7 +189,6 @@ in
           yazi
           zls
           zoom-us
-          zoxide
         ];
       };
 
@@ -257,23 +246,6 @@ in
 
       programs.dunst.enable = true;
       programs.command-not-found.enable = false;
-
-      # use bash as interactive shell so that systemd emergency mode still
-      # works, but immediately execute fish under most conditions
-      programs.bash = {
-        interactiveShellInit = ''
-          if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
-          then
-            shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-            exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
-          fi
-        '';
-      };
-
-      programs.fish = {
-        enable = true;
-        shellInit = builtins.readFile ../pkgs/fish/config.fish;
-      };
 
       programs.nix-index = {
         enable = true;
