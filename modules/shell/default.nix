@@ -6,7 +6,7 @@
 }: {
   config = {
     environment.variables = {
-      STARSHIP_CONFIG = "${../pkgs/fish/starship.toml}";
+      STARSHIP_CONFIG = "${./starship.toml}";
       # TODO: delete this if nothing goes wrong
       # SHELL = "fish";
     };
@@ -22,7 +22,7 @@
 
     programs.fish = {
       enable = true;
-      shellInit = builtins.readFile ../pkgs/fish/config.fish;
+      shellInit = builtins.readFile ./config.fish;
     };
 
     programs.direnv.enable = true;

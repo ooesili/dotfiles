@@ -15,7 +15,7 @@ in
       ../modules/mpd
       ../modules/printing.nix
       ../modules/pro-audio
-      ../modules/shell.nix
+      ../modules/shell
       ../modules/trusts.nix
       ../modules/yubikey.nix
     ];

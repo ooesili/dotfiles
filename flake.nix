@@ -93,7 +93,7 @@
         ./system/framework/configuration.nix
       ];
 
-      shell = ./modules/shell.nix;
+      shell = ./modules/shell;
     };
 
     nixosConfigurations = {
