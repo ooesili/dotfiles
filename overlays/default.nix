@@ -69,4 +69,8 @@
   neovim = mnw.lib.wrap prev ../neovim;
 
   kanagawa = prev.callPackage ../pkgs/kanagawa {};
+
+  opencode = prev.opencode.overrideAttrs (oldAttrs: {
+    patches = (oldAttrs.patches or []) ++ [./opencode-pr48397-search-cycle.patch];
+  });
 }
