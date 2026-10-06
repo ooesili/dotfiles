@@ -46,6 +46,12 @@ chars = ""
 key = "I"
 mods = "Super|Shift"
 
+# send <C-;> through to neovim via tmux's "extended-keys" option
+[[keyboard.bindings]]
+key = ";"
+mods = "Control"
+chars = "\u001b[59;5u"
+
 [scrolling]
 history = 10000
 

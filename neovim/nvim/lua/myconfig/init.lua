@@ -69,6 +69,12 @@ noremap('n', '<C-j>', '<C-w><C-j>')
 noremap('n', '<C-k>', '<C-w><C-k>')
 noremap('n', '<C-l>', '<C-w><C-l>')
 
+-- add semicolon to end of line
+vim.keymap.set("i", "<C-;>", function()
+  local line = vim.api.nvim_get_current_line()
+  vim.api.nvim_set_current_line(line .. ";")
+end)
+
 -- status line
 require('lualine').setup({
   options = { theme = 'kanagawa' }
