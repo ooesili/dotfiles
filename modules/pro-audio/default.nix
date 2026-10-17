@@ -16,6 +16,10 @@
       pkgs.fire
       pkgs.paulstretch
       # pkgs.surge-XT
+      pkgs.yabridge
+      pkgs.wineWow64Packages.stable
+      pkgs.winetricks
+      pkgs.yabridgectl
       pkgs.vital-vst
     ];
   };

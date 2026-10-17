@@ -12,6 +12,7 @@ in
       ../modules/cloudflare-ddns
       ../modules/dunst.nix
       ../modules/wayland
+      ../modules/virtualbox.nix
       ../modules/mpd
       ../modules/printing.nix
       ../modules/pro-audio
@@ -184,7 +185,6 @@ in
           usbutils
           viddy
           watchexec
-          wine
           wireguard-tools
           yazi
           zls
@@ -282,10 +282,6 @@ in
         pulse.enable = true;
         jack.enable = true;
       };
-
-      # systemd.user.services.pipewire.environment = {
-      #   PIPEWIRE_DEBUG = "D";
-      # };
 
       services.postgresql = {
         enable = true;
