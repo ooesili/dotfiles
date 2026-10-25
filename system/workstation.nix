@@ -254,24 +254,6 @@ in
         enableFishIntegration = true;
       };
 
-      security.sudo.extraRules = [
-        {
-          commands = [
-            {
-              command = "ALL";
-              options = [
-                "SETENV"
-                "NOPASSWD"
-              ];
-            }
-          ];
-          groups = ["wheel"];
-          host = "ALL";
-          runAs = "ALL:ALL";
-          users = [];
-        }
-      ];
-
       services.auto-cpufreq.enable = true;
       services.fstrim.enable = true;
       services.thermald.enable = true;
