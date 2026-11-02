@@ -62,6 +62,7 @@ noremap('n', '<Leader>o', ':Telescope oldfiles<CR>', { desc = 'Recently opened f
 noremap('n', '<Leader>s', ':Telescope live_grep<CR>', { desc = 'Live grep search' })
 noremap('n', '<Leader>/', ':Telescope current_buffer_fuzzy_find<CR>', { desc = 'Search in current file' })
 noremap('n', '<Leader>z', require('zoxide').telescope, { desc = 'Quick change directory' })
+noremap('n', '<Esc>', function() vim.cmd.nohlsearch() end)
 noremap('n', 'z=', ':Telescope spell_suggest<CR>', { desc = 'Spelling suggestions' })
 -- window navigation
 noremap('n', '<C-h>', '<C-w><C-h>')
