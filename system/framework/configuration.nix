@@ -3,6 +3,7 @@
     ../workstation.nix
     ./hardware-configuration.nix
     ../../modules/mac-changer.nix
+    ../../modules/wireshark.nix
   ];
 
   dotfiles = let
