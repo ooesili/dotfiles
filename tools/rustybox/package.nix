@@ -24,12 +24,9 @@ in
       mkdir -p $out/libexec
 
       wrapProgram $out/bin/rustybox --prefix PATH : ${lib.makeBinPath pathDepends}
-      ln $out/bin/rustybox $out/bin/configctl
-      ln $out/bin/rustybox $out/bin/mediactl
-      ln $out/bin/rustybox $out/bin/rclip
-      ln $out/bin/rustybox $out/bin/sway-windows
-      ln $out/bin/rustybox $out/libexec/batteryd
-      ln $out/bin/rustybox $out/libexec/rclipd
+      while read -r entry; do
+        ln $out/bin/rustybox $out/$entry
+      done < commands.txt
       rm $out/bin/rustybox
     '';
   }

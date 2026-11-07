@@ -96,6 +96,7 @@ enum BatteryEvent {
     LowBattery(f32),
 }
 
+#[allow(unused)]
 trait Clock {
     #[must_use]
     fn sleep(&self, dur: Duration) -> Option<()>;
