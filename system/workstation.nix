@@ -200,6 +200,8 @@ in
         pkgs.unifont
       ];
 
+      hardware.keyboard.qmk.enable = true;
+
       i18n.defaultLocale = "en_US.UTF-8";
 
       location = {

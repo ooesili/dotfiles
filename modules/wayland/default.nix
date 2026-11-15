@@ -173,16 +173,32 @@ in {
       enable = true;
 
       keyboards = {
-        default = {
-          ids = ["*"];
+        framework = {
+          ids = ["0001:0001:09b4e68d"];
           settings = {
             main = {
               capslock = "overload(control, esc)";
-              # TODO: if statement here
               leftmeta = "layer(alt)";
               leftalt = "layer(meta)";
               rightalt = "layer(meta)";
-              rightcontrol = "layer(alt)";
+              leftcontrol = "layer(overlay)";
+            };
+
+            overlay = {
+              # nav
+              h = "left";
+              j = "down";
+              k = "up";
+              l = "right";
+              y = "home";
+              u = "pagedown";
+              i = "pageup";
+              o = "end";
+
+              # media
+              z = "nextsong";
+              x = "playpause";
+              c = "previoussong";
             };
           };
         };

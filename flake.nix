@@ -38,10 +38,22 @@
       config.allowUnfree = true;
     };
   in {
-    devShells.x86_64-linux.rustybox = pkgs.mkShell {
-      buildInputs = [
-        pkgs.rust-bin.stable.latest.default
-      ];
+    devShells.x86_64-linux = {
+      rustybox = pkgs.mkShell {
+        name = "rustybox";
+        packages = [
+          pkgs.rust-bin.stable.latest.default
+        ];
+      };
+
+      qmk-dev = pkgs.mkShell {
+        name = "qmk-dev";
+        packages = [
+          pkgs.dos2unix
+          pkgs.dfu-programmer
+          pkgs.qmk
+        ];
+      };
     };
 
     overlays.default = pkgs.lib.composeManyExtensions overlays;

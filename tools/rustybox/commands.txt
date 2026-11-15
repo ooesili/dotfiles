@@ -1,4 +1,5 @@
 bin/configctl
+bin/flashkb
 bin/mediactl
 bin/rclip
 bin/setbg
