@@ -1,7 +1,9 @@
 use std::{env, fs::remove_file, io::ErrorKind, os::unix::fs::symlink, path, process::Command};
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::{Context, Result, anyhow};
 use dirs::home_dir;
+
+use crate::shell::CommandExt;
 
 pub fn main(mut args: env::Args) -> Result<()> {
     let image_path = args.next().ok_or_else(|| anyhow!("not enough arguments"))?;
@@ -17,16 +19,10 @@ pub fn main(mut args: env::Args) -> Result<()> {
         }
     }
     symlink(image_path, &wallpaper_link).context("creating symlink")?;
-    let status = Command::new("swaymsg")
+    Command::new("swaymsg")
         .args(["output", "*", "bg"])
         .arg(wallpaper_link)
         .arg("fill")
-        .spawn()
-        .context("running swaymsg")?
-        .wait()?;
-    if !status.success() {
-        bail!("swaymsg failed");
-    }
-
-    Ok(())
+        .run()
+        .context("running swaymsg")
 }
