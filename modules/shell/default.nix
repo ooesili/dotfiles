@@ -23,6 +23,15 @@
     programs.fish = {
       enable = true;
       shellInit = builtins.readFile ./config.fish;
+
+      # Skip defaults that clobber our own. I can remove this if I put my
+      # aliases here, as they will be interpolated into /etc/fish/config.fish
+      # in the right place.
+      shellAliases = {
+        l = null;
+        ll = null;
+        ls = null;
+      };
     };
 
     programs.direnv.enable = true;

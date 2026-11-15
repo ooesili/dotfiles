@@ -126,19 +126,19 @@ function sne
   sysnix edit nixpkgs#$argv[1] $argv[2..]
 end
 
-# abbreviations
-alias ls=eza
+# aliases
 alias rg="rg --type-add 'tf:*.tf' --type-add 'tfvars:*.tfvars'"
 alias screenshot='grim -g (slurp)'
 alias ta='tmux attach'
 alias ts='tmux new -s'
 alias tx='tmux resize-pane -x'
 alias ty='tmux resize-pane -y'
-abbr -a de direnv edit
-abbr -a dr direnv reload
-abbr -a l ls -l
-abbr -a la ls -la
-abbr -a mine sudo chown -R (id -u):(id -g)
+alias de='direnv edit'
+alias dr='direnv reload'
+alias ls='eza'
+alias l='eza -l'
+alias la='eza -la'
+alias mine='sudo chown -R (id -u):(id -g)'
 
 # git
 function git_main_branch
