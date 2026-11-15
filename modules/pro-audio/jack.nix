@@ -34,6 +34,12 @@
           type = "hard";
           value = "99999";
         }
+        # {
+        #   domain = "@audio";
+        #   item = "nice";
+        #   type = "-";
+        #   value = "-19";
+        # }
       ];
       rtkit.enable = true;
     };
