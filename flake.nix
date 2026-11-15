@@ -80,9 +80,6 @@
       inherit (pkgs) neovim rustybox direnv;
 
       kanagawa = pkgs.callPackage ./pkgs/kanagawa {};
-      alacritty = pkgs.callPackage ./pkgs/alacritty-config {
-        config.fontSize = "9.5";
-      };
     };
 
     # These are turned into NixOS configurations by a private flake with some

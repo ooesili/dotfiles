@@ -6,10 +6,6 @@
 }: let
   cfg = config.dotfiles.desktop;
 
-  alacrittyWrapped = pkgs.callPackage ../../pkgs/alacritty-config {
-    config.fontSize = cfg.alacritty.font.size;
-  };
-
   wayland-configs = pkgs.runCommand "wayland-configs" {} ''
     install -Dm644 ${./waybar-config} $out/etc/xdg/configctl/waybar-config
     install -Dm644 ${./waybar-style.css} $out/etc/xdg/configctl/waybar-style.css
@@ -33,12 +29,6 @@
   };
 in {
   options.dotfiles.desktop = {
-    alacritty.font.size = lib.mkOption {
-      default = "10.0";
-      description = "Font size of Alacritty terminal windows.";
-      type = lib.types.str;
-    };
-
     autoLoginUser = lib.mkOption {
       default = null;
       description = "Automatically login as this user on startup.";
@@ -54,11 +44,9 @@ in {
 
   config = {
     environment.systemPackages = [
-      alacrittyWrapped
       lock-now
       wayland-configs
       pkgs.adwaita-icon-theme
-      pkgs.alacritty
       pkgs.dunst
       pkgs.fuzzel
       pkgs.glib # for gsettings
@@ -113,6 +101,7 @@ in {
         XDG_STATE_HOME = "$HOME/.local/state";
         XDG_TEMPLATES_DIR = "$HOME/.templates";
         XDG_VIDEOS_DIR = "$HOME/media/videos";
+        XDG_SESSION_TYPE = "wayland";
       }
       // lib.attrsets.optionalAttrs cfg.enableNvidia {
         LIBVA_DRIVER_NAME = "nvidia";

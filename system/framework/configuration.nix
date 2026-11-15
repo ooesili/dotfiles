@@ -10,7 +10,6 @@
     primaryUser = "ooesili";
   in {
     desktop = {
-      alacritty.font.size = "9.5";
       autoLoginUser = primaryUser;
     };
 

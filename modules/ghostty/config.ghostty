@@ -1,0 +1,9 @@
+theme = "Kanagawa Wave"
+
+font-family = "Hack Nerd Font"
+font-size = 10
+
+clipboard-read = "allow"
+clipboard-write = "allow"
+
+confirm-close-surface = false

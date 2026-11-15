@@ -15,6 +15,7 @@ in
       ../modules/virtualbox.nix
       ../modules/mpd
       ../modules/printing.nix
+      ../modules/ghostty
       ../modules/pro-audio
       ../modules/shell
       ../modules/trusts.nix
@@ -319,7 +320,7 @@ in
 
       systemd.user.services.rclipd = {
         description = "Network copy backend for tmux based on xsel.";
-        wantedBy = ["graphical-session.target"];
+        wantedBy = ["sway-session.target"];
         serviceConfig.ExecStart = "${pkgs.rustybox}/libexec/rclipd";
       };
 

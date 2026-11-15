@@ -23,7 +23,6 @@
 
   dotfiles = {
     desktop = {
-      alacritty.font.size = "9.0";
       autoLoginUser = config.dotfiles.primaryUser;
       enableNvidia = true;
     };
