@@ -71,7 +71,7 @@ noremap('n', '<C-k>', '<C-w><C-k>')
 noremap('n', '<C-l>', '<C-w><C-l>')
 
 -- add semicolon to end of line
-vim.keymap.set("i", "<C-;>", function()
+vim.keymap.set({ "i", "n" }, "<C-;>", function()
   local line = vim.api.nvim_get_current_line()
   vim.api.nvim_set_current_line(line .. ";")
 end)
