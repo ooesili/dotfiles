@@ -38,7 +38,7 @@
     vimPlugins.kanagawa-nvim
     vimPlugins.lazydev-nvim
     vimPlugins.lualine-nvim
-    # vimPlugins.luasnip
+    vimPlugins.luasnip
     vimPlugins.nvim-dap
     vimPlugins.nvim-dap-go
     vimPlugins.nvim-dap-ui

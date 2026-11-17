@@ -153,10 +153,8 @@ require('oil').setup({
   }
 })
 
--- -- TODO: see if I can delete this
--- -- luasnip
--- local luasnip = require('luasnip')
--- require('luasnip.loaders.from_vscode').lazy_load()
+-- luasnip
+require('luasnip.loaders.from_vscode').lazy_load()
 
 -- blink.nvim
 require('blink.cmp').setup({
@@ -165,6 +163,8 @@ require('blink.cmp').setup({
   appearance = {
     nerd_font_variant = 'mono'
   },
+
+  snippets = { preset = 'luasnip' },
 
   -- (Default) Only show the documentation popup when manually triggered
   -- completion = { documentation = { auto_show = false } },
