@@ -320,6 +320,12 @@ in
         };
       };
 
+      systemd.user.services.swayd = {
+        description = "Daemon to customize sway using IPC.";
+        wantedBy = ["sway-session.target"];
+        serviceConfig. ExecStart = "${pkgs.rustybox}/libexec/swayd";
+      };
+
       systemd.user.services.rclipd = {
         description = "Network copy backend for tmux based on xsel.";
         wantedBy = ["sway-session.target"];

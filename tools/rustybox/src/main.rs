@@ -1,4 +1,4 @@
-use anyhow::{Context, Result, anyhow};
+use anyhow::{Context, Result};
 use rustybox::cmd::lookup_subcommand;
 use std::{env, path::Path};
 
@@ -11,6 +11,7 @@ fn main() -> Result<()> {
 
     let subcmd = env::var("RUSTYBOX_CMD").unwrap_or_else(|_| path.to_str().unwrap().to_owned());
 
-    let main_fn = lookup_subcommand(&subcmd).ok_or(anyhow!("unknown argv[0]: {}", argv0))?;
+    let main_fn =
+        lookup_subcommand(&subcmd).with_context(|| format!("unknown argv[0]: {}", argv0))?;
     main_fn(args)
 }
