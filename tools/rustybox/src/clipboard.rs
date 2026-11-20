@@ -1,6 +1,6 @@
 use std::{env, process::Command};
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 
 use crate::cmd::rclipd::Selection;
 

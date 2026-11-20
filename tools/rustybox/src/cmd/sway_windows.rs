@@ -1,4 +1,4 @@
-use anyhow::{ensure, Context, Result};
+use anyhow::{Context, Result, ensure};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::process::Command;
@@ -21,10 +21,10 @@ pub fn main(_args: env::Args) -> Result<()> {
 
 fn print_names(nodes: impl IntoIterator<Item = SwayNode>) {
     for node in nodes {
-        if node.is_normal_window() {
-            if let Some(ref name) = node.name {
-                println!("{}\t{} - {}", node.id, node.app_id(), name);
-            }
+        if node.is_normal_window()
+            && let Some(ref name) = node.name
+        {
+            println!("{}\t{} - {}", node.id, node.app_id(), name);
         }
         print_names(node.nodes);
         print_names(node.floating_nodes);

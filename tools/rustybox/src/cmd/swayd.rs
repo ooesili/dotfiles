@@ -69,13 +69,12 @@ fn should_resize(breadcrumbs: &mut Vec<BreadCrumb>, node: &Node, target_window_i
     let Some(crumb) = breadcrumbs.last() else {
         return false;
     };
-    let workspace_child = crumb.is_workspace == true
+    let top_of_workspace = crumb.is_workspace
         || breadcrumbs
             .iter()
             .rev()
             .skip(1)
-            .skip_while(|b| !b.is_workspace && b.children == 1)
-            .next()
+            .find(|b| b.is_workspace || b.children != 1)
             .map(|b| b.is_workspace)
             .unwrap_or(false);
 
@@ -87,7 +86,7 @@ fn should_resize(breadcrumbs: &mut Vec<BreadCrumb>, node: &Node, target_window_i
     crumb.children == 2
         && crumb.index == 1
         && crumb.layout == "splith"
-        && workspace_child
+        && top_of_workspace
         && on_wide_monitor
 }
 
@@ -208,11 +207,11 @@ mod tests {
             ..Node::default()
         };
 
-        assert_eq!(should_resize(&mut vec![], &root_node, 1), true);
-        assert_eq!(should_resize(&mut vec![], &root_node, 2), false);
-        assert_eq!(should_resize(&mut vec![], &root_node, 3), false);
-        assert_eq!(should_resize(&mut vec![], &root_node, 4), false);
-        assert_eq!(should_resize(&mut vec![], &root_node, 5), true);
-        assert_eq!(should_resize(&mut vec![], &root_node, 6), false);
+        assert!(should_resize(&mut vec![], &root_node, 1));
+        assert!(!should_resize(&mut vec![], &root_node, 2));
+        assert!(!should_resize(&mut vec![], &root_node, 3));
+        assert!(!should_resize(&mut vec![], &root_node, 4));
+        assert!(should_resize(&mut vec![], &root_node, 5));
+        assert!(!should_resize(&mut vec![], &root_node, 6));
     }
 }

@@ -13,10 +13,10 @@ pub fn main(mut args: env::Args) -> Result<()> {
         .ok_or_else(|| anyhow!("cannot determine home directory"))?
         .join(".wallpaper");
 
-    if let Err(err) = remove_file(&wallpaper_link) {
-        if err.kind() != ErrorKind::NotFound {
-            return Err(err.into());
-        }
+    if let Err(err) = remove_file(&wallpaper_link)
+        && err.kind() != ErrorKind::NotFound
+    {
+        return Err(err.into());
     }
     symlink(image_path, &wallpaper_link).context("creating symlink")?;
     Command::new("swaymsg")
