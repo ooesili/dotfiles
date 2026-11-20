@@ -28,26 +28,6 @@
 
   tmux-config = prev.callPackage ../pkgs/tmux-config {};
 
-  # The version of libnss exported by the discord wrapper is incompatible with
-  # the one firefox expects.
-  firefox = let
-    firefox-wrapped =
-      prev.runCommand "firefoxNoLdLibPath"
-      {
-        buildInputs = [prev.makeWrapper];
-      }
-      ''
-        makeWrapper ${prev.firefox}/bin/firefox $out/bin/firefox --unset LD_LIBRARY_PATH
-      '';
-  in
-    prev.symlinkJoin {
-      name = "firefox";
-      paths = [
-        firefox-wrapped
-        prev.firefox
-      ];
-    };
-
   direnv = prev.direnv.overrideAttrs (_oldAttrs: {
     patches = [./direnv-use-nix-no-trace.patch];
   });
@@ -69,4 +49,20 @@
   neovim = mnw.lib.wrap prev ../neovim;
 
   kanagawa = prev.callPackage ../pkgs/kanagawa {};
+
+  # Discord is always opening chromium for some reason so this is a silly work
+  # around.
+  discord = let
+    redirect = prev.writeShellScriptBin "chromium" ''${final.firefox}/bin/firefox "$@"'';
+    binPath = prev.lib.makeBinPath [redirect];
+  in
+    prev.symlinkJoin {
+      name = "discord-wrapped";
+      paths = [prev.discord];
+      buildInputs = [prev.makeWrapper];
+      postBuild = ''
+        wrapProgram $out/bin/discord --prefix PATH : ${binPath}
+        wrapProgram $out/bin/Discord --prefix PATH : ${binPath}
+      '';
+    };
 }
