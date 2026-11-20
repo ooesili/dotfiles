@@ -196,9 +196,9 @@ in {
               o = "end";
 
               # media
-              z = "nextsong";
+              z = "previoussong";
               x = "playpause";
-              c = "previoussong";
+              c = "nextsong";
             };
           };
         };
