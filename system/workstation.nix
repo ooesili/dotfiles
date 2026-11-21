@@ -265,12 +265,11 @@ in
         enable = true;
         alsa.enable = true;
         pulse.enable = true;
-        jack.enable = true;
       };
 
       services.postgresql = {
         enable = true;
-        package = pkgs.postgresql_14;
+        package = pkgs.postgresql_19;
       };
 
       services.tailscale.enable = true;
