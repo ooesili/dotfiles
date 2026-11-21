@@ -1,5 +1,6 @@
 {mnw}: final: prev: {
   audio-mode = final.callPackage ../pkgs/audio-mode.nix {};
+  axefx2-firmware = final.callPackage ../pkgs/axefx2-firmware.nix {};
   keymap-us-capsctrl = final.callPackage ../pkgs/keymap-us-capsctrl {};
   mdloader = final.callPackage ../pkgs/mdloader.nix {};
   rustybox = final.callPackage ../tools/rustybox/package.nix {};
@@ -65,4 +66,6 @@
         wrapProgram $out/bin/Discord --prefix PATH : ${binPath}
       '';
     };
+
+  leiningenJDK11 = prev.leiningen.override {jdk = final.openjdk11;};
 }

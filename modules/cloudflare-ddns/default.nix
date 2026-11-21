@@ -40,41 +40,40 @@
       done
     '';
   };
-in
-  with lib; {
-    options = {
-      services.cloudflareDDNS = {
-        enable = mkOption {
-          default = false;
-          description = "Enable the CloudFlare DDNS scheduled job.";
-          type = types.bool;
-        };
+in {
+  options = {
+    services.cloudflareDDNS = {
+      enable = lib.mkOption {
+        default = false;
+        description = "Enable the CloudFlare DDNS scheduled job.";
+        type = lib.types.bool;
+      };
 
-        environmentFile = mkOption {
-          default = "/run/keys/cloudflare-ddns.env";
-          description = ''
-            A file with environment variables to configure access to manage a
-            CloudFlare DNS record. The file must be formatted to work with the
-            EnvironmentFile= option described in systemd.exec(5). The required
-            values are:
-            - CLOUDFLARE_API_TOKEN
-            - ZONE_ID
-            - RECORD_ID
-          '';
-          type = types.str;
-        };
+      environmentFile = lib.mkOption {
+        default = "/run/keys/cloudflare-ddns.env";
+        description = ''
+          A file with environment variables to configure access to manage a
+          CloudFlare DNS record. The file must be formatted to work with the
+          EnvironmentFile= option described in systemd.exec(5). The required
+          values are:
+          - CLOUDFLARE_API_TOKEN
+          - ZONE_ID
+          - RECORD_ID
+        '';
+        type = lib.types.str;
       };
     };
+  };
 
-    config = {
-      systemd.services.cloudflare-ddns = mkIf cfg.enable {
-        wantedBy = ["multi-user.target"];
-        after = ["network.target" "init-keys.service"];
+  config = {
+    systemd.services.cloudflare-ddns = lib.mkIf cfg.enable {
+      wantedBy = ["multi-user.target"];
+      after = ["network.target" "init-keys.service"];
 
-        serviceConfig = {
-          ExecStart = "${ddnsScript}/bin/cloudflare-ddns";
-          EnvironmentFile = cfg.environmentFile;
-        };
+      serviceConfig = {
+        ExecStart = "${ddnsScript}/bin/cloudflare-ddns";
+        EnvironmentFile = cfg.environmentFile;
       };
     };
-  }
+  };
+}

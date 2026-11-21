@@ -4,23 +4,22 @@
   lib,
   pkgs,
   ...
-}:
-with lib; let
+}: let
   cfg = config.sec.macchanger;
 in {
   options = {
     sec.macchanger = {
-      enable = mkOption {
+      enable = lib.mkOption {
         default = false;
         description = ''
           Whether to enable MAC address randomization.
         '';
       };
 
-      devices = mkOption {
-        type = types.listOf types.str;
+      devices = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [];
-        example = literalExample ''
+        example = lib.literalExample ''
           [
             "eth0"
             "wlan0"
@@ -32,8 +31,8 @@ in {
       };
     };
   };
-  config = mkIf cfg.enable {
-    systemd.services = mkMerge (forEach cfg.devices (
+  config = lib.mkIf cfg.enable {
+    systemd.services = lib.mkMerge (lib.forEach cfg.devices (
       x: {
         "macchanger-${x}" = {
           description = "Randomize MAC address of ${x}";
