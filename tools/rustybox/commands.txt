@@ -1,9 +1,0 @@
-bin/configctl
-bin/flashkb
-bin/mediactl
-bin/rclip
-bin/setbg
-bin/sway-windows
-libexec/batteryd
-libexec/bluetoothd
-libexec/rclipd

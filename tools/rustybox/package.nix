@@ -11,22 +11,39 @@
     wl-clipboard
     xsel
   ];
+
+  cargo-toml = builtins.fromTOML (builtins.readFile ./crates/rustybox/Cargo.toml);
+  deps = cargo-toml.dependencies;
+  crates =
+    builtins.filter
+    (name: let d = deps.${name}; in d ? path)
+    (builtins.attrNames deps);
+  commands =
+    map (
+      name: let
+        manifest = builtins.fromTOML (builtins.readFile ./crates/${name}/Cargo.toml);
+      in {
+        inherit name;
+        inherit (manifest.package.metadata.rustybox) outdir;
+      }
+    )
+    crates;
 in
   rustPlatform.buildRustPackage {
     pname = "rustybox";
     version = "0.1.0";
-    cargoHash = "sha256-AGKdYD9FoU+ZBkiB2bZbyoNYAYk18KfmDhpgwmESxE8=";
+    cargoHash = "sha256-waeDzPoMyq3wIsfw2T/MXyzRGWl1ydB1jMnA9nZpveY=";
 
     src = lib.cleanSource ./.;
     buildInputs = [makeWrapper];
 
     postInstall = ''
-      mkdir -p $out/libexec
+      mkdir -p $out/bin $out/libexec
 
       wrapProgram $out/bin/rustybox --prefix PATH : ${lib.makeBinPath pathDepends}
-      while read -r entry; do
-        ln $out/bin/rustybox $out/$entry
-      done < commands.txt
-      rm $out/bin/rustybox
+      ${lib.concatMapStringsSep "\n" (
+          cmd: "ln -s $out/bin/rustybox $out/${cmd.outdir}/${cmd.name}"
+        )
+        commands}
     '';
   }

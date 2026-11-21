@@ -1,0 +1,11 @@
+[package]
+name = "flashkb"
+version = "0.1.0"
+edition = "2024"
+
+[package.metadata.rustybox]
+outdir = "bin"
+
+[dependencies]
+anyhow = "1"
+shell = { path = "../shell" }

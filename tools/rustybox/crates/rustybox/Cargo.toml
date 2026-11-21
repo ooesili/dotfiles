@@ -1,0 +1,20 @@
+[package]
+name = "rustybox"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1"
+batteryd = { path = "../batteryd" }
+bluetoothd = { path = "../bluetoothd" }
+configctl = { path = "../configctl" }
+flashkb = { path = "../flashkb" }
+mediactl = { path = "../mediactl" }
+rclip = { path = "../rclip" }
+rclipd = { path = "../rclipd" }
+setbg = { path = "../setbg" }
+sway-windows = { path = "../sway-windows" }
+swayd = { path = "../swayd" }
+
+[build-dependencies]
+toml = "1"

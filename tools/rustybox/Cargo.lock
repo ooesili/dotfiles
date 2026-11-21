@@ -59,6 +59,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
 
 [[package]]
+name = "batteryd"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
+name = "bluetoothd"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -111,6 +125,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "configctl"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+]
+
+[[package]]
 name = "dirs"
 version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -136,6 +158,14 @@ name = "equivalent"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "00d174d5400e5e8fd687ad1049e2f578285fa914201b1af7e8b112a4546bd826"
+
+[[package]]
+name = "flashkb"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "shell",
+]
 
 [[package]]
 name = "getrandom"
@@ -198,19 +228,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "mediactl"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dirs",
+]
+
+[[package]]
 name = "memchr"
 version = "2.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
-
-[[package]]
-name = "multicall"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "swayd",
- "toml",
-]
 
 [[package]]
 name = "once_cell_polyfill"
@@ -243,6 +272,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "rclip"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "rclipd",
+]
+
+[[package]]
+name = "rclipd"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "redox_users"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -258,10 +302,17 @@ name = "rustybox"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "clap",
- "dirs",
- "serde",
- "serde_json",
+ "batteryd",
+ "bluetoothd",
+ "configctl",
+ "flashkb",
+ "mediactl",
+ "rclip",
+ "rclipd",
+ "setbg",
+ "sway-windows",
+ "swayd",
+ "toml",
 ]
 
 [[package]]
@@ -317,10 +368,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "setbg"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dirs",
+ "shell",
+]
+
+[[package]]
+name = "shell"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "strsim"
 version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
+
+[[package]]
+name = "sway-windows"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "swayd"

@@ -1,0 +1,10 @@
+[package]
+name = "batteryd"
+version = "0.1.0"
+edition = "2024"
+
+[package.metadata.rustybox]
+outdir = "libexec"
+
+[dependencies]
+anyhow = "1"
