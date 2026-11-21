@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+main() {
+  if [[ $# -ne 1 ]]; then
+    echo 'error: incorrect number of arguments' >&2
+    echo "  usage: $0 {bin|libexec}/{crate}"
+    exit 1
+  fi
+
+  local path crate dir
+  path=$(dirname "$1")
+  crate=$(basename "$1")
+  dir="crates/$crate"
+
+  if [[ -d "$dir" ]]; then
+    echo "error: crate already exists: $dir" >&2
+    exit 1
+  fi
+
+  mkdir "$dir"
+  write_file "$dir/Cargo.toml" <<EOF
+[package]
+name = "$crate"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[package.metadata.rustybox]
+outdir = "$path"
+
+[dependencies]
+anyhow = "1"
+EOF
+
+  mkdir "$dir/src"
+  write_file "$dir/src/main.rs" <<EOF
+fn main() -> anyhow::Result<()> {
+    ${crate//-/_}::main()
+}
+EOF
+
+  write_file "$dir/src/lib.rs" <<EOF
+use anyhow::Result;
+
+pub fn main() -> Result<()> {
+    Ok(())
+}
+EOF
+
+  log "Adding crate as dependency to multi-call binary"
+  cargo add -p rustybox --path "$dir"
+}
+
+write_file() {
+  log "Generating file: $1"
+  cat > "$1"
+}
+
+log() {
+  echo "$(tput setaf 8)==>$(tput sgr0) $*" >&2
+}
+
+main "$@"
