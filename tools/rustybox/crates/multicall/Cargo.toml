@@ -1,0 +1,11 @@
+[package]
+name = "multicall"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1"
+swayd = { path = "../swayd" }
+
+[build-dependencies]
+toml = "1"

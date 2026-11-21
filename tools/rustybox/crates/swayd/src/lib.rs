@@ -1,6 +1,7 @@
+mod swaymsg;
+
 use anyhow::{Context, Ok, Result};
 use serde::Deserialize;
-use std::env;
 
 use crate::swaymsg::{Event, Node, Sway, WindowChange};
 
@@ -15,7 +16,7 @@ pub struct WindowContainer {
     pub app_id: String,
 }
 
-pub fn main(_args: env::Args) -> Result<()> {
+pub fn main() -> Result<()> {
     let mut sway = Sway::connect().context("connecting to sway")?;
     let events = sway.subscribe().context("subscribing to events")?;
 

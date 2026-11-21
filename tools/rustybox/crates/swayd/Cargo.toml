@@ -1,0 +1,12 @@
+[package]
+name = "swayd"
+version = "0.1.0"
+edition = "2024"
+
+[package.metadata.rustybox]
+outdir = "libexec"
+
+[dependencies]
+anyhow = "1"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
