@@ -43,6 +43,7 @@ in {
 
       loader.efi.canTouchEfiVariables = true;
       loader.systemd-boot.enable = true;
+      loader.systemd-boot.configurationLimit = 25;
 
       # Disables this warning:
       # warning: Enabling both boot.enableContainers & virtualisation.containers on system.stateVersion < 22.05 is unsupported.
