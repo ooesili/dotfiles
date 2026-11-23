@@ -68,4 +68,20 @@
     };
 
   leiningenJDK11 = prev.leiningen.override {jdk = final.openjdk11;};
+
+  kanagawa-tm-theme = final.callPackage ../pkgs/kanagawa/tm-theme.nix {};
+  bat-cache = final.callPackage ../pkgs/bat-cache.nix {};
+
+  # delta does not respect $BAT_CACHE_PATH and is hard coded to look in
+  # $XDG_CACHE_HOME, so we set it here.
+  delta = prev.symlinkJoin {
+    name = "delta-wrapped";
+    paths = [prev.delta];
+    buildInputs = [prev.makeWrapper];
+    postBuild = ''
+      mkdir -p $out/cache
+      ln -s ${final.bat-cache} $out/cache/bat
+      wrapProgram $out/bin/delta --set XDG_CACHE_HOME "$out/cache"
+    '';
+  };
 }

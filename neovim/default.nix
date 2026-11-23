@@ -33,6 +33,7 @@
     vimPlugins.diffview-nvim
     vimPlugins.editorconfig-nvim
     vimPlugins.friendly-snippets
+    vimPlugins.fzf-lua
     vimPlugins.gitsigns-nvim
     vimPlugins.indent-blankline-nvim
     vimPlugins.kanagawa-nvim
@@ -50,9 +51,6 @@
     vimPlugins.oil-nvim
     vimPlugins.plenary-nvim
     vimPlugins.vim-surround
-    vimPlugins.telescope-fzf-native-nvim
-    vimPlugins.telescope-nvim
-    vimPlugins.telescope-ui-select-nvim
     vimPlugins.tmuxline-vim
     vimPlugins.trouble-nvim
     vimPlugins.vim-abolish

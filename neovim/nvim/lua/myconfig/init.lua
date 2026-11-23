@@ -56,15 +56,18 @@ noremap('n', '<Leader>x', ':TroubleToggle workspace_diagnostics<CR>')
 noremap('n', '<Leader>gs', ':Git<CR>', { desc = 'Git: open status window' })
 noremap('n', '<Leader>gS', ':Git!<CR>', { desc = 'Git: open small status window' })
 noremap('n', '-', function() require('oil').open() end)
--- telescope
-noremap('n', '<Leader>f', ':Telescope find_files<CR>', { desc = 'Find files' })
-noremap('n', '<Leader>b', ':Telescope buffers<CR>', { desc = 'Browse open buffers' })
-noremap('n', '<Leader>o', ':Telescope oldfiles<CR>', { desc = 'Recently opened files' })
-noremap('n', '<Leader>s', ':Telescope live_grep<CR>', { desc = 'Live grep search' })
-noremap('n', '<Leader>/', ':Telescope current_buffer_fuzzy_find<CR>', { desc = 'Search in current file' })
-noremap('n', '<Leader>z', require('zoxide').telescope, { desc = 'Quick change directory' })
 noremap('n', '<Esc>', function() vim.cmd.nohlsearch() end)
-noremap('n', 'z=', ':Telescope spell_suggest<CR>', { desc = 'Spelling suggestions' })
+-- fzf-lua
+noremap('n', '<Leader><Enter>', ':FzfLua<CR>', { desc = 'Search fzf-lua commands' })
+noremap('n', '<Leader>f', ':FzfLua files<CR>', { desc = 'Find files' })
+noremap('n', '<Leader>b', ':FzfLua buffers<CR>', { desc = 'Browse open buffers' })
+noremap('n', '<Leader>o', ':FzfLua oldfiles<CR>', { desc = 'Recently opened files' })
+noremap('n', '<Leader>s', ':FzfLua live_grep<CR>', { desc = 'Live grep search' })
+noremap('n', '<Leader>/', ':FzfLua lines<CR>', { desc = 'Search all open buffers' })
+noremap('n', '<Leader>u', ':FzfLua undotree<CR>', { desc = 'Search undotree' })
+noremap('n', '<Leader>z', ':FzfLua zoxide<CR>', { desc = 'Quick change directory' })
+noremap('n', '<Leader>m', ':FzfLua manpages<CR>', { desc = 'Search man pages' })
+noremap('n', 'z=', ':FzfLua spell_suggest<CR>', { desc = 'Spelling suggestions' })
 -- window navigation
 noremap('n', '<C-h>', '<C-w><C-h>')
 noremap('n', '<C-j>', '<C-w><C-j>')
@@ -115,35 +118,7 @@ vim.g.terraform_fmt_on_save = 1
 -- trouble.nvim
 require('trouble').setup()
 
--- telescope
-local telescope_actions = require('telescope.actions')
-local telescope = require('telescope')
-telescope.setup({
-  defaults = {
-    focus = true,
-    layout_strategy = 'flex',
-    mappings = {
-      i = {
-        -- clear input instead of scrolling
-        ["<C-u>"] = false,
-        ["<Esc>"] = telescope_actions.close,
-        ["<C-c>"] = function()
-          vim.cmd('stopinsert')
-        end,
-        ["<C-q>"] = require("trouble.sources.telescope").open
-      },
-    },
-  },
-  extensions = {
-    fzf = {},
-    ["ui-select"] = {
-      require("telescope.themes").get_cursor {}
-    }
-  },
-})
-telescope.load_extension('fzf')
-telescope.load_extension('ui-select')
-
+-- oil
 require('oil').setup({
   skip_confirm_for_simple_edits = true,
   keymaps = {
@@ -187,7 +162,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Enable completion triggered by <c-x><c-o>
     vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-    vim.keymap.set('n', 'gd', ':Telescope lsp_definitions theme=cursor<CR>', opts)
+    vim.keymap.set('n', 'gd', ':FzfLua lsp_definitions<CR>', opts)
     -- vim.keymap.set('n', '[d', ':lua vim.diagnostic.goto_prev()<CR>', opts)
     -- vim.keymap.set('n', ']d', ':lua vim.diagnostic.goto_next()<CR>', opts)
     vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
@@ -196,11 +171,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<Leader>ln', ':lua vim.lsp.buf.rename()<CR>', opts)
     vim.keymap.set('n', '<Leader>la', ':lua vim.lsp.buf.code_action()<CR>', opts)
     vim.keymap.set('v', '<Leader>la', ':lua vim.lsp.buf.range_code_action()<CR>', opts)
-    vim.keymap.set('n', '<Leader>lr', ':Telescope lsp_references theme=cursor<CR>', opts)
-    vim.keymap.set('n', '<Leader>ld', ':Telescope diagnostics<CR>', opts)
-    vim.keymap.set('n', '<Leader>lt', ':Telescope lsp_type_definitions<CR>', opts)
-    vim.keymap.set('n', '<Leader>ls', ':Telescope lsp_document_symbols<CR>', opts)
-    vim.keymap.set('n', '<Leader>lS', ':Telescope lsp_workspace_symbols<CR>', opts)
+    vim.keymap.set('n', '<Leader>lr', ':FzfLua lsp_references theme=cursor<CR>', opts)
+    vim.keymap.set('n', '<Leader>ld', ':FzfLua ls<CR>', opts)
+    vim.keymap.set('n', '<Leader>ld', ':FzfLua lsp_document_diagnostics<CR>', opts)
+    vim.keymap.set('n', '<Leader>lD', ':FzfLua lsp_workspace_diagnostics<CR>', opts)
+    vim.keymap.set('n', '<Leader>lt', ':FzfLua lsp_type_definitions<CR>', opts)
+    vim.keymap.set('n', '<Leader>ls', ':FzfLua lsp_document_symbols<CR>', opts)
+    vim.keymap.set('n', '<Leader>lS', ':FzfLua lsp_workspace_symbols<CR>', opts)
   end
 })
 
@@ -286,7 +263,7 @@ end
 
 -- illuminate
 require('illuminate').configure({
-  filetypes_denylist = { 'fugitive', 'NvimTree', 'TelescopePrompt' }
+  filetypes_denylist = { 'fugitive', 'NvimTree' }
 })
 vim.api.nvim_command(string.format('hi def IlluminatedWordText guibg=#%s', vim.g.base16_gui02))
 vim.api.nvim_command(string.format('hi def IlluminatedWordRead guibg=#%s', vim.g.base16_gui02))
@@ -389,3 +366,7 @@ require('lint').linters_by_ft = {
     'statix',
   }
 }
+
+-- fzf-lua
+require('fzf-lua').setup()
+FzfLua.register_ui_select()

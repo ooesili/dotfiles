@@ -110,6 +110,7 @@ in {
         pkgs.coppwr
         pkgs.coreutils
         pkgs.deadnix
+        pkgs.delta
         pkgs.discord
         pkgs.dnsutils
         pkgs.dyff

@@ -18,7 +18,11 @@
       pkgs.zoxide
     ];
 
-    environment.shells = [config.programs.fish.package];
+    environment = {
+      shells = [config.programs.fish.package];
+      etc."bat/config".source = ./bat.conf;
+      variables.BAT_CACHE_PATH = "${pkgs.bat-cache}";
+    };
 
     programs.fish = {
       enable = true;
