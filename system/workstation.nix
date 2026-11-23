@@ -99,7 +99,6 @@ in {
         pkgs.awscli2
         pkgs.bacon
         pkgs.bash-language-server
-        pkgs.bat
         pkgs.binutils
         pkgs.bottom
         pkgs.caddy
@@ -111,7 +110,6 @@ in {
         pkgs.coppwr
         pkgs.coreutils
         pkgs.deadnix
-        pkgs.delta
         pkgs.discord
         pkgs.dnsutils
         pkgs.dyff

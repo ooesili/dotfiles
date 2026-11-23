@@ -1,0 +1,61 @@
+[core]
+  pager = delta
+[merge]
+  conflictStyle = zdiff3
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true  # use n and N to move between diff sections
+  dark = true      # or light = true, or omit for auto-detection
+  line-numbers = true
+  features = kanagawa
+[delta "kanagawa"]
+  dark = true
+  syntax-theme = Kanagawa
+  line-numbers = true
+  side-by-side = false
+  file-style = "#DCD7BA" bold
+  file-decoration-style = "#54546D" ul
+  file-added-label = [+]
+  file-copied-label = [==]
+  file-modified-label = [*]
+  file-removed-label = [-]
+  file-renamed-label = [->]
+  hunk-header-style = file line-number syntax
+  hunk-header-decoration-style = "#54546D" box ul
+  hunk-header-file-style = "#7E9CD8"
+  hunk-header-line-number-style = "#957FB8"
+  plus-style = syntax "#2B3328"
+  plus-emph-style = syntax "#76946A"
+  plus-non-emph-style = syntax "#2B3328"
+  minus-style = syntax "#43242B"
+  minus-emph-style = syntax "#C34043"
+  minus-non-emph-style = syntax "#43242B"
+  zero-style = syntax
+  line-numbers-minus-style = "#C34043"
+  line-numbers-plus-style = "#98BB6C"
+  line-numbers-zero-style = "#54546D"
+  line-numbers-left-style = "#363646"
+  line-numbers-right-style = "#363646"
+  whitespace-error-style = "#E82424" reverse
+  commit-style = "#E6C384" bold
+  commit-decoration-style = "#E6C384" box
+  blame-code-style = syntax
+  blame-palette = "#16161D" "#1F1F28" "#2A2A37" "#363646"
+  merge-conflict-begin-symbol = ~
+  merge-conflict-end-symbol = ~
+  merge-conflict-ours-diff-header-style = "#E6C384" bold
+  merge-conflict-ours-diff-header-decoration-style = "#54546D" box
+  merge-conflict-theirs-diff-header-style = "#E6C384" bold
+  merge-conflict-theirs-diff-header-decoration-style = "#54546D" box
+
+# vim: set ft=gitconfig:

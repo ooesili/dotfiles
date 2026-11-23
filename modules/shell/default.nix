@@ -12,6 +12,8 @@
     };
 
     environment.systemPackages = [
+      pkgs.bat
+      pkgs.delta
       pkgs.fzf
       pkgs.starship
       pkgs.tmux-config
@@ -22,6 +24,12 @@
       shells = [config.programs.fish.package];
       etc."bat/config".source = ./bat.conf;
       variables.BAT_CACHE_PATH = "${pkgs.bat-cache}";
+      etc."gitconfig".text = ''
+        [core]
+          excludesfile = ${./gitignore-global}
+        [include]
+          path = ${./gitconfig}
+      '';
     };
 
     programs.fish = {
