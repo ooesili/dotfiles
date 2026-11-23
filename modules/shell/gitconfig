@@ -57,5 +57,7 @@
   merge-conflict-ours-diff-header-decoration-style = "#54546D" box
   merge-conflict-theirs-diff-header-style = "#E6C384" bold
   merge-conflict-theirs-diff-header-decoration-style = "#54546D" box
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/
 
 # vim: set ft=gitconfig:
