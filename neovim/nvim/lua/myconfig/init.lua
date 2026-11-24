@@ -224,7 +224,7 @@ vim.api.nvim_create_autocmd('FileType', {
     end
 
     -- syntax highlighting, provided by Neovim
-    vim.treesitter.start()
+    vim.treesitter.start(args.buf, lang)
     -- folds, provided by Neovim
     vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     vim.wo.foldmethod = 'expr'
