@@ -40,6 +40,7 @@
     vimPlugins.lazydev-nvim
     vimPlugins.lualine-nvim
     vimPlugins.luasnip
+    vimPlugins.neogit
     vimPlugins.nvim-dap
     vimPlugins.nvim-dap-go
     vimPlugins.nvim-dap-ui
@@ -59,7 +60,6 @@
     vimPlugins.vim-endwise
     vimPlugins.vim-eunuch
     vimPlugins.vim-fireplace
-    vimPlugins.vim-fugitive
     vimPlugins.vim-illuminate
     vimPlugins.vim-repeat
     vimPlugins.vim-unimpaired

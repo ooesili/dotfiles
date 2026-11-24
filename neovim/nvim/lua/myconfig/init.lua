@@ -53,8 +53,8 @@ noremap('n', 'g<C-l>', '<C-l>')
 noremap('n', '<Leader>w', ':update<CR>')
 noremap('n', '<Leader>c', ':Trouble quickfix<CR>')
 noremap('n', '<Leader>x', ':TroubleToggle workspace_diagnostics<CR>')
-noremap('n', '<Leader>gs', ':Git<CR>', { desc = 'Git: open status window' })
-noremap('n', '<Leader>gS', ':Git!<CR>', { desc = 'Git: open small status window' })
+noremap('n', '<Leader>gs', ':Neogit<CR>', { desc = 'Git: open status window' })
+noremap('n', '<Leader>gS', ':Neogit!<CR>', { desc = 'Git: open small status window' })
 noremap('n', '-', function() require('oil').open() end)
 noremap('n', '<Esc>', function() vim.cmd.nohlsearch() end)
 -- fzf-lua
@@ -199,7 +199,6 @@ vim.lsp.enable({
 vim.g.better_whitespace_filetypes_blacklist = {
   'diff', 'gitcommit', 'unite', 'qf', 'help', 'git'
 }
-vim.api.nvim_command('autocmd FileType fugitive DisableWhitespace')
 
 -- change into the directory of the current file
 vim.api.nvim_create_user_command('CD', function()
@@ -243,9 +242,6 @@ vim.o.foldenable = false
 -- nix
 vim.api.nvim_command('autocmd BufRead,BufNewFile flake.lock setfiletype json')
 
--- fugitive
-vim.g.fugitive_pty = 0
-
 -- rclip
 if vim.fn.executable('rclip') == 1 then
   vim.g.clipboard = {
@@ -263,7 +259,7 @@ end
 
 -- illuminate
 require('illuminate').configure({
-  filetypes_denylist = { 'fugitive', 'NvimTree' }
+  filetypes_denylist = { 'NvimTree' }
 })
 vim.api.nvim_command(string.format('hi def IlluminatedWordText guibg=#%s', vim.g.base16_gui02))
 vim.api.nvim_command(string.format('hi def IlluminatedWordRead guibg=#%s', vim.g.base16_gui02))
@@ -370,3 +366,8 @@ require('lint').linters_by_ft = {
 -- fzf-lua
 require('fzf-lua').setup()
 FzfLua.register_ui_select()
+
+-- neogit
+require('neogit').setup()
+local colors = require('kanagawa.colors').setup()
+vim.api.nvim_set_hl(0, 'NeogitChangeModified', { fg = colors.theme.vcs.changed, })
