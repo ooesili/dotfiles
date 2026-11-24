@@ -368,6 +368,15 @@ require('fzf-lua').setup()
 FzfLua.register_ui_select()
 
 -- neogit
-require('neogit').setup()
+require('neogit').setup({
+  require('neogit').setup({
+    signs = {
+      -- { CLOSED, OPENED }
+      hunk = { "", "" },
+      item = { "", "" },
+      section = { "", "" },
+    },
+  })
+})
 local colors = require('kanagawa.colors').setup()
 vim.api.nvim_set_hl(0, 'NeogitChangeModified', { fg = colors.theme.vcs.changed, })
